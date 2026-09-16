@@ -255,6 +255,16 @@
     <!-- RIGHT MAIN CONTENT AREA -->
     <main class="flex-1 p-5 overflow-y-auto space-y-4">
 
+      <!-- Daily Automation Live Status Alert Banner -->
+      <div id="dailyNotificationBanner" class="dashboard-card px-4 py-2.5 border border-emerald-500/40 bg-emerald-950/30 text-emerald-300 flex flex-wrap items-center justify-between text-xs">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="font-bold text-white">Daily Auto-Harvest Active:</span>
+          <span id="dailyBannerText">GitHub Cloud Cron scans NH-48 corridor daily at 8:30 AM IST. Fresh verified leads automatically delivered!</span>
+        </div>
+        <span class="text-[11px] font-semibold text-sky-400 bg-sky-500/15 px-2 py-0.5 rounded border border-sky-500/30">Auto-Delivers Daily</span>
+      </div>
+
       <!-- DASHBOARD VIEW CONTAINER -->
       <div id="dashboardView" class="space-y-4">
         
@@ -803,6 +813,10 @@
   <script>
     // Gandhinagar to Valsad Corridor Leads Master
     const leadsMaster = [
+      { id: "DAILY-0916-1", name: "Dandi Coastal Pure Marine Chemicals", type: "B2B", category: "Liquid Bromine & Gypsum", city: "Navsari", zone: "Dandi GIDC", rating: 4.7, reviews: 65, website: "No Website", dm: "Rupesh Patel", phone: "9879234433", stage: "New Lead", priority: "Warm", webCost: 45000, mrr: 22000 },
+      { id: "DAILY-0916-2", name: "Gujarat Biotech Agri Solutions", type: "B2B", category: "Bio-Fertilizers & Pesticides", city: "Gandhinagar", zone: "Pethapur GIDC", rating: 4.6, reviews: 76, website: "No Website", dm: "Jagdishbhai Patel", phone: "9879238822", stage: "New Lead", priority: "Warm", webCost: 45000, mrr: 24000 },
+      { id: "DAILY-0916-3", name: "Baroda Resin & Specialty Polymers", type: "B2B", category: "Epoxy Resins & Flooring", city: "Vadodara", zone: "Nandesari GIDC", rating: 4.6, reviews: 96, website: "No Website", dm: "Gautam Mehta", phone: "9898145544", stage: "New Lead", priority: "Hot", webCost: 55000, mrr: 26000 },
+      { id: "DAILY-0916-4", name: "Laxmi Farsan & Sweets Mart", type: "D2C", category: "Traditional Sweets & Snacks", city: "Ahmedabad", zone: "Navrangpura & Paldi", rating: 4.9, reviews: 710, website: "No Website", dm: "Hareshbhai Kandoi", phone: "9426374466", stage: "New Lead", priority: "Hot", webCost: 50000, mrr: 30000 },
       { id: "CORR-2001", name: "Optima Instruments & Automation", type: "B2B", category: "Machinery & Automation", city: "Gandhinagar", zone: "Electronic Estate, Sec 25", rating: 4.7, reviews: 94, website: "No Website", dm: "Dr. Jayesh Mehta", phone: "9825123401", stage: "Pitch Scheduled", priority: "Hot", webCost: 60000, mrr: 30000 },
       { id: "CORR-2002", name: "Saffron Biotech & Agro Chemical", type: "B2B", category: "Chemicals & Agro", city: "Gandhinagar", zone: "Pethapur GIDC", rating: 4.5, reviews: 68, website: "No Website", dm: "Kamleshbhai Patel", phone: "9879234502", stage: "Contacted", priority: "Warm", webCost: 40000, mrr: 22000 },
       { id: "CORR-2003", name: "Matrix Hydraulic Presses & Shear", type: "B2B", category: "Machinery & Presses", city: "Ahmedabad", zone: "Kathwada GIDC", rating: 4.6, reviews: 135, website: "No Website", dm: "Rakesh Panchal", phone: "9824034503", stage: "Proposal Sent", priority: "Hot", webCost: 55000, mrr: 28000 },

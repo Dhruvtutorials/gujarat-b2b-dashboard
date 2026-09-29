@@ -109,6 +109,9 @@ def generate_daily_leads(count=4):
             "priority": "Hot" if item["reviews"] > 90 else "Warm",
             "webCost": item["webCost"],
             "mrr": item["mrr"],
+            "dateAdded": f"{today_str} 08:30 AM",
+            "batchDate": today_str,
+            "isNewToday": True,
             "notes": f"Auto-harvested on {today_str}: {item['notes']}"
         })
         
@@ -125,7 +128,7 @@ def inject_leads_into_html(file_path, new_leads):
     for l in new_leads:
         if f'"{l["name"]}"' in content:
             continue
-        new_leads_js += f'      {{ id: "{l["id"]}", name: "{l["name"]}", type: "{l["type"]}", category: "{l["category"]}", city: "{l["city"]}", zone: "{l["zone"]}", rating: {l["rating"]}, reviews: {l["reviews"]}, website: "{l["website"]}", dm: "{l["dm"]}", phone: "{l["phone"]}", stage: "{l["stage"]}", priority: "{l["priority"]}", webCost: {l["webCost"]}, mrr: {l["mrr"]} }},\n'
+        new_leads_js += f'      {{ id: "{l["id"]}", name: "{l["name"]}", type: "{l["type"]}", category: "{l["category"]}", city: "{l["city"]}", zone: "{l["zone"]}", rating: {l["rating"]}, reviews: {l["reviews"]}, website: "{l["website"]}", dm: "{l["dm"]}", phone: "{l["phone"]}", stage: "{l["stage"]}", priority: "{l["priority"]}", webCost: {l["webCost"]}, mrr: {l["mrr"]}, dateAdded: "{l["dateAdded"]}", batchDate: "{l["batchDate"]}", isNewToday: true }},\n'
 
     if not new_leads_js:
         return True

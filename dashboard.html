@@ -33,7 +33,7 @@
       --border-subtle: #E2E8F0;
       --input-bg: #F8FAFC;
       --text-bright: #0F172A;
-      --text-dim: #64748B;
+      --text-dim: #475569;
       --chart-track: #E2E8F0;
       --donut-center: #FFFFFF;
       --card-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08);
@@ -42,17 +42,23 @@
 
     body {
       background-color: var(--bg-canvas);
-      color: var(--text-bright);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      transition: background-color 0.25s ease, color 0.25s ease;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.25s ease;
     }
 
     .dashboard-card {
-      background: var(--bg-card);
+      background-color: var(--bg-card);
       border: 1px solid var(--border-card);
-      border-radius: 12px;
+      border-radius: 8px;
       box-shadow: var(--card-shadow);
-      transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      transition: all 0.25s ease;
+    }
+
+    .glow-cyan {
+      filter: drop-shadow(0 0 6px rgba(0, 213, 255, 0.65));
+    }
+    .glow-purple {
+      filter: drop-shadow(0 0 6px rgba(157, 92, 255, 0.65));
     }
 
     .filter-input {
@@ -61,87 +67,100 @@
       color: var(--text-bright);
       border-radius: 6px;
       outline: none;
-      transition: all 0.2s;
     }
     .filter-input:focus {
       border-color: #00D5FF;
-      box-shadow: 0 0 0 1px #00D5FF;
+    }
+
+    .action-circle-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .action-circle-btn:hover {
+      color: var(--text-bright);
+      border-color: #00D5FF;
+      transform: scale(1.08);
     }
 
     .btn-reset {
       background-color: #0284C7;
-      color: white;
-      transition: all 0.2s;
+      color: #FFFFFF;
+      transition: background-color 0.15s;
     }
     .btn-reset:hover {
       background-color: #0369A1;
-      box-shadow: 0 0 12px rgba(2, 132, 199, 0.5);
     }
 
-    .action-circle-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      color: #38BDF8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    .batch-tab-btn.active {
+      background-color: #0284C7 !important;
+      color: #FFFFFF !important;
+      border-color: #38BDF8 !important;
     }
-    .action-circle-btn:hover {
-      background: #0284C7;
-      color: white;
-      transform: scale(1.1);
-      box-shadow: 0 0 14px rgba(2, 132, 199, 0.6);
-    }
-
-    /* SVG glow filters */
-    .glow-cyan { filter: drop-shadow(0 0 4px rgba(0, 213, 255, 0.6)); }
-    .glow-purple { filter: drop-shadow(0 0 4px rgba(157, 92, 255, 0.6)); }
 
     /* Custom scrollbars */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-canvas); }
-    ::-webkit-scrollbar-thumb { background: #2A365E; border-radius: 3px; }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-canvas);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-card);
+      border-radius: 3px;
+    }
   </style>
 </head>
-<body class="theme-dark min-h-screen overflow-x-hidden text-[13px] antialiased select-none">
+<body class="theme-dark text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
 
-  <!-- Top Global Bar -->
-  <header class="h-12 bg-[var(--bg-header)] border-b border-[#232D4F] px-4 flex items-center justify-between text-white">
+  <!-- TOP APP BAR / POWER BI TITLE BAR -->
+  <header class="h-12 bg-[var(--bg-header)] border-b border-[var(--border-subtle)] px-4 flex items-center justify-between z-30 shrink-0 transition-colors">
     <div class="flex items-center space-x-3">
-      <div class="flex items-center space-x-2">
-        <svg class="w-5 h-5 text-sky-400" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2zm0 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
-        <span class="font-bold tracking-wide text-sm">CONTOSO</span>
-        <span class="text-xs text-[#8B98BD]">| Gujarat Corridor Enterprise Portal</span>
+      <!-- Power BI Brand Icon -->
+      <div class="flex items-center space-x-1.5 font-bold tracking-wide text-xs">
+        <div class="w-6 h-6 rounded bg-[#F2C811] flex items-center justify-center font-black text-black text-xs shadow">
+          Pb
+        </div>
+        <span class="text-sm font-semibold hidden sm:inline" style="color: var(--text-bright);">Power BI</span>
+        <span class="text-xs px-2 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400 border border-sky-500/40">Surat ➔ Gandhinagar</span>
+        <span class="text-xs px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hidden md:inline">FY 2026-27 (Current Active)</span>
       </div>
     </div>
 
-    <!-- Controls & Black/White Mode Toggle -->
-    <div class="flex items-center space-x-3">
-      
+    <!-- Navigation Tabs & View Controls -->
+    <div class="flex items-center space-x-2">
       <!-- Search Input -->
-      <div class="relative w-48 sm:w-56">
-        <input type="text" id="topSearch" oninput="applyFilters()" placeholder="Search..." class="w-full bg-[#1A223D] text-xs text-gray-200 pl-7 pr-3 py-1 rounded-md border border-[#273359] focus:outline-none focus:border-sky-400">
+      <div class="relative w-36 sm:w-52">
+        <input type="text" id="topSearch" oninput="applyFilters()" placeholder="Search company, sector, city..." class="w-full bg-[var(--input-bg)] text-xs pl-7 pr-3 py-1 rounded-md border border-[var(--border-card)] focus:outline-none focus:border-sky-400" style="color: var(--text-bright);">
         <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2 top-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
       </div>
 
-      <!-- View Switch Buttons -->
-      <button onclick="toggleView('dashboard')" id="navDashBtn" class="px-2.5 py-1 text-xs font-semibold rounded bg-[#0284C7] text-white">Dashboard</button>
-      <button onclick="toggleView('table')" id="navTableBtn" class="px-2.5 py-1 text-xs font-semibold rounded bg-[#1B2444] text-[#8B98BD] hover:text-white">Leads CRM Table</button>
+      <!-- Quick View Switch Buttons -->
+      <button onclick="switchMainView('leadsTop')" id="viewBtnLeads" class="px-2.5 py-1 text-xs font-bold rounded bg-[#0284C7] text-white flex items-center gap-1 shadow">
+        <span>📋 Leads Board (Top)</span>
+      </button>
+      <button onclick="switchMainView('chartsTop')" id="viewBtnCharts" class="px-2.5 py-1 text-xs font-semibold rounded bg-[var(--bg-card)] border border-[var(--border-card)] text-[var(--text-dim)] hover:text-white flex items-center gap-1">
+        <span>📊 Charts & Wave</span>
+      </button>
 
-      <!-- WHITE AND BLACK THEME BUTTON (Requested by user) -->
+      <!-- WHITE AND BLACK THEME BUTTON -->
       <button onclick="toggleWhiteBlackTheme()" id="whiteBlackBtn" class="flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold border border-gray-600 bg-gray-800 text-yellow-300 hover:bg-gray-700 transition shadow">
         <span id="themeEmoji">☀️</span>
         <span id="themeTitle">White Mode</span>
       </button>
 
       <!-- Auto-Harvest Button -->
-      <button onclick="openScannerModal()" title="Auto-Harvest Leads" class="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-extrabold rounded bg-gradient-to-r from-amber-500 to-yellow-400 text-black shadow">
-        ⚡ Auto-Harvest
+      <button onclick="openScannerModal()" title="Auto-Harvest Leads" class="hidden md:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-extrabold rounded bg-gradient-to-r from-amber-500 to-yellow-400 text-black shadow">
+        ⚡ Auto-Scan
       </button>
 
       <!-- User Avatar -->
@@ -154,21 +173,38 @@
   <!-- Main Workspace Layout -->
   <div class="flex min-h-[calc(100vh-48px)]">
 
-    <!-- LEFT SIDEBAR: FILTERS PANEL (Exact match to image) -->
-    <aside class="w-60 bg-[var(--bg-sidebar)] border-r border-[var(--border-subtle)] p-4 flex flex-col justify-between shrink-0 transition-colors">
+    <!-- LEFT SIDEBAR: FILTERS PANEL -->
+    <aside class="w-64 bg-[var(--bg-sidebar)] border-r border-[var(--border-subtle)] p-4 flex flex-col justify-between shrink-0 transition-colors">
       <div class="space-y-4">
         <!-- Filter Header with Funnel Icon -->
         <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3">
           <div class="flex items-center space-x-2 font-bold text-sm" style="color: var(--text-bright);">
             <svg class="w-4 h-4 text-sky-400" fill="currentColor" viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
-            <span>Filter</span>
+            <span>Filter Leads</span>
           </div>
-          <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">NH-48</span>
+          <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">13 CITIES</span>
         </div>
 
-        <!-- Filter 1: City / Corridor Highway Zone -->
+        <!-- Filter 1: 8:30 AM Batch Date Filter (Requested by User) -->
         <div>
-                    <label class="block text-[11px] mb-1 font-medium" style="color: var(--text-dim);">Highway City (Surat ➔ Gandhinagar)</label>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-[11px] font-semibold" style="color: var(--text-dim);">8:30 AM Lead Arrival Batch</label>
+            <span class="text-[9px] px-1.5 py-0.2 rounded font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">DAILY</span>
+          </div>
+          <select id="batchFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs font-semibold text-emerald-400">
+            <option value="ALL">All Corridor Batches (36 Leads)</option>
+            <option value="2026-09-29">Today: 29-Sep-2026 (08:30 AM) [6 NEW]</option>
+            <option value="2026-09-28">Yesterday: 28-Sep-2026 (08:30 AM)</option>
+            <option value="2026-09-27">27-Sep-2026 (08:30 AM Batch)</option>
+            <option value="2026-09-26">26-Sep-2026 (08:30 AM Batch)</option>
+            <option value="2026-09-25">25-Sep-2026 (08:30 AM Batch)</option>
+            <option value="2026-09-24">24-Sep-2026 (08:30 AM Batch)</option>
+          </select>
+        </div>
+
+        <!-- Filter 2: City / Corridor Highway Zone (Surat to Gandhinagar) -->
+        <div>
+          <label class="block text-[11px] mb-1 font-semibold" style="color: var(--text-dim);">Highway City (Surat ➔ Gandhinagar)</label>
           <select id="cityFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs font-semibold">
             <option value="ALL">All 13 Corridor Cities</option>
             <option value="Surat">1. Surat (Textiles & Diamonds)</option>
@@ -187,10 +223,10 @@
           </select>
         </div>
 
-        <!-- Filter 2: Fiscal Year (Current Ongoing Active) -->
+        <!-- Filter 3: Fiscal Year (Current Ongoing Active) -->
         <div>
           <div class="flex items-center justify-between mb-1">
-            <label class="block text-[11px] font-medium" style="color: var(--text-dim);">Fiscal Year</label>
+            <label class="block text-[11px] font-semibold" style="color: var(--text-dim);">Fiscal Year</label>
             <span class="text-[9px] px-1 py-0.2 rounded font-bold bg-emerald-500/20 text-emerald-400">CURRENT</span>
           </div>
           <select id="fiscalYearFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs font-semibold text-sky-400">
@@ -201,55 +237,40 @@
           </select>
         </div>
 
-        <!-- Filter 3: Priority (High, Mid, Low) -->
+        <!-- Filter 4: Priority -->
         <div>
-          <label class="block text-[11px] mb-1 font-medium" style="color: var(--text-dim);">Priority</label>
+          <label class="block text-[11px] mb-1 font-semibold" style="color: var(--text-dim);">Priority</label>
           <select id="priorityFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs">
-            <option value="ALL">All</option>
+            <option value="ALL">All Priorities</option>
             <option value="Hot">High Priority (Hot)</option>
             <option value="Warm">Mid Priority (Warm)</option>
-            <option value="Cold">Low Priority (Cold)</option>
           </select>
         </div>
 
-        <!-- Filter 4: Severity / Website Status -->
+        <!-- Filter 5: Severity / Web Status -->
         <div>
-          <label class="block text-[11px] mb-1 font-medium" style="color: var(--text-dim);">Severity / Web Presence</label>
+          <label class="block text-[11px] mb-1 font-semibold" style="color: var(--text-dim);">Web Presence</label>
           <select id="webStatusFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs">
-            <option value="ALL">All</option>
-            <option value="No Website">Zero Website (Critical)</option>
+            <option value="ALL">All Status</option>
+            <option value="No Website">Zero Website (Critical Need)</option>
             <option value="Outdated">Outdated / Broken Site</option>
           </select>
         </div>
 
-        <!-- Filter 5: Work Type (B2B vs D2C) -->
+        <!-- Filter 6: Work Type (B2B vs D2C) -->
         <div>
-          <label class="block text-[11px] mb-1 font-medium" style="color: var(--text-dim);">Work Type</label>
+          <label class="block text-[11px] mb-1 font-semibold" style="color: var(--text-dim);">Work Type</label>
           <select id="typeFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs">
-            <option value="ALL">All</option>
+            <option value="ALL">All Types</option>
             <option value="B2B">B2B Manufacturing & GIDC</option>
             <option value="D2C">D2C Retail & Food Brands</option>
-          </select>
-        </div>
-
-        <!-- Filter 6: Pipeline Stage -->
-        <div>
-          <label class="block text-[11px] mb-1 font-medium" style="color: var(--text-dim);">Pipeline Stage</label>
-          <select id="stageFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs">
-            <option value="ALL">All</option>
-            <option value="New Lead">New Lead</option>
-            <option value="Contacted">Contacted</option>
-            <option value="Audit Sent">Audit Sent</option>
-            <option value="Pitch Scheduled">Pitch Scheduled</option>
-            <option value="Proposal Sent">Proposal Sent</option>
-            <option value="Closed-Won">Closed-Won</option>
           </select>
         </div>
 
         <!-- Reset Button -->
         <div class="pt-2">
           <button onclick="resetFilters()" class="btn-reset w-full py-1.5 text-xs font-bold rounded-md shadow flex items-center justify-center space-x-1">
-            <span>Reset Filter</span>
+            <span>Reset All Filters</span>
           </button>
         </div>
       </div>
@@ -257,356 +278,487 @@
       <!-- Bottom sidebar info -->
       <div class="pt-4 border-t border-[var(--border-subtle)] text-[11px]" style="color: var(--text-dim);">
         <div>NH-48 Industrial Corridor</div>
-        <div class="text-[10px] text-sky-500 font-bold">Surat ➔ Gandhinagar</div>
+        <div class="text-[10px] text-sky-400 font-bold">Surat ➔ Gandhinagar</div>
+        <div class="text-[9px] text-emerald-400 mt-1 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          Daily 8:30 AM Auto-Sync
+        </div>
       </div>
     </aside>
 
     <!-- RIGHT MAIN CONTENT AREA -->
-    <main class="flex-1 p-5 overflow-y-auto space-y-4">
+    <main class="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4">
 
       <!-- Daily Automation Live Status Alert Banner -->
       <div id="dailyNotificationBanner" class="dashboard-card px-4 py-2.5 border border-emerald-500/40 bg-emerald-950/30 text-emerald-300 flex flex-wrap items-center justify-between text-xs">
         <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          <span class="font-bold text-white">Daily Auto-Harvest Active:</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="font-bold text-white">Daily 8:30 AM Auto-Harvest Active:</span>
           <span id="dailyBannerText">GitHub Cloud Cron scans NH-48 corridor daily at 8:30 AM IST. Fresh verified leads automatically delivered!</span>
         </div>
-        <span class="text-[11px] font-semibold text-sky-400 bg-sky-500/15 px-2 py-0.5 rounded border border-sky-500/30">Auto-Delivers Daily</span>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] font-bold text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-500/30">
+            Latest Batch: 29-Sep-2026, 08:30 AM
+          </span>
+        </div>
       </div>
 
-      <!-- DASHBOARD VIEW CONTAINER -->
-      <div id="dashboardView" class="space-y-4">
+      <!-- ROW 1: 4 Top KPI Cards with Sparklines -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         
-        <!-- Dashboard Header Banner inside card (Exact match) -->
-        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg border border-sky-400/40">
-              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        <!-- Card 1: Leads Created -->
+        <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Total Corridor Leads</span>
+              <div id="kpiLeadsCreated" class="text-2xl font-bold mt-1" style="color: var(--text-bright);">36 Active</div>
+              <div class="text-[11px] text-[#10B981] font-semibold mt-1 flex items-center gap-1">
+                <span>+6 New Today</span> <span class="text-[10px]" style="color: var(--text-dim);">(8:30 AM Batch)</span>
+              </div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            </div>
+          </div>
+          <div class="mt-2 h-7 w-full">
+            <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
+              <path d="M0 25 Q 15 5, 30 18 T 60 12 T 90 22 T 120 8" fill="none" stroke="#00D5FF" stroke-width="2" class="glow-cyan"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card 2: Audits Delivered -->
+        <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Est. Total Pipeline Value</span>
+              <div id="kpiAuditsDelivered" class="text-2xl font-bold mt-1 text-emerald-400">₹19.4 Lakh</div>
+              <div class="text-[11px] text-[#10B981] font-semibold mt-1 flex items-center gap-1">
+                <span>₹9.8 L/mo</span> <span class="text-[10px]" style="color: var(--text-dim);">MRR Potential</span>
+              </div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+          </div>
+          <div class="mt-2 h-7 w-full">
+            <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
+              <path d="M0 20 Q 20 28, 40 10 T 70 20 T 100 8 T 120 15" fill="none" stroke="#10B981" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card 3: Closure Rate -->
+        <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Zero Website Ratio</span>
+              <div id="kpiClosureRate" class="text-2xl font-bold mt-1 text-rose-400">91.6%</div>
+              <div class="text-[11px] text-sky-400 font-semibold mt-1 flex items-center gap-1">
+                <span>33 of 36</span> <span class="text-[10px]" style="color: var(--text-dim);">have zero web</span>
+              </div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+          </div>
+          <div class="mt-2 h-7 w-full">
+            <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
+              <path d="M0 24 Q 25 8, 50 16 T 80 12 T 105 18 T 120 4" fill="none" stroke="#F43F5E" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card 4: Within Target LTV -->
+        <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Corridor Highway Reach</span>
+              <div id="kpiWithinLTV" class="text-2xl font-bold mt-1 text-sky-400">13 Hubs</div>
+              <div class="text-[11px] text-emerald-400 font-semibold mt-1">
+                Surat ➔ Gandhinagar <span class="text-[10px]" style="color: var(--text-dim);">(100% Covered)</span>
+              </div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+          </div>
+          <div class="mt-2 h-7 w-full">
+            <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
+              <path d="M0 26 Q 30 14, 60 20 T 90 8 T 120 2" fill="none" stroke="#00D5FF" stroke-width="2" class="glow-cyan"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PROMINENT LEADS BOARD & DAILY 8:30 AM INFLOW STRUCTURE (MOVED TO TOP) -->
+      <!-- ========================================================================= -->
+      <section id="sectionLeadsBoard" class="space-y-3.5">
+
+        <!-- 8:30 AM DAILY FRESH INFLOW SHOWCASE HEADER -->
+        <div class="dashboard-card p-4 border border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 via-[#161F3C] to-[#141B34]">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3 border-b border-[var(--border-subtle)] pb-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-3 w-3 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <div>
+                <h2 class="text-sm font-bold flex items-center gap-2 text-white">
+                  🌅 Today's 8:30 AM Fresh Lead Inflow
+                  <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">TODAY'S BATCH</span>
+                </h2>
+                <p class="text-[11px]" style="color: var(--text-dim);">
+                  Automated Daily Highway Scan Drop: <strong class="text-emerald-300">29 Sep 2026 • 08:30 AM IST</strong> • Next Daily Drop: <span class="text-sky-400 font-semibold">Tomorrow @ 08:30 AM IST</span>
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                6 Fresh Leads Added Today at 8:30 AM
+              </span>
+            </div>
+          </div>
+
+          <!-- TOP 3 FRESH ACTION CARDS FOR TODAY'S 8:30 AM DROP -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            
+            <!-- Highlight Card 1 -->
+            <div class="p-3 rounded-lg bg-[var(--bg-canvas)] border border-emerald-500/30 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-1">
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">🆕 29-Sep • 08:30 AM</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">Surat</span>
+                </div>
+                <div class="font-bold text-xs text-white">Surat Silk & Jacquard Weaving Mills</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Silk & Jacquard Wholesale • Pandesara GIDC</div>
+                <div class="flex items-center gap-2 mt-2 text-xs">
+                  <span class="text-amber-400 font-bold">⭐ 4.7</span>
+                  <span class="text-gray-400 text-[10px]">(240 reviews)</span>
+                  <span class="text-rose-400 text-[10px] font-bold">No Website</span>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between">
+                <div>
+                  <div class="text-[10px] text-gray-400">Est. Web Fee</div>
+                  <div class="font-bold text-xs text-white">₹80,000</div>
+                </div>
+                <button onclick="openPitchModal('STG-101')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1">
+                  <span>WhatsApp Pitch</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Highlight Card 2 -->
+            <div class="p-3 rounded-lg bg-[var(--bg-canvas)] border border-emerald-500/30 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-1">
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">🆕 29-Sep • 08:30 AM</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">Vadodara</span>
+                </div>
+                <div class="font-bold text-xs text-white">PowerVolt Switchgears & HT Panels</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Transformers & Switchgear • Makarpura GIDC</div>
+                <div class="flex items-center gap-2 mt-2 text-xs">
+                  <span class="text-amber-400 font-bold">⭐ 4.8</span>
+                  <span class="text-gray-400 text-[10px]">(160 reviews)</span>
+                  <span class="text-amber-400 text-[10px] font-bold">Outdated Site</span>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between">
+                <div>
+                  <div class="text-[10px] text-gray-400">Est. Web Fee</div>
+                  <div class="font-bold text-xs text-white">₹75,000</div>
+                </div>
+                <button onclick="openPitchModal('STG-116')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1">
+                  <span>WhatsApp Pitch</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Highlight Card 3 -->
+            <div class="p-3 rounded-lg bg-[var(--bg-canvas)] border border-emerald-500/30 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-1">
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">🆕 29-Sep • 08:30 AM</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">Dahej</span>
+                </div>
+                <div class="font-bold text-xs text-white">Dahej Petrochem Piping & Vessels</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Pressure Vessels & Boilers • Dahej PCPIR SEZ</div>
+                <div class="flex items-center gap-2 mt-2 text-xs">
+                  <span class="text-amber-400 font-bold">⭐ 4.8</span>
+                  <span class="text-gray-400 text-[10px]">(130 reviews)</span>
+                  <span class="text-rose-400 text-[10px] font-bold">No Website</span>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between">
+                <div>
+                  <div class="text-[10px] text-gray-400">Est. Web Fee</div>
+                  <div class="font-bold text-xs text-white">₹75,000</div>
+                </div>
+                <button onclick="openPitchModal('STG-112')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1">
+                  <span>WhatsApp Pitch</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- MAIN HIGHWAY CORRIDOR LEADS MATRIX TABLE (SURAT TO GANDHINAGAR) -->
+        <div class="dashboard-card overflow-hidden">
+          
+          <!-- Table Header Bar -->
+          <div class="p-4 border-b border-[var(--border-subtle)] flex flex-wrap justify-between items-center gap-3">
+            <div>
+              <h2 class="text-base font-bold flex items-center gap-2" style="color: var(--text-bright);">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></span>
+                Highway Corridor Qualified Prospect Matrix (Surat ➔ Gandhinagar)
+              </h2>
+              <p class="text-xs mt-0.5" style="color: var(--text-dim);">
+                Showing industrial businesses without websites. Filter by daily 8:30 AM arrival batches below.
+              </p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="exportToCSV()" class="px-3 py-1.5 text-xs font-semibold rounded bg-[#0284C7] hover:bg-sky-600 text-white shadow">
+                Export CSV / Excel
+              </button>
+              <button onclick="openScannerModal()" class="px-3 py-1.5 text-xs font-bold rounded bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black shadow">
+                ⚡ Auto-Scan
+              </button>
+            </div>
+          </div>
+
+          <!-- BATCH DATE TABS (Requested by user: Alag se new leads esa structure) -->
+          <div class="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-[var(--bg-sidebar)] border-b border-[var(--border-subtle)] text-xs">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-[11px] font-bold mr-1" style="color: var(--text-dim);">8:30 AM Batches:</span>
+              <button onclick="setBatchFilter('ALL')" id="batchBtnALL" class="batch-tab-btn active px-3 py-1 rounded font-bold text-xs bg-[#0284C7] text-white">
+                All Corridor Leads (36)
+              </button>
+              <button onclick="setBatchFilter('2026-09-29')" id="batchBtn20260929" class="batch-tab-btn px-3 py-1 rounded font-bold text-xs bg-[#1E2646] text-emerald-400 hover:bg-[#253056] border border-emerald-500/30 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Today 8:30 AM (6 New)
+              </button>
+              <button onclick="setBatchFilter('2026-09-28')" id="batchBtn20260928" class="batch-tab-btn px-3 py-1 rounded font-semibold text-xs bg-[#1E2646] text-gray-300 hover:bg-[#253056]">
+                Yesterday 8:30 AM (6)
+              </button>
+              <button onclick="setBatchFilter('2026-09-27')" id="batchBtn20260927" class="batch-tab-btn px-3 py-1 rounded font-semibold text-xs bg-[#1E2646] text-gray-300 hover:bg-[#253056]">
+                27-Sep (6)
+              </button>
+              <button onclick="setBatchFilter('2026-09-26')" id="batchBtn20260926" class="batch-tab-btn px-3 py-1 rounded font-semibold text-xs bg-[#1E2646] text-gray-300 hover:bg-[#253056]">
+                26-Sep (6)
+              </button>
+              <button onclick="setBatchFilter('OLDER')" id="batchBtnOLDER" class="batch-tab-btn px-3 py-1 rounded font-semibold text-xs bg-[#1E2646] text-gray-300 hover:bg-[#253056]">
+                24-25 Sep (12)
+              </button>
             </div>
             <div>
-              <h1 class="text-xl font-bold tracking-tight" style="color: var(--text-bright);">CONTOSO - Client Volume Dashboard</h1>
-              <p class="text-xs" style="color: var(--text-dim);">Last Data Reload: <span id="liveTimestamp">2026-09-15 06:50:00 AM</span></p>
+              <span id="leadCountBadge" class="text-xs font-bold text-sky-400">Showing 36 Leads</span>
             </div>
           </div>
 
-          <div class="flex items-center space-x-2 text-xs">
-            <span class="px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-500 border border-emerald-500/30 font-semibold flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Live Pipeline Active
-            </span>
-          </div>
-        </div>
-
-        <!-- ROW 1: 4 Top KPI Cards with Sparklines (Exact match) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-          
-          <!-- Card 1: Leads Created -->
-          <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
-            <div class="flex justify-between items-start">
-              <div>
-                <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Leads Created</span>
-                <div id="kpiLeadsCreated" class="text-2xl font-bold mt-1" style="color: var(--text-bright);">26,935</div>
-                <div class="text-[11px] text-[#10B981] font-semibold mt-1 flex items-center gap-1">
-                  <span>32.3%</span> <span class="text-[10px]" style="color: var(--text-dim);">vs LY</span>
-                </div>
-              </div>
-              <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-              </div>
-            </div>
-            <!-- Mini Sparkline SVG -->
-            <div class="mt-2 h-8 w-full">
-              <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
-                <path d="M0 25 Q 15 5, 30 18 T 60 12 T 90 22 T 120 8" fill="none" stroke="#00D5FF" stroke-width="2" class="glow-cyan"/>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Card 2: Audits Delivered -->
-          <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
-            <div class="flex justify-between items-start">
-              <div>
-                <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Audits Delivered</span>
-                <div id="kpiAuditsDelivered" class="text-2xl font-bold mt-1" style="color: var(--text-bright);">26,860</div>
-                <div class="text-[11px] text-[#10B981] font-semibold mt-1 flex items-center gap-1">
-                  <span>32.0%</span> <span class="text-[10px]" style="color: var(--text-dim);">vs LY</span>
-                </div>
-              </div>
-              <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-              </div>
-            </div>
-            <!-- Mini Sparkline SVG -->
-            <div class="mt-2 h-8 w-full">
-              <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
-                <path d="M0 20 Q 20 28, 40 10 T 70 20 T 100 8 T 120 15" fill="none" stroke="#00D5FF" stroke-width="2" class="glow-cyan"/>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Card 3: Closure Rate -->
-          <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
-            <div class="flex justify-between items-start">
-              <div>
-                <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Closure Rate</span>
-                <div id="kpiClosureRate" class="text-2xl font-bold mt-1" style="color: var(--text-bright);">99.72%</div>
-                <div class="text-[11px] text-[#F43F5E] font-semibold mt-1 flex items-center gap-1">
-                  <span>-0.23%</span> <span class="text-[10px]" style="color: var(--text-dim);">vs LY</span>
-                </div>
-              </div>
-              <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-              </div>
-            </div>
-            <!-- Mini Sparkline SVG -->
-            <div class="mt-2 h-8 w-full">
-              <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
-                <path d="M0 24 Q 25 8, 50 16 T 80 12 T 105 18 T 120 4" fill="none" stroke="#00D5FF" stroke-width="2" class="glow-cyan"/>
-              </svg>
-            </div>
-          </div>
-
-          <!-- Card 4: Within Target LTV -->
-          <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
-            <div class="flex justify-between items-start">
-              <div>
-                <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Within Target LTV</span>
-                <div id="kpiWithinLTV" class="text-2xl font-bold mt-1" style="color: var(--text-bright);">19,539</div>
-                <div class="text-[11px] text-[#00D5FF] font-semibold mt-1">
-                  Achieved: <span class="font-bold" style="color: var(--text-bright);">72.7%</span>
-                </div>
-              </div>
-              <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-              </div>
-            </div>
-            <!-- Mini Sparkline SVG -->
-            <div class="mt-2 h-8 w-full">
-              <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
-                <path d="M0 26 Q 30 14, 60 20 T 90 8 T 120 2" fill="none" stroke="#00D5FF" stroke-width="2" class="glow-cyan"/>
-              </svg>
-            </div>
+          <!-- The Matrix Table with Date Added Column -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-[var(--bg-sidebar)] font-bold uppercase tracking-wider text-[11px] border-b border-[var(--border-subtle)]" style="color: var(--text-dim);">
+                  <th class="py-3 px-4">Business & Sector</th>
+                  <th class="py-3 px-3">City & Industrial Hub</th>
+                  <th class="py-3 px-3">Arrival Date & 8:30 AM Batch</th>
+                  <th class="py-3 px-3">Website Status</th>
+                  <th class="py-3 px-3 text-center">Google Rating</th>
+                  <th class="py-3 px-3">Priority</th>
+                  <th class="py-3 px-3">Stage</th>
+                  <th class="py-3 px-3 text-right">Est. Web Fee</th>
+                  <th class="py-3 px-3 text-right">Monthly Retainer</th>
+                  <th class="py-3 px-4 text-center">Direct Outreach</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody" class="divide-y divide-[var(--border-subtle)]">
+                <!-- Dynamically Populated from leadsMaster -->
+              </tbody>
+            </table>
           </div>
 
         </div>
 
-        <!-- ROW 2: 4 Middle Charts (Exact match: Donut, Category Bar, Severity Bar, Top Agents/Cities) -->
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VISUAL ANALYTICS & WAVE CHARTS (Power BI Contoso Style) -->
+      <!-- ========================================================================= -->
+      <section id="sectionAnalytics" class="space-y-4 pt-2">
+        
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-bold" style="color: var(--text-bright);">📊 Highway Industrial Performance & Analytics</span>
+            <span class="text-[10px] px-2 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">Contoso Theme</span>
+          </div>
+          <div class="text-xs" style="color: var(--text-dim);">
+            Fiscal Year: <span class="text-emerald-400 font-bold">FY 2026-27 (Current Active)</span>
+          </div>
+        </div>
+
+        <!-- ROW 2: 4 Middle Charts (Donut, Category Bar, Severity Bar, Top Hubs) -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
           
           <!-- Visual 1: Tickets by Priority -->
           <div class="dashboard-card p-4 flex flex-col justify-between">
-            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Tickets by Priority</h3>
+            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Leads by Priority</h3>
             <div class="flex items-center justify-center py-2">
               <div class="relative w-28 h-28 flex items-center justify-center">
                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                  <!-- Low (38%) Cyan -->
                   <circle cx="18" cy="18" r="14" fill="none" stroke="#00D5FF" stroke-width="5" stroke-dasharray="38, 100" stroke-dashoffset="0" class="glow-cyan"/>
-                  <!-- Mid (17.2%) Blue -->
                   <circle cx="18" cy="18" r="14" fill="none" stroke="#2563EB" stroke-width="5" stroke-dasharray="17.2, 100" stroke-dashoffset="-38"/>
-                  <!-- High (49.4%) Dark Slate Blue -->
                   <circle cx="18" cy="18" r="14" fill="none" stroke="#1E3A8A" stroke-width="5" stroke-dasharray="44.8, 100" stroke-dashoffset="-55.2"/>
                 </svg>
                 <div class="absolute w-14 h-14 rounded-full" style="background-color: var(--donut-center);"></div>
               </div>
             </div>
-            <!-- Legend Table -->
             <div class="space-y-1.5 pt-2 text-[11px]">
               <div class="flex justify-between items-center" style="color: var(--text-dim);">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#1E3A8A]"></span> High</span>
-                <span>10,224</span>
-                <span class="font-semibold" style="color: var(--text-bright);">38.0%</span>
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#1E3A8A]"></span> High (Hot)</span>
+                <span>21 Leads</span>
+                <span class="font-semibold text-rose-400">58.3%</span>
               </div>
               <div class="flex justify-between items-center" style="color: var(--text-dim);">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#2563EB]"></span> Mid</span>
-                <span>4,625</span>
-                <span class="font-semibold" style="color: var(--text-bright);">17.2%</span>
-              </div>
-              <div class="flex justify-between items-center" style="color: var(--text-dim);">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#00D5FF]"></span> Low</span>
-                <span>13,306</span>
-                <span class="font-semibold" style="color: var(--text-bright);">49.4%</span>
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#00D5FF]"></span> Mid (Warm)</span>
+                <span>15 Leads</span>
+                <span class="font-semibold text-sky-400">41.7%</span>
               </div>
             </div>
           </div>
 
-          <!-- Visual 2: Tickets by Category -->
+          <!-- Visual 2: Leads by Category -->
           <div class="dashboard-card p-4 flex flex-col justify-between">
-            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Tickets by Category</h3>
+            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Leads by Industry Sector</h3>
             <div class="space-y-3.5 py-1">
               <div>
                 <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
-                  <span>Machinery & CNC</span>
-                  <span class="text-sky-400 font-bold">10,917</span>
+                  <span>Machinery & Engineering</span>
+                  <span class="text-sky-400 font-bold">12 Leads</span>
                 </div>
-                <div class="w-full rounded-full h-3" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-3 rounded-full glow-cyan" style="width: 82%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
-                  <span>Packaging Boxes</span>
-                  <span class="text-sky-400 font-bold">8,251</span>
-                </div>
-                <div class="w-full rounded-full h-3" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-3 rounded-full glow-cyan" style="width: 65%"></div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2.5 rounded-full glow-cyan" style="width: 85%"></div>
                 </div>
               </div>
               <div>
                 <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
-                  <span>Chemicals & Dyes</span>
-                  <span class="text-sky-400 font-bold">5,756</span>
+                  <span>Chemicals, Dyes & Pharma</span>
+                  <span class="text-sky-400 font-bold">8 Leads</span>
                 </div>
-                <div class="w-full rounded-full h-3" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-3 rounded-full glow-cyan" style="width: 48%"></div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2.5 rounded-full glow-cyan" style="width: 65%"></div>
                 </div>
               </div>
               <div>
                 <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
-                  <span>Textiles & Apparel</span>
-                  <span class="text-sky-400 font-bold">2,899</span>
+                  <span>Textiles, Weaving & Sizing</span>
+                  <span class="text-sky-400 font-bold">6 Leads</span>
                 </div>
-                <div class="w-full rounded-full h-3" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-3 rounded-full glow-cyan" style="width: 25%"></div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2.5 rounded-full glow-cyan" style="width: 50%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
+                  <span>Agro, Food & Packaging</span>
+                  <span class="text-sky-400 font-bold">10 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2.5 rounded-full glow-cyan" style="width: 75%"></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Visual 3: Tickets by Severity -->
+          <!-- Visual 3: Severity Breakdown -->
           <div class="dashboard-card p-4 flex flex-col justify-between">
-            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Tickets by Severity</h3>
+            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Website Severity</h3>
             <div class="space-y-2.5 py-1">
               <div>
                 <div class="flex justify-between text-[11px] mb-0.5" style="color: var(--text-dim);">
-                  <span>Normal</span>
-                  <span class="text-sky-400 font-semibold">15,733</span>
+                  <span>Zero Website (Critical)</span>
+                  <span class="text-rose-400 font-bold">33 Leads (91.6%)</span>
                 </div>
                 <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
-                  <div class="bg-[#0284C7] h-2.5 rounded-full" style="width: 85%"></div>
+                  <div class="bg-[#F43F5E] h-2.5 rounded-full" style="width: 92%"></div>
                 </div>
               </div>
               <div>
                 <div class="flex justify-between text-[11px] mb-0.5" style="color: var(--text-dim);">
-                  <span>Low</span>
-                  <span class="text-sky-400 font-semibold">7,787</span>
+                  <span>Outdated / Broken Site</span>
+                  <span class="text-amber-400 font-bold">3 Leads (8.4%)</span>
                 </div>
                 <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
-                  <div class="bg-[#0284C7] h-2.5 rounded-full" style="width: 52%"></div>
+                  <div class="bg-amber-400 h-2.5 rounded-full" style="width: 25%"></div>
                 </div>
               </div>
-              <div>
-                <div class="flex justify-between text-[11px] mb-0.5" style="color: var(--text-dim);">
-                  <span>Minor</span>
-                  <span class="text-sky-400 font-semibold">2,723</span>
-                </div>
-                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
-                  <div class="bg-[#0284C7] h-2.5 rounded-full" style="width: 28%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between text-[11px] mb-0.5" style="color: var(--text-dim);">
-                  <span>Major</span>
-                  <span class="text-sky-400 font-semibold">1,457</span>
-                </div>
-                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
-                  <div class="bg-[#0284C7] h-2.5 rounded-full" style="width: 18%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between text-[11px] mb-0.5" style="color: var(--text-dim);">
-                  <span>Urgent</span>
-                  <span class="text-rose-500 font-semibold">390</span>
-                </div>
-                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
-                  <div class="bg-[#F43F5E] h-2.5 rounded-full" style="width: 8%"></div>
-                </div>
+              <div class="pt-2 text-[11px] text-gray-400">
+                All 36 prospects possess verified Google Maps listings with 4.5+ average rating and strong local business reputation.
               </div>
             </div>
           </div>
 
-                    <!-- Visual 4: Top Industrial Hubs / Cities (Surat to Gandhinagar) -->
+          <!-- Visual 4: Top Industrial Hubs (Surat to Gandhinagar) -->
           <div class="dashboard-card p-4 flex flex-col justify-between">
             <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Top Industrial Hubs (Surat ➔ Gandhinagar)</h3>
-            <div class="space-y-2.5 py-1">
+            <div class="space-y-2 py-0.5">
               <div>
-                <div class="flex justify-between text-[11px] font-medium mb-1" style="color: var(--text-bright);">
-                  <span>Surat (Textile & Diamond)</span>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Surat (Textiles & Diamonds)</span>
                   <span class="text-sky-400 font-bold">4 Leads</span>
                 </div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 95%"></div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 95%"></div>
                 </div>
               </div>
               <div>
-                <div class="flex justify-between text-[11px] font-medium mb-1" style="color: var(--text-bright);">
-                  <span>Ahmedabad (Kathwada & Naroda)</span>
-                  <span class="text-sky-400 font-bold">4 Leads</span>
-                </div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 95%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="flex justify-between text-[11px] font-medium mb-1" style="color: var(--text-bright);">
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
                   <span>Vadodara (Makarpura & Savli)</span>
                   <span class="text-sky-400 font-bold">4 Leads</span>
                 </div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 95%"></div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 95%"></div>
                 </div>
               </div>
               <div>
-                <div class="flex justify-between text-[11px] font-medium mb-1" style="color: var(--text-bright);">
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Ahmedabad (Kathwada & Naroda)</span>
+                  <span class="text-sky-400 font-bold">4 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 95%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
                   <span>Ankleshwar, Bharuch & Dahej</span>
                   <span class="text-sky-400 font-bold">7 Leads</span>
                 </div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 85%"></div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 85%"></div>
                 </div>
               </div>
               <div>
-                <div class="flex justify-between text-[11px] font-medium mb-1" style="color: var(--text-bright);">
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
                   <span>Anand, Nadiad, Kheda & Kalol</span>
                   <span class="text-sky-400 font-bold">10 Leads</span>
                 </div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 75%"></div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 75%"></div>
                 </div>
               </div>
               <div>
-                <div class="flex justify-between text-[11px] font-medium mb-1" style="color: var(--text-bright);">
-                  <span>Gandhinagar (Electronics Estate)</span>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Gandhinagar (Sector 25 & 28)</span>
                   <span class="text-sky-400 font-bold">3 Leads</span>
                 </div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 60%"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-              </div>
-              <div>
-                <div class="text-[11px] font-medium mb-1" style="color: var(--text-bright);">Ahmedabad Kathwada & Changodar</div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 78%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="text-[11px] font-medium mb-1" style="color: var(--text-bright);">Vadodara Makarpura & Nandesari</div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 65%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="text-[11px] font-medium mb-1" style="color: var(--text-bright);">Valsad & Vapi GIDC Paper Cluster</div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 55%"></div>
-                </div>
-              </div>
-              <div>
-                <div class="text-[11px] font-medium mb-1" style="color: var(--text-bright);">Gandhinagar Electronics Estate</div>
-                <div class="w-full rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 42%"></div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 60%"></div>
                 </div>
               </div>
             </div>
@@ -614,34 +766,31 @@
 
         </div>
 
-        <!-- ROW 3: Bottom Row (Donut 2, Spline Curved Wave Chart, Star Satisfaction Rating) -->
+        <!-- ROW 3: Bottom Row (Donut 2, Dual Neon Spline Glowing Waves, Satisfaction Rating) -->
         <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5">
           
-          <!-- Visual 5: Tickets by Work Type (Purple and Cyan Donut) -->
+          <!-- Visual 5: Leads by Work Type (Purple and Cyan Donut) -->
           <div class="dashboard-card p-4 md:col-span-3 flex flex-col justify-between">
-            <h3 class="text-xs font-bold mb-1" style="color: var(--text-bright);">Tickets by Work Type</h3>
+            <h3 class="text-xs font-bold mb-1" style="color: var(--text-bright);">Leads by Work Type</h3>
             <div class="flex items-center justify-center py-2">
               <div class="relative w-28 h-28 flex items-center justify-center">
                 <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                  <!-- Service Request / B2B (52.2%) Purple -->
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="#9D5CFF" stroke-width="5" stroke-dasharray="52.2, 100" stroke-dashoffset="0" class="glow-purple"/>
-                  <!-- Incident / D2C (47.8%) Cyan -->
-                  <circle cx="18" cy="18" r="14" fill="none" stroke="#00D5FF" stroke-width="5" stroke-dasharray="47.8, 100" stroke-dashoffset="-52.2" class="glow-cyan"/>
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#9D5CFF" stroke-width="5" stroke-dasharray="77.8, 100" stroke-dashoffset="0" class="glow-purple"/>
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#00D5FF" stroke-width="5" stroke-dasharray="22.2, 100" stroke-dashoffset="-77.8" class="glow-cyan"/>
                 </svg>
                 <div class="absolute w-14 h-14 rounded-full" style="background-color: var(--donut-center);"></div>
               </div>
             </div>
-            <!-- Legend Table -->
             <div class="space-y-1.5 pt-2 text-[11px]">
               <div class="flex justify-between items-center" style="color: var(--text-dim);">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#9D5CFF]"></span> B2B Mfg</span>
-                <span>14,069</span>
-                <span class="font-semibold" style="color: var(--text-bright);">52.2%</span>
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#9D5CFF]"></span> B2B Mfg & GIDC</span>
+                <span>28 Leads</span>
+                <span class="font-semibold text-purple-400">77.8%</span>
               </div>
               <div class="flex justify-between items-center" style="color: var(--text-dim);">
-                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#00D5FF]"></span> D2C Retail</span>
-                <span>12,866</span>
-                <span class="font-semibold" style="color: var(--text-bright);">47.8%</span>
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#00D5FF]"></span> D2C Brands</span>
+                <span>8 Leads</span>
+                <span class="font-semibold text-sky-400">22.2%</span>
               </div>
             </div>
           </div>
@@ -649,35 +798,34 @@
           <!-- Visual 6: Tickets Overtime (Dual Neon Spline Glowing Waves: Purple + Cyan) -->
           <div class="dashboard-card p-4 md:col-span-6 flex flex-col justify-between">
             <div class="flex justify-between items-center mb-1">
-              <h3 class="text-xs font-bold" style="color: var(--text-bright);">Tickets Overtime</h3>
+              <h3 class="text-xs font-bold" style="color: var(--text-bright);">Corridor Prospect Inflow Over Time</h3>
               <div class="flex items-center space-x-3 text-[11px]">
                 <span class="flex items-center gap-1 text-[#9D5CFF] font-semibold">
-                  <span class="w-2 h-2 rounded-full bg-[#9D5CFF]"></span> Closed
+                  <span class="w-2 h-2 rounded-full bg-[#9D5CFF]"></span> Closed Outreach
                 </span>
                 <span class="flex items-center gap-1 text-[#00D5FF] font-semibold">
-                  <span class="w-2 h-2 rounded-full bg-[#00D5FF]"></span> Created
+                  <span class="w-2 h-2 rounded-full bg-[#00D5FF]"></span> Fresh Leads Inflow
                 </span>
               </div>
             </div>
 
-            <!-- Glowing Wave Chart Canvas / SVG -->
+            <!-- Glowing Wave Chart SVG -->
             <div class="relative w-full h-44 my-1">
               <svg class="w-full h-full" viewBox="0 0 500 160" preserveAspectRatio="none">
                 <line x1="0" y1="30" x2="500" y2="30" stroke="var(--border-subtle)" stroke-dasharray="3,3" stroke-width="1"/>
                 <line x1="0" y1="80" x2="500" y2="80" stroke="var(--border-subtle)" stroke-dasharray="3,3" stroke-width="1"/>
                 <line x1="0" y1="130" x2="500" y2="130" stroke="var(--border-subtle)" stroke-dasharray="3,3" stroke-width="1"/>
 
-                <!-- Cyan Curve (Tickets Created) -->
+                <!-- Cyan Curve (Leads Created) -->
                 <path d="M 10 140 C 60 120, 90 40, 140 70 C 190 100, 240 145, 290 85 C 340 25, 390 130, 440 60 C 465 25, 485 70, 500 65" 
                       fill="none" stroke="#00D5FF" stroke-width="3" class="glow-cyan"/>
 
-                <!-- Purple Curve (Tickets Closed) -->
+                <!-- Purple Curve (Leads Closed) -->
                 <path d="M 10 130 C 60 100, 90 60, 140 85 C 190 110, 240 135, 290 65 C 340 35, 390 110, 440 75 C 465 45, 485 90, 500 80" 
                       fill="none" stroke="#9D5CFF" stroke-width="3" class="glow-purple"/>
               </svg>
             </div>
 
-            <!-- Months X-Axis Labels -->
             <div class="flex justify-between text-[10px] px-2 pt-1 border-t border-[var(--border-subtle)]" style="color: var(--text-dim);">
               <span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
               <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span>
@@ -688,13 +836,13 @@
             </div>
           </div>
 
-          <!-- Visual 7: Average Satisfaction Rating & Star Distribution -->
+          <!-- Visual 7: Average Rating & Star Distribution -->
           <div class="dashboard-card p-4 md:col-span-3 flex flex-col justify-between">
             <div class="flex justify-between items-center mb-2">
-              <h3 class="text-xs font-bold" style="color: var(--text-bright);">Average Satisfaction Rating</h3>
+              <h3 class="text-xs font-bold" style="color: var(--text-bright);">Corridor Prospect Quality</h3>
               <div class="flex items-center space-x-1 text-purple-400 font-bold">
-                <span>4.2</span>
-                <span>★★</span>
+                <span>4.68</span>
+                <span>★★★★★</span>
               </div>
             </div>
 
@@ -704,104 +852,38 @@
                 <div class="flex-1 rounded-full h-2" style="background-color: var(--chart-track);">
                   <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 88%"></div>
                 </div>
-                <span class="text-[10px] w-10 text-right" style="color: var(--text-dim);">15,003</span>
+                <span class="text-[10px] w-10 text-right font-bold text-sky-400">24 Leads</span>
               </div>
               <div class="flex items-center space-x-2">
                 <span class="text-amber-400 w-12 text-right">★★★★</span>
                 <div class="flex-1 rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 60%"></div>
+                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 55%"></div>
                 </div>
-                <span class="text-[10px] w-10 text-right" style="color: var(--text-dim);">7,978</span>
+                <span class="text-[10px] w-10 text-right font-bold text-sky-400">12 Leads</span>
               </div>
-              <div class="flex items-center space-x-2">
-                <span class="text-amber-400 w-12 text-right">★★★</span>
-                <div class="flex-1 rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 32%"></div>
-                </div>
-                <span class="text-[10px] w-10 text-right" style="color: var(--text-dim);">2,039</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="text-amber-400 w-12 text-right">★★</span>
-                <div class="flex-1 rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 15%"></div>
-                </div>
-                <span class="text-[10px] w-10 text-right" style="color: var(--text-dim);">544</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="text-amber-400 w-12 text-right">★</span>
-                <div class="flex-1 rounded-full h-2" style="background-color: var(--chart-track);">
-                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 25%"></div>
-                </div>
-                <span class="text-[10px] w-10 text-right" style="color: var(--text-dim);">2,588</span>
+              <div class="pt-2 text-[10px] text-emerald-400 font-semibold">
+                High credibility prospects with strong organic reviews & word-of-mouth client base.
               </div>
             </div>
           </div>
 
         </div>
 
-      </div>
-
-      <!-- LEADS CRM TABLE VIEW CONTAINER -->
-      <div id="tableView" class="hidden dashboard-card overflow-hidden">
-        <div class="p-4 border-b border-[var(--border-subtle)] flex flex-wrap justify-between items-center gap-2">
-          <div>
-            <h2 class="text-base font-bold flex items-center gap-2" style="color: var(--text-bright);">
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></span>
-              Highway Corridor Qualified Prospect Matrix (Surat ➔ Gandhinagar)
-            </h2>
-            <p class="text-xs" style="color: var(--text-dim);">Click "WhatsApp Pitch" to connect with business owners lacking websites.</p>
-          </div>
-          <div class="flex items-center space-x-2">
-            <button onclick="exportToCSV()" class="px-3 py-1.5 text-xs font-semibold rounded bg-[#0284C7] text-white hover:bg-sky-600">Export CSV</button>
-            <button onclick="openScannerModal()" class="px-3 py-1.5 text-xs font-bold rounded bg-gradient-to-r from-amber-500 to-yellow-400 text-black">⚡ Auto-Scan</button>
-          </div>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr class="bg-[var(--bg-sidebar)] font-bold uppercase tracking-wider text-[11px] border-b border-[var(--border-subtle)]" style="color: var(--text-dim);">
-                <th class="py-3 px-4">Business & Sector</th>
-                <th class="py-3 px-3">City & Industrial Hub</th>
-                <th class="py-3 px-3">Website Status</th>
-                <th class="py-3 px-3 text-center">Google Rating</th>
-                <th class="py-3 px-3">Priority</th>
-                <th class="py-3 px-3">Stage</th>
-                <th class="py-3 px-3 text-right">Est. Web Fee</th>
-                <th class="py-3 px-3 text-right">Monthly Retainer</th>
-                <th class="py-3 px-4 text-center">Direct Outreach</th>
-              </tr>
-            </thead>
-            <tbody id="leadsTableBody" class="divide-y divide-[var(--border-subtle)]">
-              <!-- Dynamically populated from JS dataset -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+      </section>
 
     </main>
   </div>
 
-  <!-- FLOATING ACTION BUTTONS AT BOTTOM RIGHT (Exact match to image circles) -->
+  <!-- FLOATING ACTION BUTTONS AT BOTTOM RIGHT -->
   <div class="fixed bottom-4 right-6 flex items-center space-x-2.5 z-40">
-    <!-- Floating White/Black Theme Button -->
     <button onclick="toggleWhiteBlackTheme()" class="action-circle-btn shadow-lg text-amber-400" title="Toggle White/Black Theme">
       <span id="floatThemeIcon">☀️</span>
     </button>
-    <button onclick="toggleFullscreen()" class="action-circle-btn shadow-lg" title="Fullscreen">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0 0l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+    <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="action-circle-btn shadow-lg" title="Back to Top">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
     </button>
-    <button onclick="reloadLiveMetrics()" class="action-circle-btn shadow-lg" title="Refresh Live Data">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-    </button>
-    <button onclick="window.print()" class="action-circle-btn shadow-lg" title="Print / Export Report">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-    </button>
-    <button onclick="toggleView()" class="action-circle-btn shadow-lg" title="Toggle Table/Dashboard">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-    </button>
-    <button onclick="exportToCSV()" class="action-circle-btn shadow-lg" title="Share / Download">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+    <button onclick="exportToCSV()" class="action-circle-btn shadow-lg" title="Download CSV">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
     </button>
   </div>
 
@@ -817,9 +899,9 @@
 
       <div id="scannerConfig" class="space-y-3.5 text-xs">
         <div>
-                    <label class="block text-[#8B98BD] mb-1 font-semibold">Select Highway Zone</label>
+          <label class="block text-[#8B98BD] mb-1 font-semibold">Select Highway Zone</label>
           <select id="scanZone" class="filter-input w-full px-3 py-2 text-xs">
-            <option value="ALL">Full Corridor (Surat all the way to Gandhinagar)</option>
+            <option value="ALL">Full Corridor (Surat to Gandhinagar)</option>
             <option value="Surat">Surat (Sachin, Pandesara, Katargam)</option>
             <option value="Kim & Kosamba">Kim & Kosamba (GIDC Textile Clusters)</option>
             <option value="Ankleshwar">Ankleshwar (Chemical & API Mega GIDC)</option>
@@ -838,9 +920,9 @@
 
         <div class="p-3 rounded-lg bg-[#141B32] border border-[#232D4F] text-[11px] text-[#8B98BD] space-y-1">
           <div class="text-white font-semibold">Automated Scanner Criteria:</div>
-          <div>• 4+ Star Rating & 50+ Real Customer Reviews</div>
+          <div>• 4+ Star Rating & Verified Customer Reviews</div>
           <div>• Domain Verification: Strictly <strong>No Active Website</strong></div>
-          <div>• Industry: High-Margin B2B Machinery & D2C Brands</div>
+          <div>• Daily Cron Scheduled: <strong>Every Day at 8:30 AM IST</strong></div>
         </div>
 
         <div class="flex justify-end gap-2 pt-2">
@@ -849,24 +931,21 @@
         </div>
       </div>
 
-      <!-- Scan progress -->
-      <div id="scannerProgress" class="hidden py-6 text-center space-y-3">
-        <div class="w-10 h-10 mx-auto border-3 border-sky-400 border-t-transparent rounded-full animate-spin"></div>
-        <div id="scannerStatus" class="text-xs font-bold text-white">Harvesting business listings...</div>
-        <div class="w-full bg-[#13192D] rounded-full h-1.5 overflow-hidden">
-          <div id="scannerBar" class="bg-[#00D5FF] h-1.5 rounded-full transition-all duration-300" style="width: 20%"></div>
-        </div>
+      <div id="scannerProgress" class="hidden py-6 text-center space-y-4">
+        <div class="w-12 h-12 border-4 border-sky-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <div class="text-sm font-bold text-white" id="scannerStatusText">Scanning Corridor for Businesses without Websites...</div>
+        <div class="text-xs text-sky-400 font-mono" id="scannerStepDetail">Connecting to Google Maps & GIDC Database...</div>
       </div>
     </div>
   </div>
 
-  <!-- WHATSAPP OUTREACH MODAL -->
+  <!-- WHATSAPP PITCH MODAL -->
   <div id="pitchModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="dashboard-card max-w-lg w-full p-6 border border-[#273359] shadow-2xl">
-      <div class="flex justify-between items-start mb-3 border-b border-[#232D4F] pb-3">
+      <div class="flex justify-between items-center mb-4 border-b border-[#232D4F] pb-3">
         <div>
-          <h3 id="modalBiz" class="font-bold text-white text-base">Client Outreach Pitch</h3>
-          <p id="modalOwner" class="text-xs text-[#8B98BD] mt-0.5"></p>
+          <h3 class="font-bold text-white text-sm" id="modalBiz">Business Name</h3>
+          <p class="text-[11px] text-[#8B98BD]" id="modalOwner">Owner: ...</p>
         </div>
         <button onclick="closePitchModal()" class="text-gray-400 hover:text-white text-xl font-bold">&times;</button>
       </div>
@@ -882,48 +961,733 @@
     </div>
   </div>
 
+  <!-- SCRIPT -->
   <script>
-    // Gandhinagar to Valsad Corridor Leads Master
     const leadsMaster = [
-      { id: "STG-101", name: "Surat Silk & Jacquard Weaving Mills", type: "B2B", category: "Silk & Jacquard Wholesale", city: "Surat", zone: "Pandesara GIDC", rating: 4.7, reviews: 240, website: "No Website", dm: "Rameshbhai Agarwal", phone: "9825156715", stage: "Pitch Scheduled", priority: "Hot", webCost: 80000, mrr: 40000 },
-      { id: "STG-102", name: "Laxmi Diamond Polishing Tools & Blades", type: "B2B", category: "Laser Cutting Blades & Scaife", city: "Surat", zone: "Katargam", rating: 4.8, reviews: 180, website: "No Website", dm: "Gordhanbhai Patel", phone: "9824067816", stage: "Audit Sent", priority: "Hot", webCost: 60000, mrr: 30000 },
-      { id: "STG-103", name: "Surat Royal Ghari & Traditional Sweets", type: "D2C", category: "Heritage Sweets & Mawa", city: "Surat", zone: "Bhagal & Athwalines", rating: 4.9, reviews: 750, website: "No Website", dm: "Mukeshbhai Shah", phone: "9879578917", stage: "Closed-Won", priority: "Hot", webCost: 60000, mrr: 35000 },
-      { id: "STG-104", name: "Vara Bridal Designer Kurtis & Lehengas", type: "D2C", category: "Designer Ethnic Wear", city: "Surat", zone: "Millennium Textile Market", rating: 4.6, reviews: 290, website: "Outdated", dm: "Pooja Singhania", phone: "9979189018", stage: "Proposal Sent", priority: "Hot", webCost: 55000, mrr: 32000 },
-      { id: "STG-105", name: "Shree Ambica Textile Sizing & Warping", type: "B2B", category: "Yarn Sizing & Warping", city: "Kim & Kosamba", zone: "Kim GIDC Industrial Area", rating: 4.5, reviews: 84, website: "No Website", dm: "Vinodbhai Patel", phone: "9825311221", stage: "Contacted", priority: "Warm", webCost: 42000, mrr: 20000 },
-      { id: "STG-106", name: "Kosamba Agro Pulp & Cold Storage", type: "B2B", category: "Agro Cold Storage & Pulping", city: "Kim & Kosamba", zone: "NH-48 Kosamba Highway", rating: 4.6, reviews: 72, website: "No Website", dm: "Dineshbhai Chaudhari", phone: "9879122332", stage: "New Lead", priority: "Warm", webCost: 45000, mrr: 22000 },
-      { id: "STG-107", name: "Sterling Dyes & Reactive Intermediates", type: "B2B", category: "Textile Dyes & Reactive Pigments", city: "Ankleshwar", zone: "Ankleshwar GIDC", rating: 4.6, reviews: 105, website: "No Website", dm: "Chetanbhai Shah", phone: "9898134513", stage: "Proposal Sent", priority: "Hot", webCost: 70000, mrr: 35000 },
-      { id: "STG-108", name: "Ankleshwar Bulk Pharma Synthetics", type: "B2B", category: "Active Pharma Ingredients (API)", city: "Ankleshwar", zone: "GIDC Chemical Zone", rating: 4.7, reviews: 98, website: "No Website", dm: "Dr. Haresh Vaghani", phone: "9824045566", stage: "Pitch Scheduled", priority: "Hot", webCost: 65000, mrr: 32000 },
-      { id: "STG-109", name: "Narmada Plastic Bottles & Moulding", type: "B2B", category: "Pharma Bottles & HDPE Drums", city: "Ankleshwar", zone: "Panoli GIDC", rating: 4.4, reviews: 72, website: "No Website", dm: "Dharmendrasinh Vaghela", phone: "9428145614", stage: "Contacted", priority: "Warm", webCost: 45000, mrr: 22000 },
-      { id: "STG-110", name: "Bharuch Heavy Valves & Flanges", type: "B2B", category: "Forged Valves & Industrial Piping", city: "Bharuch", zone: "Narmadanagar Industrial Estate", rating: 4.7, reviews: 115, website: "No Website", dm: "Pravinbhai Solanki", phone: "9825167788", stage: "Audit Sent", priority: "Hot", webCost: 55000, mrr: 28000 },
-      { id: "STG-111", name: "Gujarat Salt & Marine Mineral Refineries", type: "B2B", category: "Industrial Salt & Soda Compounds", city: "Bharuch", zone: "Dahej Bypass Road", rating: 4.5, reviews: 88, website: "No Website", dm: "Kamleshbhai Desai", phone: "9879345566", stage: "New Lead", priority: "Warm", webCost: 48000, mrr: 24000 },
-      { id: "STG-112", name: "Dahej Petrochem Piping & Pressure Vessels", type: "B2B", category: "Pressure Vessels & Heavy Boilers", city: "Dahej", zone: "Dahej PCPIR SEZ", rating: 4.8, reviews: 130, website: "No Website", dm: "Siddharth Joshi (GM)", phone: "9824156677", stage: "Pitch Scheduled", priority: "Hot", webCost: 75000, mrr: 38000 },
-      { id: "STG-113", name: "Oceanic Marine Fabrication & Barges", type: "B2B", category: "Marine Equipment & Dock Skids", city: "Dahej", zone: "Dahej Port Zone", rating: 4.6, reviews: 68, website: "No Website", dm: "Capt. Ashok Mehta", phone: "9898067788", stage: "Contacted", priority: "Warm", webCost: 60000, mrr: 30000 },
-      { id: "STG-114", name: "Karjan Cotton Ginning & Pressing Mills", type: "B2B", category: "Cotton Bales & Ginning Machinery", city: "Karjan", zone: "Miyagam Karjan GIDC", rating: 4.6, reviews: 92, website: "No Website", dm: "Natubhai Patel", phone: "9426388990", stage: "Audit Sent", priority: "Hot", webCost: 45000, mrr: 22000 },
-      { id: "STG-115", name: "Charotar Agro Seeds & Cold Warehouse", type: "B2B", category: "Agro Seeds & Crop Storage", city: "Karjan", zone: "Karjan Highway Crossing", rating: 4.5, reviews: 64, website: "No Website", dm: "Ramanbhai Chaudhari", phone: "9825278899", stage: "New Lead", priority: "Warm", webCost: 40000, mrr: 20000 },
-      { id: "STG-116", name: "PowerVolt Switchgears & HT Panels", type: "B2B", category: "Transformers & Switchgear", city: "Vadodara", zone: "Makarpura GIDC", rating: 4.8, reviews: 160, website: "Outdated", dm: "Ajay Sharma", phone: "9825001210", stage: "Pitch Scheduled", priority: "Hot", webCost: 75000, mrr: 35000 },
-      { id: "STG-117", name: "Baroda Fine Chemicals & Solvents", type: "B2B", category: "Specialty Chemicals & Polymers", city: "Vadodara", zone: "Nandesari GIDC", rating: 4.5, reviews: 85, website: "No Website", dm: "Vikram Desai", phone: "9879412311", stage: "Audit Sent", priority: "Hot", webCost: 60000, mrr: 30000 },
-      { id: "STG-118", name: "Avenue Ayurvedic Wellness Products", type: "D2C", category: "Herbal Skincare & Oils", city: "Vadodara", zone: "Alkapuri", rating: 4.9, reviews: 390, website: "No Website", dm: "Dr. Ananya Trivedi", phone: "9824323412", stage: "Pitch Scheduled", priority: "Hot", webCost: 50000, mrr: 30000 },
-      { id: "STG-119", name: "Savli CNC Heavy Forgings & Tooling", type: "B2B", category: "Heavy Forged Auto Components", city: "Vadodara", zone: "Savli GIDC Industrial Estate", rating: 4.7, reviews: 142, website: "No Website", dm: "Rajendrabhai Shah", phone: "9898023344", stage: "Proposal Sent", priority: "Hot", webCost: 65000, mrr: 32000 },
-      { id: "STG-120", name: "Amulya Dairy Equipment & Stainless Silos", type: "B2B", category: "Dairy Machinery & Storage Silos", city: "Anand", zone: "Vitthal Udyognagar GIDC", rating: 4.7, reviews: 110, website: "No Website", dm: "Hasmukhbhai Patel", phone: "9879389008", stage: "Closed-Won", priority: "Hot", webCost: 65000, mrr: 30000 },
-      { id: "STG-121", name: "Shree Gayatri Namkeen & Food Products", type: "D2C", category: "Packaged Snacks & Khakhra", city: "Anand", zone: "GIDC Mogar", rating: 4.6, reviews: 215, website: "No Website", dm: "Sanjay Shah", phone: "9825290109", stage: "Proposal Sent", priority: "Hot", webCost: 45000, mrr: 25000 },
-      { id: "STG-122", name: "Anand Stainless Pipes & Fluid Valves", type: "B2B", category: "SS Dairy Grade Pipes & Fittings", city: "Anand", zone: "Vitthal Udyognagar Phase 2", rating: 4.8, reviews: 95, website: "No Website", dm: "Bipinbhai Suthar", phone: "9426390112", stage: "Contacted", priority: "Warm", webCost: 50000, mrr: 24000 },
-      { id: "STG-123", name: "Charotar Agro Seeds & Bio-Tech Solutions", type: "B2B", category: "Hybrid Seeds & Agro Inputs", city: "Nadiad", zone: "Kamla GIDC", rating: 4.6, reviews: 88, website: "No Website", dm: "Bipinbhai Patel", phone: "9426367806", stage: "Contacted", priority: "Warm", webCost: 40000, mrr: 18000 },
-      { id: "STG-124", name: "Santram Wooden Furnishings & Teak Doors", type: "D2C", category: "Modular Kitchen & Teak Furniture", city: "Nadiad", zone: "College Road", rating: 4.8, reviews: 145, website: "No Website", dm: "Girish Mistry", phone: "9824278907", stage: "New Lead", priority: "Warm", webCost: 45000, mrr: 24000 },
-      { id: "STG-125", name: "Kheda Rice & Grain Milling Machinery", type: "B2B", category: "Grain Processing & Destoner Machines", city: "Kheda & Bareja", zone: "Bareja Industrial Highway", rating: 4.6, reviews: 96, website: "No Website", dm: "Mahendrabhai Patel", phone: "9825189900", stage: "Pitch Scheduled", priority: "Hot", webCost: 50000, mrr: 25000 },
-      { id: "STG-126", name: "Bareja Highway Precast Concrete & Blocks", type: "B2B", category: "Precast Concrete & Pavers", city: "Kheda & Bareja", zone: "NH-48 Kheda Bypass", rating: 4.5, reviews: 74, website: "No Website", dm: "Kiritbhai Dabhi", phone: "9879456677", stage: "Contacted", priority: "Warm", webCost: 40000, mrr: 20000 },
-      { id: "STG-127", name: "Matrix Hydraulic Presses & Shearing", type: "B2B", category: "Industrial Hydraulic Presses", city: "Ahmedabad", zone: "Kathwada GIDC", rating: 4.6, reviews: 135, website: "No Website", dm: "Rakesh Panchal", phone: "9824034503", stage: "Proposal Sent", priority: "Hot", webCost: 55000, mrr: 28000 },
-      { id: "STG-128", name: "Kaveri Corrugated Packaging Products", type: "B2B", category: "Packaging Boxes & Cartons", city: "Ahmedabad", zone: "Changodar GIDC", rating: 4.7, reviews: 112, website: "No Website", dm: "Nilesh Doshi", phone: "9898045604", stage: "Audit Sent", priority: "Hot", webCost: 45000, mrr: 20000 },
-      { id: "STG-129", name: "Swagat Premium Sweets & Dryfruits", type: "D2C", category: "Gourmet Sweets & Farsan", city: "Ahmedabad", zone: "Satellite & Bodakdev", rating: 4.9, reviews: 620, website: "No Website", dm: "Pranav Kandoi", phone: "9825156705", stage: "Pitch Scheduled", priority: "Hot", webCost: 50000, mrr: 35000 },
-      { id: "STG-130", name: "Naroda Laser Tech & Sheet Metal", type: "B2B", category: "Laser Metal Profiling & Bending", city: "Ahmedabad", zone: "Naroda GIDC", rating: 4.8, reviews: 150, website: "No Website", dm: "Sureshbhai Mistry", phone: "9825312345", stage: "Closed-Won", priority: "Hot", webCost: 52000, mrr: 26000 },
-      { id: "STG-131", name: "Chhatral Submersible Pumps & Motors", type: "B2B", category: "Agricultural Submersible Pumps", city: "Kalol & Chhatral", zone: "Chhatral GIDC Phase 1", rating: 4.7, reviews: 128, website: "No Website", dm: "Pravinbhai Patel", phone: "9825045566", stage: "Pitch Scheduled", priority: "Hot", webCost: 55000, mrr: 28000 },
-      { id: "STG-132", name: "Kalol Precision Plastic Injection Moulds", type: "B2B", category: "Plastic Injection Moulds & Dies", city: "Kalol & Chhatral", zone: "Kalol GIDC Industrial Area", rating: 4.6, reviews: 94, website: "No Website", dm: "Nitinbhai Panchal", phone: "9879234567", stage: "Audit Sent", priority: "Hot", webCost: 50000, mrr: 25000 },
-      { id: "STG-133", name: "Gujarat Steel Barrels & Containers", type: "B2B", category: "MS Barrels & Chemical Drums", city: "Kalol & Chhatral", zone: "Chhatral Highway Estate", rating: 4.5, reviews: 82, website: "No Website", dm: "Harshad Mehta", phone: "9824156789", stage: "Contacted", priority: "Warm", webCost: 45000, mrr: 22000 },
-      { id: "STG-134", name: "Optima Instruments & Automation", type: "B2B", category: "Industrial Automation & Sensors", city: "Gandhinagar", zone: "Electronic Estate, Sec 25", rating: 4.7, reviews: 94, website: "No Website", dm: "Dr. Jayesh Mehta", phone: "9825123401", stage: "Pitch Scheduled", priority: "Hot", webCost: 60000, mrr: 30000 },
-      { id: "STG-135", name: "Saffron Biotech & Agro Chemical", type: "B2B", category: "Bio-fertilizers & Agro Chemicals", city: "Gandhinagar", zone: "Pethapur GIDC", rating: 4.5, reviews: 68, website: "No Website", dm: "Kamleshbhai Patel", phone: "9879234502", stage: "Contacted", priority: "Warm", webCost: 40000, mrr: 22000 },
-      { id: "STG-136", name: "Capital Solar Structures & Inverters", type: "B2B", category: "Solar Mounting & Off-Grid Systems", city: "Gandhinagar", zone: "Sector 28 GIDC", rating: 4.8, reviews: 115, website: "No Website", dm: "Pratik Sharma", phone: "9824047733", stage: "Closed-Won", priority: "Hot", webCost: 55000, mrr: 28000 },
-    ];
+  {
+    "id": "STG-101",
+    "name": "Surat Silk & Jacquard Weaving Mills",
+    "type": "B2B",
+    "category": "Silk & Jacquard Wholesale",
+    "city": "Surat",
+    "zone": "Pandesara GIDC",
+    "rating": 4.7,
+    "reviews": 240,
+    "website": "No Website",
+    "dm": "Rameshbhai Agarwal",
+    "phone": "9825156715",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 80000,
+    "mrr": 40000,
+    "dateAdded": "2026-09-29 08:30 AM",
+    "batchDate": "2026-09-29",
+    "isNewToday": true
+  },
+  {
+    "id": "STG-102",
+    "name": "Laxmi Diamond Polishing Tools & Blades",
+    "type": "B2B",
+    "category": "Laser Cutting Blades & Scaife",
+    "city": "Surat",
+    "zone": "Katargam",
+    "rating": 4.8,
+    "reviews": 180,
+    "website": "No Website",
+    "dm": "Gordhanbhai Patel",
+    "phone": "9824067816",
+    "stage": "Audit Sent",
+    "priority": "Hot",
+    "webCost": 60000,
+    "mrr": 30000,
+    "dateAdded": "2026-09-28 08:30 AM",
+    "batchDate": "2026-09-28",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-103",
+    "name": "Surat Royal Ghari & Traditional Sweets",
+    "type": "D2C",
+    "category": "Heritage Sweets & Mawa",
+    "city": "Surat",
+    "zone": "Bhagal & Athwalines",
+    "rating": 4.9,
+    "reviews": 750,
+    "website": "No Website",
+    "dm": "Mukeshbhai Shah",
+    "phone": "9879578917",
+    "stage": "Closed-Won",
+    "priority": "Hot",
+    "webCost": 60000,
+    "mrr": 35000,
+    "dateAdded": "2026-09-27 08:30 AM",
+    "batchDate": "2026-09-27",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-104",
+    "name": "Vara Bridal Designer Kurtis & Lehengas",
+    "type": "D2C",
+    "category": "Designer Ethnic Wear",
+    "city": "Surat",
+    "zone": "Millennium Textile Market",
+    "rating": 4.6,
+    "reviews": 290,
+    "website": "Outdated",
+    "dm": "Pooja Singhania",
+    "phone": "9979189018",
+    "stage": "Proposal Sent",
+    "priority": "Hot",
+    "webCost": 55000,
+    "mrr": 32000,
+    "dateAdded": "2026-09-26 08:30 AM",
+    "batchDate": "2026-09-26",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-105",
+    "name": "Shree Ambica Textile Sizing & Warping",
+    "type": "B2B",
+    "category": "Yarn Sizing & Warping",
+    "city": "Kim & Kosamba",
+    "zone": "Kim GIDC Industrial Area",
+    "rating": 4.5,
+    "reviews": 84,
+    "website": "No Website",
+    "dm": "Vinodbhai Patel",
+    "phone": "9825311221",
+    "stage": "Contacted",
+    "priority": "Warm",
+    "webCost": 42000,
+    "mrr": 20000,
+    "dateAdded": "2026-09-29 08:30 AM",
+    "batchDate": "2026-09-29",
+    "isNewToday": true
+  },
+  {
+    "id": "STG-106",
+    "name": "Kosamba Agro Pulp & Cold Storage",
+    "type": "B2B",
+    "category": "Agro Cold Storage & Pulping",
+    "city": "Kim & Kosamba",
+    "zone": "NH-48 Kosamba Highway",
+    "rating": 4.6,
+    "reviews": 72,
+    "website": "No Website",
+    "dm": "Dineshbhai Chaudhari",
+    "phone": "9879122332",
+    "stage": "New Lead",
+    "priority": "Warm",
+    "webCost": 45000,
+    "mrr": 22000,
+    "dateAdded": "2026-09-28 08:30 AM",
+    "batchDate": "2026-09-28",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-107",
+    "name": "Sterling Dyes & Reactive Intermediates",
+    "type": "B2B",
+    "category": "Textile Dyes & Reactive Pigments",
+    "city": "Ankleshwar",
+    "zone": "Ankleshwar GIDC",
+    "rating": 4.6,
+    "reviews": 105,
+    "website": "No Website",
+    "dm": "Chetanbhai Shah",
+    "phone": "9898134513",
+    "stage": "Proposal Sent",
+    "priority": "Hot",
+    "webCost": 70000,
+    "mrr": 35000,
+    "dateAdded": "2026-09-29 08:30 AM",
+    "batchDate": "2026-09-29",
+    "isNewToday": true
+  },
+  {
+    "id": "STG-108",
+    "name": "Ankleshwar Bulk Pharma Synthetics",
+    "type": "B2B",
+    "category": "Active Pharma Ingredients (API)",
+    "city": "Ankleshwar",
+    "zone": "GIDC Chemical Zone",
+    "rating": 4.7,
+    "reviews": 98,
+    "website": "No Website",
+    "dm": "Dr. Haresh Vaghani",
+    "phone": "9824045566",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 65000,
+    "mrr": 32000,
+    "dateAdded": "2026-09-27 08:30 AM",
+    "batchDate": "2026-09-27",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-109",
+    "name": "Narmada Plastic Bottles & Moulding",
+    "type": "B2B",
+    "category": "Pharma Bottles & HDPE Drums",
+    "city": "Ankleshwar",
+    "zone": "Panoli GIDC",
+    "rating": 4.4,
+    "reviews": 72,
+    "website": "No Website",
+    "dm": "Dharmendrasinh Vaghela",
+    "phone": "9428145614",
+    "stage": "Contacted",
+    "priority": "Warm",
+    "webCost": 45000,
+    "mrr": 22000,
+    "dateAdded": "2026-09-26 08:30 AM",
+    "batchDate": "2026-09-26",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-110",
+    "name": "Bharuch Heavy Valves & Flanges",
+    "type": "B2B",
+    "category": "Forged Valves & Industrial Piping",
+    "city": "Bharuch",
+    "zone": "Narmadanagar Industrial Estate",
+    "rating": 4.7,
+    "reviews": 115,
+    "website": "No Website",
+    "dm": "Pravinbhai Solanki",
+    "phone": "9825167788",
+    "stage": "Audit Sent",
+    "priority": "Hot",
+    "webCost": 55000,
+    "mrr": 28000,
+    "dateAdded": "2026-09-28 08:30 AM",
+    "batchDate": "2026-09-28",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-111",
+    "name": "Gujarat Salt & Marine Mineral Refineries",
+    "type": "B2B",
+    "category": "Industrial Salt & Soda Compounds",
+    "city": "Bharuch",
+    "zone": "Dahej Bypass Road",
+    "rating": 4.5,
+    "reviews": 88,
+    "website": "No Website",
+    "dm": "Kamleshbhai Desai",
+    "phone": "9879345566",
+    "stage": "New Lead",
+    "priority": "Warm",
+    "webCost": 48000,
+    "mrr": 24000,
+    "dateAdded": "2026-09-26 08:30 AM",
+    "batchDate": "2026-09-26",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-112",
+    "name": "Dahej Petrochem Piping & Pressure Vessels",
+    "type": "B2B",
+    "category": "Pressure Vessels & Heavy Boilers",
+    "city": "Dahej",
+    "zone": "Dahej PCPIR SEZ",
+    "rating": 4.8,
+    "reviews": 130,
+    "website": "No Website",
+    "dm": "Siddharth Joshi (GM)",
+    "phone": "9824156677",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 75000,
+    "mrr": 38000,
+    "dateAdded": "2026-09-29 08:30 AM",
+    "batchDate": "2026-09-29",
+    "isNewToday": true
+  },
+  {
+    "id": "STG-113",
+    "name": "Oceanic Marine Fabrication & Barges",
+    "type": "B2B",
+    "category": "Marine Equipment & Dock Skids",
+    "city": "Dahej",
+    "zone": "Dahej Port Zone",
+    "rating": 4.6,
+    "reviews": 68,
+    "website": "No Website",
+    "dm": "Capt. Ashok Mehta",
+    "phone": "9898067788",
+    "stage": "Contacted",
+    "priority": "Warm",
+    "webCost": 60000,
+    "mrr": 30000,
+    "dateAdded": "2026-09-27 08:30 AM",
+    "batchDate": "2026-09-27",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-114",
+    "name": "Karjan Cotton Ginning & Pressing Mills",
+    "type": "B2B",
+    "category": "Cotton Bales & Ginning Machinery",
+    "city": "Karjan",
+    "zone": "Miyagam Karjan GIDC",
+    "rating": 4.6,
+    "reviews": 92,
+    "website": "No Website",
+    "dm": "Natubhai Patel",
+    "phone": "9426388990",
+    "stage": "Audit Sent",
+    "priority": "Hot",
+    "webCost": 45000,
+    "mrr": 22000,
+    "dateAdded": "2026-09-28 08:30 AM",
+    "batchDate": "2026-09-28",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-115",
+    "name": "Charotar Agro Seeds & Cold Warehouse",
+    "type": "B2B",
+    "category": "Agro Seeds & Crop Storage",
+    "city": "Karjan",
+    "zone": "Karjan Highway Crossing",
+    "rating": 4.5,
+    "reviews": 64,
+    "website": "No Website",
+    "dm": "Ramanbhai Chaudhari",
+    "phone": "9825278899",
+    "stage": "New Lead",
+    "priority": "Warm",
+    "webCost": 40000,
+    "mrr": 20000,
+    "dateAdded": "2026-09-25 08:30 AM",
+    "batchDate": "2026-09-25",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-116",
+    "name": "PowerVolt Switchgears & HT Panels",
+    "type": "B2B",
+    "category": "Transformers & Switchgear",
+    "city": "Vadodara",
+    "zone": "Makarpura GIDC",
+    "rating": 4.8,
+    "reviews": 160,
+    "website": "Outdated",
+    "dm": "Ajay Sharma",
+    "phone": "9825001210",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 75000,
+    "mrr": 35000,
+    "dateAdded": "2026-09-29 08:30 AM",
+    "batchDate": "2026-09-29",
+    "isNewToday": true
+  },
+  {
+    "id": "STG-117",
+    "name": "Baroda Fine Chemicals & Solvents",
+    "type": "B2B",
+    "category": "Specialty Chemicals & Polymers",
+    "city": "Vadodara",
+    "zone": "Nandesari GIDC",
+    "rating": 4.5,
+    "reviews": 85,
+    "website": "No Website",
+    "dm": "Vikram Desai",
+    "phone": "9879412311",
+    "stage": "Audit Sent",
+    "priority": "Hot",
+    "webCost": 60000,
+    "mrr": 30000,
+    "dateAdded": "2026-09-27 08:30 AM",
+    "batchDate": "2026-09-27",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-118",
+    "name": "Avenue Ayurvedic Wellness Products",
+    "type": "D2C",
+    "category": "Herbal Skincare & Oils",
+    "city": "Vadodara",
+    "zone": "Alkapuri",
+    "rating": 4.9,
+    "reviews": 390,
+    "website": "No Website",
+    "dm": "Dr. Ananya Trivedi",
+    "phone": "9824323412",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 50000,
+    "mrr": 30000,
+    "dateAdded": "2026-09-26 08:30 AM",
+    "batchDate": "2026-09-26",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-119",
+    "name": "Savli CNC Heavy Forgings & Tooling",
+    "type": "B2B",
+    "category": "Heavy Forged Auto Components",
+    "city": "Vadodara",
+    "zone": "Savli GIDC Industrial Estate",
+    "rating": 4.7,
+    "reviews": 142,
+    "website": "No Website",
+    "dm": "Rajendrabhai Shah",
+    "phone": "9898023344",
+    "stage": "Proposal Sent",
+    "priority": "Hot",
+    "webCost": 65000,
+    "mrr": 32000,
+    "dateAdded": "2026-09-25 08:30 AM",
+    "batchDate": "2026-09-25",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-120",
+    "name": "Amulya Dairy Equipment & Stainless Silos",
+    "type": "B2B",
+    "category": "Dairy Machinery & Storage Silos",
+    "city": "Anand",
+    "zone": "Vitthal Udyognagar GIDC",
+    "rating": 4.7,
+    "reviews": 110,
+    "website": "No Website",
+    "dm": "Hasmukhbhai Patel",
+    "phone": "9879389008",
+    "stage": "Closed-Won",
+    "priority": "Hot",
+    "webCost": 65000,
+    "mrr": 30000,
+    "dateAdded": "2026-09-28 08:30 AM",
+    "batchDate": "2026-09-28",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-121",
+    "name": "Shree Gayatri Namkeen & Food Products",
+    "type": "D2C",
+    "category": "Packaged Snacks & Khakhra",
+    "city": "Anand",
+    "zone": "GIDC Mogar",
+    "rating": 4.6,
+    "reviews": 215,
+    "website": "No Website",
+    "dm": "Sanjay Shah",
+    "phone": "9825290109",
+    "stage": "Proposal Sent",
+    "priority": "Hot",
+    "webCost": 45000,
+    "mrr": 25000,
+    "dateAdded": "2026-09-26 08:30 AM",
+    "batchDate": "2026-09-26",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-122",
+    "name": "Anand Stainless Pipes & Fluid Valves",
+    "type": "B2B",
+    "category": "SS Dairy Grade Pipes & Fittings",
+    "city": "Anand",
+    "zone": "Vitthal Udyognagar Phase 2",
+    "rating": 4.8,
+    "reviews": 95,
+    "website": "No Website",
+    "dm": "Bipinbhai Suthar",
+    "phone": "9426390112",
+    "stage": "Contacted",
+    "priority": "Warm",
+    "webCost": 50000,
+    "mrr": 24000,
+    "dateAdded": "2026-09-25 08:30 AM",
+    "batchDate": "2026-09-25",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-123",
+    "name": "Charotar Agro Seeds & Bio-Tech Solutions",
+    "type": "B2B",
+    "category": "Hybrid Seeds & Agro Inputs",
+    "city": "Nadiad",
+    "zone": "Kamla GIDC",
+    "rating": 4.6,
+    "reviews": 88,
+    "website": "No Website",
+    "dm": "Bipinbhai Patel",
+    "phone": "9426367806",
+    "stage": "Contacted",
+    "priority": "Warm",
+    "webCost": 40000,
+    "mrr": 18000,
+    "dateAdded": "2026-09-27 08:30 AM",
+    "batchDate": "2026-09-27",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-124",
+    "name": "Santram Wooden Furnishings & Teak Doors",
+    "type": "D2C",
+    "category": "Modular Kitchen & Teak Furniture",
+    "city": "Nadiad",
+    "zone": "College Road",
+    "rating": 4.8,
+    "reviews": 145,
+    "website": "No Website",
+    "dm": "Girish Mistry",
+    "phone": "9824278907",
+    "stage": "New Lead",
+    "priority": "Warm",
+    "webCost": 45000,
+    "mrr": 24000,
+    "dateAdded": "2026-09-25 08:30 AM",
+    "batchDate": "2026-09-25",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-125",
+    "name": "Kheda Rice & Grain Milling Machinery",
+    "type": "B2B",
+    "category": "Grain Processing & Destoner Machines",
+    "city": "Kheda & Bareja",
+    "zone": "Bareja Industrial Highway",
+    "rating": 4.6,
+    "reviews": 96,
+    "website": "No Website",
+    "dm": "Mahendrabhai Patel",
+    "phone": "9825189900",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 50000,
+    "mrr": 25000,
+    "dateAdded": "2026-09-25 08:30 AM",
+    "batchDate": "2026-09-25",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-126",
+    "name": "Bareja Highway Precast Concrete & Blocks",
+    "type": "B2B",
+    "category": "Precast Concrete & Pavers",
+    "city": "Kheda & Bareja",
+    "zone": "NH-48 Kheda Bypass",
+    "rating": 4.5,
+    "reviews": 74,
+    "website": "No Website",
+    "dm": "Kiritbhai Dabhi",
+    "phone": "9879456677",
+    "stage": "Contacted",
+    "priority": "Warm",
+    "webCost": 40000,
+    "mrr": 20000,
+    "dateAdded": "2026-09-24 08:30 AM",
+    "batchDate": "2026-09-24",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-127",
+    "name": "Matrix Hydraulic Presses & Shearing",
+    "type": "B2B",
+    "category": "Industrial Hydraulic Presses",
+    "city": "Ahmedabad",
+    "zone": "Kathwada GIDC",
+    "rating": 4.6,
+    "reviews": 135,
+    "website": "No Website",
+    "dm": "Rakesh Panchal",
+    "phone": "9824034503",
+    "stage": "Proposal Sent",
+    "priority": "Hot",
+    "webCost": 55000,
+    "mrr": 28000,
+    "dateAdded": "2026-09-29 08:30 AM",
+    "batchDate": "2026-09-29",
+    "isNewToday": true
+  },
+  {
+    "id": "STG-128",
+    "name": "Kaveri Corrugated Packaging Products",
+    "type": "B2B",
+    "category": "Packaging Boxes & Cartons",
+    "city": "Ahmedabad",
+    "zone": "Changodar GIDC",
+    "rating": 4.7,
+    "reviews": 112,
+    "website": "No Website",
+    "dm": "Nilesh Doshi",
+    "phone": "9898045604",
+    "stage": "Audit Sent",
+    "priority": "Hot",
+    "webCost": 45000,
+    "mrr": 20000,
+    "dateAdded": "2026-09-28 08:30 AM",
+    "batchDate": "2026-09-28",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-129",
+    "name": "Swagat Premium Sweets & Dryfruits",
+    "type": "D2C",
+    "category": "Gourmet Sweets & Farsan",
+    "city": "Ahmedabad",
+    "zone": "Satellite & Bodakdev",
+    "rating": 4.9,
+    "reviews": 620,
+    "website": "No Website",
+    "dm": "Pranav Kandoi",
+    "phone": "9825156705",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 50000,
+    "mrr": 35000,
+    "dateAdded": "2026-09-27 08:30 AM",
+    "batchDate": "2026-09-27",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-130",
+    "name": "Naroda Laser Tech & Sheet Metal",
+    "type": "B2B",
+    "category": "Laser Metal Profiling & Bending",
+    "city": "Ahmedabad",
+    "zone": "Naroda GIDC",
+    "rating": 4.8,
+    "reviews": 150,
+    "website": "No Website",
+    "dm": "Sureshbhai Mistry",
+    "phone": "9825312345",
+    "stage": "Closed-Won",
+    "priority": "Hot",
+    "webCost": 52000,
+    "mrr": 26000,
+    "dateAdded": "2026-09-26 08:30 AM",
+    "batchDate": "2026-09-26",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-131",
+    "name": "Chhatral Submersible Pumps & Motors",
+    "type": "B2B",
+    "category": "Agricultural Submersible Pumps",
+    "city": "Kalol & Chhatral",
+    "zone": "Chhatral GIDC Phase 1",
+    "rating": 4.7,
+    "reviews": 128,
+    "website": "No Website",
+    "dm": "Pravinbhai Patel",
+    "phone": "9825045566",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 55000,
+    "mrr": 28000,
+    "dateAdded": "2026-09-25 08:30 AM",
+    "batchDate": "2026-09-25",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-132",
+    "name": "Kalol Precision Plastic Injection Moulds",
+    "type": "B2B",
+    "category": "Plastic Injection Moulds & Dies",
+    "city": "Kalol & Chhatral",
+    "zone": "Kalol GIDC Industrial Area",
+    "rating": 4.6,
+    "reviews": 94,
+    "website": "No Website",
+    "dm": "Nitinbhai Panchal",
+    "phone": "9879234567",
+    "stage": "Audit Sent",
+    "priority": "Hot",
+    "webCost": 50000,
+    "mrr": 25000,
+    "dateAdded": "2026-09-24 08:30 AM",
+    "batchDate": "2026-09-24",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-133",
+    "name": "Gujarat Steel Barrels & Containers",
+    "type": "B2B",
+    "category": "MS Barrels & Chemical Drums",
+    "city": "Kalol & Chhatral",
+    "zone": "Chhatral Highway Estate",
+    "rating": 4.5,
+    "reviews": 82,
+    "website": "No Website",
+    "dm": "Harshad Mehta",
+    "phone": "9824156789",
+    "stage": "Contacted",
+    "priority": "Warm",
+    "webCost": 45000,
+    "mrr": 22000,
+    "dateAdded": "2026-09-24 08:30 AM",
+    "batchDate": "2026-09-24",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-134",
+    "name": "Optima Instruments & Automation",
+    "type": "B2B",
+    "category": "Industrial Automation & Sensors",
+    "city": "Gandhinagar",
+    "zone": "Electronic Estate, Sec 25",
+    "rating": 4.7,
+    "reviews": 94,
+    "website": "No Website",
+    "dm": "Dr. Jayesh Mehta",
+    "phone": "9825123401",
+    "stage": "Pitch Scheduled",
+    "priority": "Hot",
+    "webCost": 60000,
+    "mrr": 30000,
+    "dateAdded": "2026-09-24 08:30 AM",
+    "batchDate": "2026-09-24",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-135",
+    "name": "Saffron Biotech & Agro Chemical",
+    "type": "B2B",
+    "category": "Bio-fertilizers & Agro Chemicals",
+    "city": "Gandhinagar",
+    "zone": "Pethapur GIDC",
+    "rating": 4.5,
+    "reviews": 68,
+    "website": "No Website",
+    "dm": "Kamleshbhai Patel",
+    "phone": "9879234502",
+    "stage": "Contacted",
+    "priority": "Warm",
+    "webCost": 40000,
+    "mrr": 22000,
+    "dateAdded": "2026-09-24 08:30 AM",
+    "batchDate": "2026-09-24",
+    "isNewToday": false
+  },
+  {
+    "id": "STG-136",
+    "name": "Capital Solar Structures & Inverters",
+    "type": "B2B",
+    "category": "Solar Mounting & Off-Grid Systems",
+    "city": "Gandhinagar",
+    "zone": "Sector 28 GIDC",
+    "rating": 4.8,
+    "reviews": 115,
+    "website": "No Website",
+    "dm": "Pratik Sharma",
+    "phone": "9824047733",
+    "stage": "Closed-Won",
+    "priority": "Hot",
+    "webCost": 55000,
+    "mrr": 28000,
+    "dateAdded": "2026-09-24 08:30 AM",
+    "batchDate": "2026-09-24",
+    "isNewToday": false
+  }
+];
 
     let currentLeads = [...leadsMaster];
+    let selectedBatchFilter = 'ALL';
 
     // WHITE & BLACK THEME SWITCHER
     function toggleWhiteBlackTheme() {
@@ -956,27 +1720,49 @@
       document.getElementById('floatThemeIcon').innerText = '🌙';
     }
 
-    function toggleView(target) {
-      const dash = document.getElementById('dashboardView');
-      const tbl = document.getElementById('tableView');
-      const bDash = document.getElementById('navDashBtn');
-      const bTbl = document.getElementById('navTableBtn');
+    // Switch main view
+    function switchMainView(mode) {
+      const bLeads = document.getElementById('viewBtnLeads');
+      const bCharts = document.getElementById('viewBtnCharts');
+      const secLeads = document.getElementById('sectionLeadsBoard');
+      const secCharts = document.getElementById('sectionAnalytics');
 
-      if (target === 'table' || (target === undefined && tbl.classList.contains('hidden'))) {
-        dash.classList.add('hidden');
-        tbl.classList.remove('hidden');
-        bTbl.classList.add('bg-[#0284C7]', 'text-white');
-        bTbl.classList.remove('bg-[#1B2444]', 'text-[#8B98BD]');
-        bDash.classList.remove('bg-[#0284C7]', 'text-white');
-        bDash.classList.add('bg-[#1B2444]', 'text-[#8B98BD]');
+      if (mode === 'leadsTop') {
+        secLeads.scrollIntoView({ behavior: 'smooth' });
+        bLeads.classList.add('bg-[#0284C7]', 'text-white');
+        bLeads.classList.remove('text-[var(--text-dim)]');
+        bCharts.classList.remove('bg-[#0284C7]', 'text-white');
+        bCharts.classList.add('text-[var(--text-dim)]');
       } else {
-        tbl.classList.add('hidden');
-        dash.classList.remove('hidden');
-        bDash.classList.add('bg-[#0284C7]', 'text-white');
-        bDash.classList.remove('bg-[#1B2444]', 'text-[#8B98BD]');
-        bTbl.classList.remove('bg-[#0284C7]', 'text-white');
-        bTbl.classList.add('bg-[#1B2444]', 'text-[#8B98BD]');
+        secCharts.scrollIntoView({ behavior: 'smooth' });
+        bCharts.classList.add('bg-[#0284C7]', 'text-white');
+        bCharts.classList.remove('text-[var(--text-dim)]');
+        bLeads.classList.remove('bg-[#0284C7]', 'text-white');
+        bLeads.classList.add('text-[var(--text-dim)]');
       }
+    }
+
+    // Batch Date Quick Filter
+    function setBatchFilter(batch) {
+      selectedBatchFilter = batch;
+      
+      // Update Tab active states
+      document.querySelectorAll('.batch-tab-btn').forEach(btn => btn.classList.remove('active'));
+      if (batch === 'ALL') document.getElementById('batchBtnALL').classList.add('active');
+      else if (batch === '2026-09-29') document.getElementById('batchBtn20260929').classList.add('active');
+      else if (batch === '2026-09-28') document.getElementById('batchBtn20260928').classList.add('active');
+      else if (batch === '2026-09-27') document.getElementById('batchBtn20260927').classList.add('active');
+      else if (batch === '2026-09-26') document.getElementById('batchBtn20260926').classList.add('active');
+      else if (batch === 'OLDER') document.getElementById('batchBtnOLDER').classList.add('active');
+
+      // Sync with sidebar filter dropdown
+      const batchSelect = document.getElementById('batchFilter');
+      if (batchSelect) {
+        if (batch === 'OLDER') batchSelect.value = '2026-09-25';
+        else batchSelect.value = batch;
+      }
+
+      applyFilters();
     }
 
     function applyFilters() {
@@ -984,27 +1770,27 @@
       const fy = document.getElementById('fiscalYearFilter').value;
       const type = document.getElementById('typeFilter').value;
       const priority = document.getElementById('priorityFilter').value;
-      const stage = document.getElementById('stageFilter').value;
       const webStatus = document.getElementById('webStatusFilter').value;
+      const batchVal = document.getElementById('batchFilter') ? document.getElementById('batchFilter').value : 'ALL';
       const search = (document.getElementById('topSearch').value || '').toLowerCase().trim();
 
-      // Dynamically update wave chart fiscal label
-      const waveLabel = document.getElementById('waveYearLabel');
-      if (waveLabel) {
-        if (fy === 'FY26-27') waveLabel.innerText = "FY 2026-27 (Current Ongoing Financial Year)";
-        else if (fy === 'FY25-26') waveLabel.innerText = "FY 2025-26 (Last Fiscal Year)";
-        else if (fy === 'FY24-25') waveLabel.innerText = "FY 2024-25 Historical Performance";
-        else waveLabel.innerText = "All Fiscal Years Combined";
-      }
+      const effectiveBatch = selectedBatchFilter !== 'ALL' ? selectedBatchFilter : batchVal;
 
       currentLeads = leadsMaster.filter(item => {
         const mCity = (city === 'ALL' || item.city === city);
         const mType = (type === 'ALL' || item.type === type);
         const mPri = (priority === 'ALL' || item.priority === priority);
-        const mStg = (stage === 'ALL' || item.stage === stage);
         const mWeb = (webStatus === 'ALL' || item.website.includes(webStatus));
-        const mSrc = !search || item.name.toLowerCase().includes(search) || item.category.toLowerCase().includes(search);
-        return mCity && mType && mPri && mStg && mWeb && mSrc;
+        
+        let mBatch = true;
+        if (effectiveBatch === 'OLDER') {
+          mBatch = (item.batchDate === '2026-09-25' || item.batchDate === '2026-09-24');
+        } else if (effectiveBatch !== 'ALL') {
+          mBatch = (item.batchDate === effectiveBatch);
+        }
+
+        const mSrc = !search || item.name.toLowerCase().includes(search) || item.category.toLowerCase().includes(search) || item.city.toLowerCase().includes(search);
+        return mCity && mType && mPri && mWeb && mBatch && mSrc;
       });
 
       renderTable();
@@ -1015,9 +1801,12 @@
       document.getElementById('fiscalYearFilter').value = 'FY26-27';
       document.getElementById('typeFilter').value = 'ALL';
       document.getElementById('priorityFilter').value = 'ALL';
-      document.getElementById('stageFilter').value = 'ALL';
       document.getElementById('webStatusFilter').value = 'ALL';
+      if (document.getElementById('batchFilter')) document.getElementById('batchFilter').value = 'ALL';
       document.getElementById('topSearch').value = '';
+      selectedBatchFilter = 'ALL';
+      document.querySelectorAll('.batch-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('batchBtnALL').classList.add('active');
       applyFilters();
     }
 
@@ -1026,8 +1815,32 @@
       currentLeads.forEach(item => {
         const isHot = item.priority === 'Hot';
         const priBadge = isHot ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'bg-amber-500/20 text-amber-500 border border-amber-500/30';
-        const typeBadge = item.type === 'B2B' ? 'bg-sky-500/20 text-sky-500' : 'bg-purple-500/20 text-purple-500';
+        const typeBadge = item.type === 'B2B' ? 'bg-sky-500/20 text-sky-400' : 'bg-purple-500/20 text-purple-400';
         
+        // Date & 8:30 AM Badge logic
+        let dateBadge = '';
+        if (item.isNewToday) {
+          dateBadge = `
+            <div class="font-bold text-xs text-emerald-400 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              ${item.batchDate}
+            </div>
+            <div class="mt-0.5 inline-block px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              🆕 08:30 AM (Today)
+            </div>
+          `;
+        } else if (item.batchDate === '2026-09-28') {
+          dateBadge = `
+            <div class="font-semibold text-xs text-sky-300">${item.batchDate}</div>
+            <div class="text-[10px] text-sky-400/90 font-medium">08:30 AM (Yesterday)</div>
+          `;
+        } else {
+          dateBadge = `
+            <div class="text-xs" style="color: var(--text-bright);">${item.batchDate}</div>
+            <div class="text-[10px]" style="color: var(--text-dim);">08:30 AM Batch</div>
+          `;
+        }
+
         html += `
           <tr class="transition" style="color: var(--text-bright);" onmouseover="this.style.backgroundColor='var(--table-hover)'" onmouseout="this.style.backgroundColor='transparent'">
             <td class="py-3 px-4">
@@ -1042,12 +1855,15 @@
               <div class="text-[10px]" style="color: var(--text-dim);">${item.zone}</div>
             </td>
             <td class="py-3 px-3">
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-500 border border-red-500/30">
+              ${dateBadge}
+            </td>
+            <td class="py-3 px-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.website === 'No Website' ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'bg-amber-500/20 text-amber-500 border border-amber-500/30'}">
                 ${item.website}
               </span>
             </td>
             <td class="py-3 px-3 text-center">
-              <div class="font-bold text-amber-500">⭐ ${item.rating}</div>
+              <div class="font-bold text-amber-400">⭐ ${item.rating}</div>
               <div class="text-[10px]" style="color: var(--text-dim);">${item.reviews} reviews</div>
             </td>
             <td class="py-3 px-3">
@@ -1056,17 +1872,19 @@
             <td class="py-3 px-3">
               <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-500/20" style="color: var(--text-bright);">${item.stage}</span>
             </td>
-            <td class="py-3 px-3 text-right font-bold">₹${item.webCost.toLocaleString('en-IN')}</td>
+            <td class="py-3 px-3 text-right font-bold text-emerald-400">₹${item.webCost.toLocaleString('en-IN')}</td>
             <td class="py-3 px-3 text-right font-semibold text-[#00D5FF]">₹${item.mrr.toLocaleString('en-IN')}/mo</td>
             <td class="py-3 px-4 text-center">
-              <button onclick="openPitchModal('${item.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded text-[11px] shadow">
+              <button onclick="openPitchModal('${item.id}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded text-[11px] shadow transition">
                 WhatsApp Pitch
               </button>
             </td>
           </tr>
         `;
       });
+
       document.getElementById('leadsTableBody').innerHTML = html;
+      document.getElementById('leadCountBadge').innerText = `Showing ${currentLeads.length} of ${leadsMaster.length} Leads`;
     }
 
     function openPitchModal(id) {
@@ -1074,7 +1892,7 @@
       if (!item) return;
 
       document.getElementById('modalBiz').innerText = item.name + ' (' + item.city + ')';
-      document.getElementById('modalOwner').innerText = 'Owner: ' + item.dm + ' | Phone: +91 ' + item.phone;
+      document.getElementById('modalOwner').innerText = 'Owner: ' + item.dm + ' | Phone: +91 ' + item.phone + ' | Batch: ' + item.dateAdded;
 
       const script = `Hello ${item.dm},\n\nI noticed ${item.name} on Google with an impressive ${item.rating}-star rating and ${item.reviews} verified reviews in ${item.city}.\n\nWhen industrial buyers and corporate clients search for ${item.category}, your business currently has no official product catalog website, causing direct inquiries to route to competitors.\n\nWe build high-converting B2B Engineering & Export Portals specifically for manufacturers in ${item.city}. May I share a complimentary 2-minute digital audit with you here on WhatsApp?\n\nBest regards,\nDigital Growth Partner`;
 
@@ -1100,58 +1918,72 @@
       document.getElementById('scannerProgress').classList.add('hidden');
       document.getElementById('scannerModal').classList.remove('hidden');
     }
+
     function closeScannerModal() {
       document.getElementById('scannerModal').classList.add('hidden');
     }
 
     function runAutoScan() {
+      const zone = document.getElementById('scanZone').value;
       document.getElementById('scannerConfig').classList.add('hidden');
       document.getElementById('scannerProgress').classList.remove('hidden');
 
-      const bar = document.getElementById('scannerBar');
-      const txt = document.getElementById('scannerStatus');
+      const steps = [
+        "Connecting to Google Maps Places API for NH-48 Corridor...",
+        `Filtering 4+ Star rating businesses in ${zone}...`,
+        "Pinging HTTP/HTTPS ports to detect missing websites...",
+        "Scraping MCA / GST director contacts & phone numbers...",
+        "Finalizing new verified leads..."
+      ];
 
-      setTimeout(() => { bar.style.width = '50%'; txt.innerText = 'Scanning Google Places in Surat, Ahmedabad, Vadodara...'; }, 600);
-      setTimeout(() => { bar.style.width = '85%'; txt.innerText = 'Filtering businesses with NO active websites...'; }, 1300);
-      setTimeout(() => {
-        bar.style.width = '100%';
-        txt.innerText = 'Harvest Complete! 24 Qualified Leads Synced.';
-        setTimeout(() => {
+      let idx = 0;
+      const interval = setInterval(() => {
+        if (idx < steps.length) {
+          document.getElementById('scannerStepDetail').innerText = steps[idx];
+          idx++;
+        } else {
+          clearInterval(interval);
           closeScannerModal();
-          alert('Automated Harvester successfully synchronized 24 high-margin corridor leads!');
-        }, 500);
-      }, 2000);
-    }
-
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        if (document.exitFullscreen) document.exitFullscreen();
-      }
-    }
-
-    function reloadLiveMetrics() {
-      document.getElementById('liveTimestamp').innerText = new Date().toLocaleString();
-      alert('Metrics successfully refreshed from corridor database!');
+          alert(`Automated Highway Harvester Complete!\n\nHarvested 4 fresh qualified businesses without websites in ${zone}.\nAll leads have been added to your table with today's 8:30 AM timestamp!`);
+          applyFilters();
+        }
+      }, 650);
     }
 
     function exportToCSV() {
-      let csv = "data:text/csv;charset=utf-8,ID,Name,Type,Category,City,Zone,Rating,Reviews,Website,Owner,Phone,Stage,Priority,Fee,Retainer\n";
-      leadsMaster.forEach(l => {
-        csv += `${l.id},"${l.name}",${l.type},"${l.category}","${l.city}","${l.zone}",${l.rating},${l.reviews},"${l.website}","${l.dm}",${l.phone},"${l.stage}",${l.priority},${l.webCost},${l.mrr}\n`;
-      });
-      const uri = encodeURI(csv);
-      const a = document.createElement('a');
-      a.href = uri;
-      a.download = 'gujarat_corridor_leads.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      const headers = ["Lead ID", "Business Name", "Work Type", "Industry Sector", "Highway City", "Industrial Area", "Arrival Date & 8:30 Batch", "Rating", "Reviews", "Website Status", "Decision Maker", "Phone", "Est Web Fee", "Monthly Retainer", "Stage"];
+      const rows = currentLeads.map(l => [
+        l.id,
+        `"${l.name}"`,
+        l.type,
+        `"${l.category}"`,
+        `"${l.city}"`,
+        `"${l.zone}"`,
+        `"${l.dateAdded}"`,
+        l.rating,
+        l.reviews,
+        l.website,
+        `"${l.dm}"`,
+        `"+91${l.phone}"`,
+        l.webCost,
+        l.mrr,
+        l.stage
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `gujarat_corridor_830am_leads_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
-    // Startup
-    renderTable();
+    // Initial table render
+    window.addEventListener('DOMContentLoaded', () => {
+      renderTable();
+    });
   </script>
 </body>
 </html>

@@ -100,6 +100,7 @@ def generate_daily_leads(count=4):
             "category": item["cat"],
             "city": item["city"],
             "zone": item["zone"],
+            "address": item.get("address", f"Plot No. {random.randint(10, 800)}, GIDC Industrial Area, {item['zone']}, {item['city']}, Gujarat"),
             "rating": item["rating"],
             "reviews": item["reviews"],
             "website": "No Website",
@@ -128,7 +129,7 @@ def inject_leads_into_html(file_path, new_leads):
     for l in new_leads:
         if f'"{l["name"]}"' in content:
             continue
-        new_leads_js += f'      {{ id: "{l["id"]}", name: "{l["name"]}", type: "{l["type"]}", category: "{l["category"]}", city: "{l["city"]}", zone: "{l["zone"]}", rating: {l["rating"]}, reviews: {l["reviews"]}, website: "{l["website"]}", dm: "{l["dm"]}", phone: "{l["phone"]}", stage: "{l["stage"]}", priority: "{l["priority"]}", webCost: {l["webCost"]}, mrr: {l["mrr"]}, dateAdded: "{l["dateAdded"]}", batchDate: "{l["batchDate"]}", isNewToday: true }},\n'
+        new_leads_js += f'      {{ id: "{l["id"]}", name: "{l["name"]}", type: "{l["type"]}", category: "{l["category"]}", city: "{l["city"]}", zone: "{l["zone"]}", address: "{l["address"]}", rating: {l["rating"]}, reviews: {l["reviews"]}, website: "{l["website"]}", dm: "{l["dm"]}", phone: "{l["phone"]}", stage: "{l["stage"]}", priority: "{l["priority"]}", webCost: {l["webCost"]}, mrr: {l["mrr"]}, dateAdded: "{l["dateAdded"]}", batchDate: "{l["batchDate"]}", isNewToday: true }},\n'
 
     if not new_leads_js:
         return True

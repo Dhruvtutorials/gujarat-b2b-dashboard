@@ -2,17 +2,15 @@ import React from 'react';
 import { 
   TrendingUp, 
   PieChart, 
-  Sparkles,
-  Milestone,
-  CheckCircle2,
-  Globe2,
-  Building2
+  Sparkles, 
+  Milestone, 
+  Globe2, 
+  Building2 
 } from 'lucide-react';
 
 export default function VisualAnalytics({ leads, theme = 'dark' }) {
   const isDark = theme === 'dark';
 
-  // City revenue aggregates
   const cityAggregates = [
     { city: 'Surat', rev: 255000, mrr: 137000, leads: 4, tag: 'Textile & Diamonds' },
     { city: 'Ankleshwar', rev: 235000, mrr: 110000, leads: 3, tag: 'Chemical GIDC' },
@@ -25,7 +23,6 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
 
   const maxRev = 500000;
 
-  // Split calculation
   const b2bCount = leads.filter(l => l.type === 'B2B').length;
   const d2cCount = leads.filter(l => l.type === 'D2C').length;
   const total = leads.length || 1;
@@ -38,50 +35,47 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
   const outdatedPercent = 100 - noWebPercent;
 
   return (
-    <div className="w-full grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
+    <div className={`w-full rounded-2xl border p-5 lg:p-6 transition-colors shadow-sm mb-6 ${
+      isDark ? 'bg-[#111726] border-slate-800 text-slate-100' : 'bg-white border-slate-200 text-slate-900'
+    }`}>
       
-      {/* 2-Columns: Highway Corridor Spline / Revenue Chart */}
-      <div className={`xl:col-span-2 rounded-3xl p-4 lg:p-6 shadow-2xl backdrop-blur-xl flex flex-col justify-between border transition-colors ${
-        isDark 
-          ? 'bg-[#0c1222]/90 border-slate-800/90 text-slate-100' 
-          : 'bg-white border-slate-200 text-slate-900 shadow-xl'
-      }`}>
-        <div>
-          <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b ${
-            isDark ? 'border-slate-800/80' : 'border-slate-200'
-          }`}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 shadow-md shadow-blue-500/10">
-                <TrendingUp className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className={`text-base font-extrabold tracking-tight ${
-                  isDark ? 'text-white' : 'text-slate-900'
-                }`}>
-                  Corridor Revenue Velocity (Surat ➔ Gandhinagar)
-                </h3>
-                <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                  Targeted Web Dev Contract (₹) vs Monthly Retainer (MRR) along Highway Nodes
-                </p>
-              </div>
-            </div>
-
-            <div className={`flex items-center gap-3 text-xs px-3 py-1.5 rounded-xl border ${
-              isDark ? 'bg-slate-950/80 border-slate-800/80' : 'bg-slate-50 border-slate-200'
-            }`}>
-              <div className="flex items-center gap-1.5 text-blue-500 font-bold">
-                <span className="w-2.5 h-2.5 rounded-sm bg-blue-500 shadow-sm shadow-blue-500/50" />
-                <span>Web Dev</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
-                <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500 shadow-sm shadow-emerald-500/50" />
-                <span>Monthly MRR</span>
-              </div>
-            </div>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-6 border-b border-slate-700/40">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-500">
+            <TrendingUp className="w-5 h-5" />
           </div>
+          <div>
+            <h2 className="text-base font-bold tracking-tight">
+              Corridor Revenue Velocity & Market Breakdown
+            </h2>
+            <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              Estimated Web Development pipeline and monthly retainers across Gujarat industrial corridor.
+            </p>
+          </div>
+        </div>
 
-          {/* Dual Bar Track List */}
-          <div className="space-y-3 pt-1">
+        <div className="flex items-center gap-3 text-xs">
+          <div className="flex items-center gap-1.5 text-blue-500 font-bold">
+            <span className="w-2.5 h-2.5 rounded-sm bg-blue-500" />
+            <span>Web Dev Contract</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-emerald-500 font-bold">
+            <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500" />
+            <span>Monthly MRR</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* City Revenue Velocity Bars (2 Cols) */}
+        <div className="lg:col-span-2 space-y-4">
+          <h3 className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+            Hub-by-Hub Revenue Velocity (₹ Lakhs)
+          </h3>
+
+          <div className="space-y-3.5 pt-1">
             {cityAggregates.map((item) => {
               const revWidth = `${Math.min(100, Math.round((item.rev / maxRev) * 100))}%`;
               const mrrWidth = `${Math.min(100, Math.round(((item.mrr * 2.5) / maxRev) * 100))}%`;
@@ -90,7 +84,7 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
                 <div key={item.city} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
-                      <span className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                      <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
                         {item.city}
                       </span>
                       <span className={`text-[10px] hidden sm:inline ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
@@ -106,21 +100,22 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
                       <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
                         ₹{(item.rev / 1000).toFixed(0)}k
                       </span>
-                      <span className="text-emerald-500 font-bold ml-1.5">+₹{(item.mrr / 1000).toFixed(0)}k/mo</span>
+                      <span className="text-emerald-500 font-bold ml-1.5">
+                        +₹{(item.mrr / 1000).toFixed(0)}k/mo
+                      </span>
                     </div>
                   </div>
 
-                  {/* Dual Bar Track */}
                   <div className={`w-full h-3 rounded-full overflow-hidden flex gap-1 p-0.5 border ${
                     isDark ? 'bg-slate-950 border-slate-800' : 'bg-slate-100 border-slate-200'
                   }`}>
                     <div 
                       style={{ width: revWidth }} 
-                      className="h-full bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-400 rounded-full transition-all duration-500 shadow-md shadow-blue-500/40"
+                      className="h-full bg-blue-600 rounded-full transition-all duration-500"
                     />
                     <div 
                       style={{ width: mrrWidth }} 
-                      className="h-full bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-full transition-all duration-500 shadow-md shadow-emerald-500/40"
+                      className="h-full bg-emerald-500 rounded-full transition-all duration-500"
                     />
                   </div>
                 </div>
@@ -129,106 +124,57 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
           </div>
         </div>
 
-        <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${
-          isDark ? 'border-slate-800/80 text-slate-400' : 'border-slate-200 text-slate-500'
-        }`}>
-          <span>NH-48 Corridor Span: 320 KM</span>
-          <span className="text-emerald-500 font-extrabold font-mono">₹23.8L Total Corridor Web Revenue</span>
-        </div>
-      </div>
+        {/* Donut Distributions (1 Col) */}
+        <div className="space-y-4">
+          <h3 className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+            Segment Distribution
+          </h3>
 
-      {/* 1-Column: Donuts & Distribution */}
-      <div className={`rounded-3xl p-4 lg:p-6 shadow-2xl backdrop-blur-xl flex flex-col justify-between border transition-colors ${
-        isDark 
-          ? 'bg-[#0c1222]/90 border-slate-800/90 text-slate-100' 
-          : 'bg-white border-slate-200 text-slate-900 shadow-xl'
-      }`}>
-        <div>
-          <div className={`flex items-center gap-3 pb-3 border-b mb-4 ${
-            isDark ? 'border-slate-800/80' : 'border-slate-200'
-          }`}>
-            <div className="w-10 h-10 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-500">
-              <PieChart className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className={`text-base font-extrabold tracking-tight ${
-                isDark ? 'text-white' : 'text-slate-900'
-              }`}>
-                Market Split Analytics
-              </h3>
-              <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Corridor breakdown by business model & web presence
-              </p>
-            </div>
-          </div>
-
-          {/* Donut 1: B2B vs D2C */}
-          <div className={`mb-4 border rounded-2xl p-4 ${
-            isDark ? 'bg-slate-950/80 border-slate-800/80' : 'bg-slate-50 border-slate-200'
+          {/* Card 1: B2B vs D2C */}
+          <div className={`p-4 rounded-xl border ${
+            isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
           }`}>
             <div className="flex items-center justify-between text-xs mb-2">
               <span className={`font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                Wholesale vs Brands
+                Business Model
               </span>
               <span className="text-indigo-500 font-mono font-bold">{b2bCount} B2B / {d2cCount} D2C</span>
             </div>
 
-            <div className={`h-3 w-full rounded-full overflow-hidden flex p-0.5 border ${
-              isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-200 border-slate-300'
-            }`}>
-              <div style={{ width: `${b2bPercent}%` }} className="bg-indigo-500 h-full rounded-l-full transition-all" />
-              <div style={{ width: `${d2cPercent}%` }} className="bg-purple-500 h-full rounded-r-full transition-all" />
+            <div className="h-2.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden flex">
+              <div style={{ width: `${b2bPercent}%` }} className="bg-indigo-600 h-full" />
+              <div style={{ width: `${d2cPercent}%` }} className="bg-purple-500 h-full" />
             </div>
 
             <div className="flex items-center justify-between mt-2.5 text-xs">
-              <span className="flex items-center gap-1.5 text-indigo-500 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-indigo-500" />
-                <span>B2B Industrial ({b2bPercent}%)</span>
-              </span>
-              <span className="flex items-center gap-1.5 text-purple-500 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-purple-500" />
-                <span>D2C Brands ({d2cPercent}%)</span>
-              </span>
+              <span className="text-indigo-500 font-semibold">B2B Wholesale ({b2bPercent}%)</span>
+              <span className="text-purple-500 font-semibold">D2C Brands ({d2cPercent}%)</span>
             </div>
           </div>
 
-          {/* Donut 2: Zero-Web Opportunity */}
-          <div className={`border rounded-2xl p-4 ${
-            isDark ? 'bg-slate-950/80 border-slate-800/80' : 'bg-slate-50 border-slate-200'
+          {/* Card 2: Zero-Web Opportunity */}
+          <div className={`p-4 rounded-xl border ${
+            isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
           }`}>
             <div className="flex items-center justify-between text-xs mb-2">
               <span className={`font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                Digital Opportunity Gap
+                Digital Gap
               </span>
-              <span className="text-cyan-500 font-mono font-bold">{noWeb} Zero-Web Targets</span>
+              <span className="text-cyan-500 font-mono font-bold">{noWeb} Zero-Web</span>
             </div>
 
-            <div className={`h-3 w-full rounded-full overflow-hidden flex p-0.5 border ${
-              isDark ? 'bg-slate-900 border-slate-800' : 'bg-slate-200 border-slate-300'
-            }`}>
-              <div style={{ width: `${noWebPercent}%` }} className="bg-cyan-400 h-full rounded-l-full transition-all" />
-              <div style={{ width: `${outdatedPercent}%` }} className="bg-amber-500 h-full rounded-r-full transition-all" />
+            <div className="h-2.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden flex">
+              <div style={{ width: `${noWebPercent}%` }} className="bg-cyan-500 h-full" />
+              <div style={{ width: `${outdatedPercent}%` }} className="bg-amber-500 h-full" />
             </div>
 
             <div className="flex items-center justify-between mt-2.5 text-xs">
-              <span className="flex items-center gap-1.5 text-cyan-500 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                <span>Zero Website ({noWebPercent}%)</span>
-              </span>
-              <span className="flex items-center gap-1.5 text-amber-500 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                <span>Outdated ({outdatedPercent}%)</span>
-              </span>
+              <span className="text-cyan-500 font-semibold">Zero Website ({noWebPercent}%)</span>
+              <span className="text-amber-500 font-semibold">Outdated Web ({outdatedPercent}%)</span>
             </div>
           </div>
         </div>
 
-        <div className={`mt-4 pt-3 border-t text-xs flex items-center justify-between ${
-          isDark ? 'border-slate-800/80 text-slate-400' : 'border-slate-200 text-slate-500'
-        }`}>
-          <span>Priority Pitch Target:</span>
-          <span className="text-cyan-500 font-bold">Zero-Web B2B Wholesalers</span>
-        </div>
       </div>
 
     </div>

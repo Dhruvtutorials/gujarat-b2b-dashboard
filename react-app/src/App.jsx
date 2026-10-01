@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { CORRIDOR_LEADS } from './data/leadsData';
+import React, { useState } from 'react';
+import { CORRIDOR_LEADS, CORRIDOR_CITIES } from './data/leadsData';
 import SecurityGate from './components/SecurityGate';
 import Navbar from './components/Navbar';
-import CorridorHighwayBar from './components/CorridorHighwayBar';
-import SidebarFilters from './components/SidebarFilters';
 import KpiMetrics from './components/KpiMetrics';
+import LeadsMatrixTable from './components/LeadsMatrixTable';
 import Fresh830Shelf from './components/Fresh830Shelf';
 import VisualAnalytics from './components/VisualAnalytics';
-import LeadsMatrixTable from './components/LeadsMatrixTable';
+import CorridorRouteView from './components/CorridorRouteView';
 import PitchModal from './components/PitchModal';
 import AutoScanModal from './components/AutoScanModal';
-import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3 } from 'lucide-react';
 
 export default function App() {
-  // Authentication State (Passcode: 2002)
+  // Passcode Authentication (PIN: 2002)
   const [isUnlocked, setIsUnlocked] = useState(() => {
     return sessionStorage.getItem('gujarat_corridor_auth') === 'unlocked_2002';
   });
 
-  // White / Dark Mode Theme State
+  // White / Dark Mode Theme
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('gujarat_corridor_theme') || 'dark';
   });
@@ -28,11 +26,8 @@ export default function App() {
     localStorage.setItem('gujarat_corridor_theme', newTheme);
   };
 
-  // View Sections: 'table' or 'analytics'
-  const [activeMainTab, setActiveMainTab] = useState('table');
-
-  // Sidebar Open/Close toggle
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  // Active Navigation Tab: 'leads' | 'fresh' | 'analytics' | 'corridor'
+  const [activeTab, setActiveTab] = useState('leads');
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,39 +35,28 @@ export default function App() {
   const [selectedType, setSelectedType] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('all');
   const [selectedWebStatus, setSelectedWebStatus] = useState('all');
-  const [activeBatch, setActiveBatch] = useState('all');
 
   // Modals
   const [pitchLead, setPitchLead] = useState(null);
   const [isAutoScanOpen, setIsAutoScanOpen] = useState(false);
 
-  // Lock portal
+  // Lock Portal
   const handleLock = () => {
     sessionStorage.removeItem('gujarat_corridor_auth');
     setIsUnlocked(false);
   };
 
-  // Reset all filters
+  // Reset Filters
   const handleResetFilters = () => {
     setSearchQuery('');
     setSelectedCity('all');
     setSelectedType('all');
     setSelectedPriority('all');
     setSelectedWebStatus('all');
-    setActiveBatch('all');
-  };
-
-  const scrollToTable = () => {
-    setActiveMainTab('table');
-    const el = document.getElementById('leads-table-section');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   // Filter logic
   const filteredLeads = CORRIDOR_LEADS.filter((lead) => {
-    // Search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const match = 
@@ -86,55 +70,28 @@ export default function App() {
       if (!match) return false;
     }
 
-    // City
     if (selectedCity !== 'all' && lead.city !== selectedCity) return false;
-
-    // Type
     if (selectedType !== 'all' && lead.type !== selectedType) return false;
-
-    // Priority
     if (selectedPriority !== 'all' && lead.priority !== selectedPriority) return false;
-
-    // Website status
     if (selectedWebStatus !== 'all' && lead.website !== selectedWebStatus) return false;
-
-    // Batch / Inflow
-    if (activeBatch === 'today') {
-      if (!lead.isNewToday) return false;
-    } else if (activeBatch !== 'all') {
-      if (lead.batchDate !== activeBatch) return false;
-    }
 
     return true;
   });
 
-  // Today's 08:30 AM fresh leads for dedicated shelf
   const freshLeadsToday = CORRIDOR_LEADS.filter((l) => l.isNewToday);
 
-  // Map route navigation handler
+  // Map route handler
   const handleNavigateMap = (lead) => {
     const query = encodeURIComponent(`${lead.name} ${lead.address}`);
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
 
-  // Export to CSV
+  // Export CSV
   const handleExportCsv = () => {
     const headers = [
-      'ID',
-      'Company Name',
-      'Business Type',
-      'Category / Sector',
-      'City',
-      'Zone',
-      'Physical Factory/Office Address',
-      'Decision Maker',
-      'Phone Number',
-      'Web Presence',
-      'Lead Stage',
-      'Priority',
-      'Estimated Web Dev Fee (INR)',
-      'Estimated Monthly MRR (INR)',
-      'Batch Timestamp'
+      'ID', 'Company Name', 'Type', 'Category', 'City', 'Zone',
+      'Address', 'Decision Maker', 'Phone', 'Website', 'Stage',
+      'Priority', 'Web Dev Fee (INR)', 'Monthly MRR (INR)', 'Timestamp'
     ];
 
     const rows = filteredLeads.map((l) => [
@@ -167,48 +124,45 @@ export default function App() {
 
   const isDark = theme === 'dark';
 
-  // If locked, show Security Gate
+  // If locked, render SecurityGate
   if (!isUnlocked) {
     return <SecurityGate onUnlock={() => setIsUnlocked(true)} />;
   }
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans transition-colors w-full overflow-x-hidden antialiased ${
-      isDark ? 'bg-[#070a13] text-slate-100' : 'bg-slate-100 text-slate-900'
+    <div className={`min-h-screen flex flex-col font-sans transition-colors w-full antialiased ${
+      isDark ? 'bg-[#090d16] text-slate-100' : 'bg-slate-50 text-slate-900'
     }`}>
       
-      {/* 1. Ultra-Wide Top Navigation Bar with White/Dark Button */}
+      {/* 1. Clean Navigation Bar with Tabs & White/Dark Switch */}
       <Navbar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         totalLeads={CORRIDOR_LEADS.length}
         todayCount={freshLeadsToday.length}
-        onOpenAutoScan={() => setIsAutoScanOpen(true)}
         onExportCsv={handleExportCsv}
         onLock={handleLock}
-        activeBatch={activeBatch}
-        setActiveBatch={setActiveBatch}
-        isSidebarOpen={isSidebarOpen}
-        setIsSidebarOpen={setIsSidebarOpen}
         theme={theme}
         setTheme={handleSetTheme}
-        onScrollToTable={scrollToTable}
       />
 
-      {/* 2. Interactive 13 Corridor Hubs Highway Ribbon (Surat ➔ Gandhinagar) */}
-      <CorridorHighwayBar
-        selectedCity={selectedCity}
-        setSelectedCity={setSelectedCity}
-        leads={CORRIDOR_LEADS}
-        theme={theme}
-      />
-
-      {/* 3. Full-Width Main Cockpit Workspace */}
-      <div className="w-full px-3 lg:px-6 py-4 flex-1 flex flex-col lg:flex-row gap-5 items-start">
+      {/* 2. Main Executive Content Container */}
+      <main className="w-full max-w-7xl mx-auto px-4 lg:px-8 py-6 flex-1 flex flex-col">
         
-        {/* Left Filter Sidebar */}
-        {isSidebarOpen && (
-          <SidebarFilters
+        {/* Clean Executive KPI Metrics */}
+        <KpiMetrics 
+          leads={filteredLeads} 
+          todayCount={freshLeadsToday.length} 
+          theme={theme}
+        />
+
+        {/* 3. Clean Modular Tabs */}
+        {activeTab === 'leads' && (
+          <LeadsMatrixTable
+            leads={filteredLeads}
+            onOpenPitch={(lead) => setPitchLead(lead)}
+            onNavigateMap={handleNavigateMap}
+            theme={theme}
             selectedCity={selectedCity}
             setSelectedCity={setSelectedCity}
             selectedType={selectedType}
@@ -217,173 +171,71 @@ export default function App() {
             setSelectedPriority={setSelectedPriority}
             selectedWebStatus={selectedWebStatus}
             setSelectedWebStatus={setSelectedWebStatus}
-            activeBatch={activeBatch}
-            setActiveBatch={setActiveBatch}
-            leads={filteredLeads}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
             onResetFilters={handleResetFilters}
-            theme={theme}
           />
         )}
 
-        {/* Right Dashboard Body */}
-        <main className="flex-1 w-full min-w-0 flex flex-col">
-          
-          {/* Quick Filter Pills Row */}
-          <div className="w-full flex items-center justify-between gap-3 overflow-x-auto pb-3 mb-2 no-scrollbar">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleResetFilters()}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  selectedCity === 'all' && activeBatch === 'all' && selectedType === 'all' && selectedPriority === 'all' && selectedWebStatus === 'all'
-                    ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-600/30'
-                    : isDark 
-                      ? 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800' 
-                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                All Highway Leads ({CORRIDOR_LEADS.length})
-              </button>
-
-              <button
-                onClick={() => setActiveBatch(activeBatch === 'today' ? 'all' : 'today')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  activeBatch === 'today'
-                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/30'
-                    : isDark
-                      ? 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
-                      : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
-                }`}
-              >
-                <Clock className="w-3.5 h-3.5" />
-                <span>🌅 08:30 AM Inflow ({freshLeadsToday.length})</span>
-              </button>
-
-              <button
-                onClick={() => setSelectedPriority(selectedPriority === 'Hot' ? 'all' : 'Hot')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  selectedPriority === 'Hot'
-                    ? 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-600/30'
-                    : isDark
-                      ? 'bg-rose-500/10 text-rose-300 border-rose-500/30 hover:bg-rose-500/20'
-                      : 'bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100'
-                }`}
-              >
-                <Flame className="w-3.5 h-3.5 text-rose-500" />
-                <span>Hot Deals (19)</span>
-              </button>
-
-              <button
-                onClick={() => setSelectedWebStatus(selectedWebStatus === 'No Website' ? 'all' : 'No Website')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  selectedWebStatus === 'No Website'
-                    ? 'bg-cyan-600 text-white border-cyan-400 shadow-md shadow-cyan-600/30'
-                    : isDark
-                      ? 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30 hover:bg-cyan-500/20'
-                      : 'bg-cyan-50 text-cyan-800 border-cyan-300 hover:bg-cyan-100'
-                }`}
-              >
-                <Globe2 className="w-3.5 h-3.5 text-cyan-500" />
-                <span>Zero Website (25)</span>
-              </button>
-
-              <button
-                onClick={() => setSelectedType(selectedType === 'B2B' ? 'all' : 'B2B')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  selectedType === 'B2B'
-                    ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
-                    : isDark
-                      ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
-                      : 'bg-indigo-50 text-indigo-800 border-indigo-300 hover:bg-indigo-100'
-                }`}
-              >
-                <Building2 className="w-3.5 h-3.5 text-indigo-500" />
-                <span>B2B Industrial (26)</span>
-              </button>
-            </div>
-
-            {/* View Selector: Table vs Analytics */}
-            <div className={`flex items-center gap-1 p-1 rounded-xl border shrink-0 ${
-              isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-sm'
-            }`}>
-              <button
-                onClick={() => setActiveMainTab('table')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                  activeMainTab === 'table'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <TableIcon className="w-3.5 h-3.5" />
-                <span>Leads Table</span>
-              </button>
-              <button
-                onClick={() => setActiveMainTab('analytics')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                  activeMainTab === 'analytics'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                <BarChart3 className="w-3.5 h-3.5" />
-                <span>Analytics Charts</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Executive KPI Metrics */}
-          <KpiMetrics 
-            leads={filteredLeads} 
-            todayCount={freshLeadsToday.length} 
-            theme={theme}
-          />
-
-          {/* Dedicated 08:30 AM Fresh Lead Inflow Shelf */}
-          {activeBatch !== '2026-09-28' && activeBatch !== '2026-09-27' && (
+        {activeTab === 'fresh' && (
+          <div>
             <Fresh830Shelf
               freshLeads={freshLeadsToday}
               onOpenPitch={(lead) => setPitchLead(lead)}
               onNavigateMap={handleNavigateMap}
               theme={theme}
             />
-          )}
+            {/* Also show table filtered for today */}
+            <LeadsMatrixTable
+              leads={freshLeadsToday}
+              onOpenPitch={(lead) => setPitchLead(lead)}
+              onNavigateMap={handleNavigateMap}
+              theme={theme}
+              selectedCity={selectedCity}
+              setSelectedCity={setSelectedCity}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              selectedPriority={selectedPriority}
+              setSelectedPriority={setSelectedPriority}
+              selectedWebStatus={selectedWebStatus}
+              setSelectedWebStatus={setSelectedWebStatus}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onResetFilters={handleResetFilters}
+            />
+          </div>
+        )}
 
-          {/* TABLE VIEW IS SHOWN DIRECTLY & PROMINENTLY */}
-          {activeMainTab === 'table' ? (
-            <>
-              <LeadsMatrixTable
-                leads={filteredLeads}
-                onOpenPitch={(lead) => setPitchLead(lead)}
-                onNavigateMap={handleNavigateMap}
-                theme={theme}
-              />
-              <VisualAnalytics leads={filteredLeads} theme={theme} />
-            </>
-          ) : (
-            <>
-              <VisualAnalytics leads={filteredLeads} theme={theme} />
-              <LeadsMatrixTable
-                leads={filteredLeads}
-                onOpenPitch={(lead) => setPitchLead(lead)}
-                onNavigateMap={handleNavigateMap}
-                theme={theme}
-              />
-            </>
-          )}
+        {activeTab === 'analytics' && (
+          <VisualAnalytics 
+            leads={filteredLeads} 
+            theme={theme} 
+          />
+        )}
 
-        </main>
-      </div>
+        {activeTab === 'corridor' && (
+          <CorridorRouteView
+            onSelectCity={(city) => {
+              setSelectedCity(city);
+              setActiveTab('leads');
+            }}
+            theme={theme}
+          />
+        )}
 
-      {/* Footer */}
-      <footer className={`mt-auto border-t py-4 px-4 text-center text-xs w-full transition-colors ${
-        isDark ? 'border-slate-800/80 bg-[#050811] text-slate-500' : 'border-slate-200 bg-white text-slate-500'
+      </main>
+
+      {/* Clean Minimalist Footer */}
+      <footer className={`mt-auto border-t py-4 px-4 text-center text-xs transition-colors ${
+        isDark ? 'border-slate-800 bg-[#070a13] text-slate-500' : 'border-slate-200 bg-white text-slate-500'
       }`}>
-        <div className="flex flex-col sm:flex-row items-center justify-between max-w-full px-4 gap-2 text-[11px]">
-          <span>Gujarat Highway Corridor B2B Prospecting Engine • Built with React 19 & Tailwind CSS</span>
-          <span>Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar (320 KM) • Passcode Protected (2002)</span>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 px-4 text-[11px]">
+          <span>Gujarat Highway Corridor B2B Portal • Surat ➔ Gandhinagar (320 KM)</span>
+          <span>Passcode Protected (PIN: 2002) • Built with React 19</span>
         </div>
       </footer>
 
-      {/* WhatsApp & Meeting Pitch Modal */}
+      {/* WhatsApp Pitch Modal */}
       {pitchLead && (
         <PitchModal
           lead={pitchLead}
@@ -391,7 +243,7 @@ export default function App() {
         />
       )}
 
-      {/* Corridor Auto Scanner Modal */}
+      {/* Auto Scan Modal */}
       {isAutoScanOpen && (
         <AutoScanModal
           onClose={() => setIsAutoScanOpen(false)}

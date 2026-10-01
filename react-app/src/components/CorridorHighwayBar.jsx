@@ -1,5 +1,5 @@
 import React from 'react';
-import { Milestone, Navigation2, CheckCircle2, ChevronRight, Layers } from 'lucide-react';
+import { Navigation2, Milestone, ChevronRight } from 'lucide-react';
 import { CORRIDOR_CITIES } from '../data/leadsData';
 
 export default function CorridorHighwayBar({ selectedCity, setSelectedCity, leads, theme = 'dark' }) {
@@ -27,19 +27,19 @@ export default function CorridorHighwayBar({ selectedCity, setSelectedCity, lead
   ];
 
   return (
-    <div className={`w-full border-y px-3 lg:px-6 py-2.5 backdrop-blur-xl relative z-20 transition-colors ${
+    <div className={`w-full border-y px-3 lg:px-6 py-2.5 backdrop-blur-xl relative z-20 transition-colors shadow-sm ${
       isDark 
-        ? 'bg-[#0b101d]/95 border-slate-800/80 text-slate-100' 
-        : 'bg-white/95 border-slate-200 text-slate-800 shadow-sm'
+        ? 'bg-[#090d18]/95 border-slate-800/80 text-slate-100' 
+        : 'bg-white/95 border-slate-200 text-slate-800'
     }`}>
       <div className="w-full flex items-center justify-between gap-3 overflow-x-auto no-scrollbar">
         
-        {/* Left Badge: Corridor Route */}
-        <div className={`flex items-center gap-2 shrink-0 pr-3 border-r ${
+        {/* Left Badge: Highway Corridor Route Indicator */}
+        <div className={`flex items-center gap-2.5 shrink-0 pr-3.5 border-r ${
           isDark ? 'border-slate-800' : 'border-slate-200'
         }`}>
-          <div className="w-7 h-7 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-500">
-            <Navigation2 className="w-3.5 h-3.5 rotate-45" />
+          <div className="w-8 h-8 rounded-xl bg-blue-600/15 border border-blue-500/30 flex items-center justify-center text-blue-500 shadow-sm">
+            <Navigation2 className="w-4 h-4 rotate-45" />
           </div>
           <div className="leading-tight">
             <span className={`text-[10px] font-mono uppercase tracking-wider block font-bold ${
@@ -55,20 +55,20 @@ export default function CorridorHighwayBar({ selectedCity, setSelectedCity, lead
           </div>
           <button
             onClick={() => setSelectedCity('all')}
-            className={`ml-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+            className={`ml-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               selectedCity === 'all'
                 ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
                 : isDark
-                  ? 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-slate-800/80 text-slate-300 hover:bg-slate-700 border border-slate-700/50'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
             }`}
           >
             All 13 Hubs (36)
           </button>
         </div>
 
-        {/* Horizontal Highway Stations */}
-        <div className="flex items-center gap-1.5 shrink-0 py-1">
+        {/* 13 Milestone Stations Ribbon */}
+        <div className="flex items-center gap-1.5 shrink-0 py-0.5">
           {stops.map((stop, idx) => {
             const count = cityLeadCount[stop.name] || 0;
             const isSelected = selectedCity === stop.name;
@@ -77,28 +77,28 @@ export default function CorridorHighwayBar({ selectedCity, setSelectedCity, lead
               <React.Fragment key={stop.name}>
                 <button
                   onClick={() => setSelectedCity(stop.name)}
-                  className={`group relative flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition-all whitespace-nowrap ${
+                  className={`group relative flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition-all whitespace-nowrap shadow-sm ${
                     isSelected
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-blue-400 shadow-md shadow-blue-500/30 font-bold scale-[1.03]'
                       : isDark
-                        ? 'bg-slate-900/60 hover:bg-slate-800 border-slate-800/80 text-slate-300 hover:border-slate-700'
+                        ? 'bg-slate-900/70 hover:bg-slate-800 border-slate-800 text-slate-300 hover:border-slate-700'
                         : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700 hover:border-slate-300'
                   }`}
                   title={`${stop.name} (${stop.km}) - ${stop.tag}`}
                 >
                   {/* Status dot */}
-                  <span className={`w-2 h-2 rounded-full ${
-                    isSelected ? 'bg-white animate-pulse' : 'bg-blue-500/70'
+                  <span className={`w-2 h-2 rounded-full transition-transform ${
+                    isSelected ? 'bg-white animate-pulse scale-125' : 'bg-blue-500/70 group-hover:scale-125'
                   }`} />
 
-                  <span className="tracking-tight font-medium">{stop.name}</span>
+                  <span className="font-semibold">{stop.name}</span>
 
                   {/* Lead Count Badge */}
                   <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full font-bold ${
                     isSelected 
-                      ? 'bg-blue-900/80 text-blue-200' 
+                      ? 'bg-blue-900/90 text-blue-100' 
                       : isDark 
-                        ? 'bg-slate-800 text-slate-400' 
+                        ? 'bg-slate-800 text-slate-400 group-hover:text-slate-200' 
                         : 'bg-slate-200 text-slate-700'
                   }`}>
                     {count}
@@ -107,7 +107,7 @@ export default function CorridorHighwayBar({ selectedCity, setSelectedCity, lead
 
                 {/* Connector Arrow */}
                 {idx < stops.length - 1 && (
-                  <span className={`text-xs font-mono select-none ${
+                  <span className={`text-xs font-mono select-none px-0.5 ${
                     isDark ? 'text-slate-700' : 'text-slate-300'
                   }`}>
                     ➔

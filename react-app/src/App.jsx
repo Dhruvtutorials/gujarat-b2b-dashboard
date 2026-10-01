@@ -10,7 +10,7 @@ import VisualAnalytics from './components/VisualAnalytics';
 import LeadsMatrixTable from './components/LeadsMatrixTable';
 import PitchModal from './components/PitchModal';
 import AutoScanModal from './components/AutoScanModal';
-import { Sparkles, Flame, Globe2, Building2, Clock, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3 } from 'lucide-react';
 
 export default function App() {
   // Authentication State (Passcode: 2002)
@@ -18,7 +18,20 @@ export default function App() {
     return sessionStorage.getItem('gujarat_corridor_auth') === 'unlocked_2002';
   });
 
-  // Sidebar Open/Close toggle for ultra full screen experience
+  // White / Dark Mode Theme State
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('gujarat_corridor_theme') || 'dark';
+  });
+
+  const handleSetTheme = (newTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem('gujarat_corridor_theme', newTheme);
+  };
+
+  // View Sections: 'table' or 'analytics'
+  const [activeMainTab, setActiveMainTab] = useState('table');
+
+  // Sidebar Open/Close toggle
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Filter States
@@ -47,6 +60,14 @@ export default function App() {
     setSelectedPriority('all');
     setSelectedWebStatus('all');
     setActiveBatch('all');
+  };
+
+  const scrollToTable = () => {
+    setActiveMainTab('table');
+    const el = document.getElementById('leads-table-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   // Filter logic
@@ -144,15 +165,19 @@ export default function App() {
     document.body.removeChild(link);
   };
 
+  const isDark = theme === 'dark';
+
   // If locked, show Security Gate
   if (!isUnlocked) {
     return <SecurityGate onUnlock={() => setIsUnlocked(true)} />;
   }
 
   return (
-    <div className="min-h-screen bg-[#070a13] text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased w-full overflow-x-hidden">
+    <div className={`min-h-screen flex flex-col font-sans transition-colors w-full overflow-x-hidden antialiased ${
+      isDark ? 'bg-[#070a13] text-slate-100' : 'bg-slate-100 text-slate-900'
+    }`}>
       
-      {/* 1. Ultra-Wide Top Navigation Bar */}
+      {/* 1. Ultra-Wide Top Navigation Bar with White/Dark Button */}
       <Navbar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -165,6 +190,9 @@ export default function App() {
         setActiveBatch={setActiveBatch}
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
+        theme={theme}
+        setTheme={handleSetTheme}
+        onScrollToTable={scrollToTable}
       />
 
       {/* 2. Interactive 13 Corridor Hubs Highway Ribbon (Surat ➔ Gandhinagar) */}
@@ -172,12 +200,13 @@ export default function App() {
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
         leads={CORRIDOR_LEADS}
+        theme={theme}
       />
 
       {/* 3. Full-Width Main Cockpit Workspace */}
       <div className="w-full px-3 lg:px-6 py-4 flex-1 flex flex-col lg:flex-row gap-5 items-start">
         
-        {/* Left Filter Sidebar (Collapsible) */}
+        {/* Left Filter Sidebar */}
         {isSidebarOpen && (
           <SidebarFilters
             selectedCity={selectedCity}
@@ -192,104 +221,162 @@ export default function App() {
             setActiveBatch={setActiveBatch}
             leads={filteredLeads}
             onResetFilters={handleResetFilters}
+            theme={theme}
           />
         )}
 
-        {/* Right Dashboard Body (Takes 100% fluid space when sidebar is collapsed or on wide screens) */}
+        {/* Right Dashboard Body */}
         <main className="flex-1 w-full min-w-0 flex flex-col">
           
           {/* Quick Filter Pills Row */}
-          <div className="w-full flex items-center gap-2 overflow-x-auto pb-3 mb-2 no-scrollbar">
-            <button
-              onClick={() => handleResetFilters()}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                selectedCity === 'all' && activeBatch === 'all' && selectedType === 'all' && selectedPriority === 'all' && selectedWebStatus === 'all'
-                  ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-600/30'
-                  : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800'
-              }`}
-            >
-              All Highway Leads ({CORRIDOR_LEADS.length})
-            </button>
+          <div className="w-full flex items-center justify-between gap-3 overflow-x-auto pb-3 mb-2 no-scrollbar">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleResetFilters()}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                  selectedCity === 'all' && activeBatch === 'all' && selectedType === 'all' && selectedPriority === 'all' && selectedWebStatus === 'all'
+                    ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-600/30'
+                    : isDark 
+                      ? 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800' 
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                }`}
+              >
+                All Highway Leads ({CORRIDOR_LEADS.length})
+              </button>
 
-            <button
-              onClick={() => setActiveBatch(activeBatch === 'today' ? 'all' : 'today')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                activeBatch === 'today'
-                  ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/30'
-                  : 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
-              }`}
-            >
-              <Clock className="w-3.5 h-3.5" />
-              <span>🌅 08:30 AM Inflow ({freshLeadsToday.length})</span>
-            </button>
+              <button
+                onClick={() => setActiveBatch(activeBatch === 'today' ? 'all' : 'today')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                  activeBatch === 'today'
+                    ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/30'
+                    : isDark
+                      ? 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
+                      : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
+                }`}
+              >
+                <Clock className="w-3.5 h-3.5" />
+                <span>🌅 08:30 AM Inflow ({freshLeadsToday.length})</span>
+              </button>
 
-            <button
-              onClick={() => setSelectedPriority(selectedPriority === 'Hot' ? 'all' : 'Hot')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                selectedPriority === 'Hot'
-                  ? 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-600/30'
-                  : 'bg-rose-500/10 text-rose-300 border-rose-500/30 hover:bg-rose-500/20'
-              }`}
-            >
-              <Flame className="w-3.5 h-3.5 text-rose-400" />
-              <span>Hot Priority (19)</span>
-            </button>
+              <button
+                onClick={() => setSelectedPriority(selectedPriority === 'Hot' ? 'all' : 'Hot')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                  selectedPriority === 'Hot'
+                    ? 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-600/30'
+                    : isDark
+                      ? 'bg-rose-500/10 text-rose-300 border-rose-500/30 hover:bg-rose-500/20'
+                      : 'bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100'
+                }`}
+              >
+                <Flame className="w-3.5 h-3.5 text-rose-500" />
+                <span>Hot Deals (19)</span>
+              </button>
 
-            <button
-              onClick={() => setSelectedWebStatus(selectedWebStatus === 'No Website' ? 'all' : 'No Website')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                selectedWebStatus === 'No Website'
-                  ? 'bg-cyan-600 text-white border-cyan-400 shadow-md shadow-cyan-600/30'
-                  : 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30 hover:bg-cyan-500/20'
-              }`}
-            >
-              <Globe2 className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Zero Website Targets (25)</span>
-            </button>
+              <button
+                onClick={() => setSelectedWebStatus(selectedWebStatus === 'No Website' ? 'all' : 'No Website')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                  selectedWebStatus === 'No Website'
+                    ? 'bg-cyan-600 text-white border-cyan-400 shadow-md shadow-cyan-600/30'
+                    : isDark
+                      ? 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30 hover:bg-cyan-500/20'
+                      : 'bg-cyan-50 text-cyan-800 border-cyan-300 hover:bg-cyan-100'
+                }`}
+              >
+                <Globe2 className="w-3.5 h-3.5 text-cyan-500" />
+                <span>Zero Website (25)</span>
+              </button>
 
-            <button
-              onClick={() => setSelectedType(selectedType === 'B2B' ? 'all' : 'B2B')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                selectedType === 'B2B'
-                  ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
-                  : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
-              }`}
-            >
-              <Building2 className="w-3.5 h-3.5 text-indigo-400" />
-              <span>B2B Industrial (26)</span>
-            </button>
+              <button
+                onClick={() => setSelectedType(selectedType === 'B2B' ? 'all' : 'B2B')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                  selectedType === 'B2B'
+                    ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
+                    : isDark
+                      ? 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
+                      : 'bg-indigo-50 text-indigo-800 border-indigo-300 hover:bg-indigo-100'
+                }`}
+              >
+                <Building2 className="w-3.5 h-3.5 text-indigo-500" />
+                <span>B2B Industrial (26)</span>
+              </button>
+            </div>
+
+            {/* View Selector: Table vs Analytics */}
+            <div className={`flex items-center gap-1 p-1 rounded-xl border shrink-0 ${
+              isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200 shadow-sm'
+            }`}>
+              <button
+                onClick={() => setActiveMainTab('table')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  activeMainTab === 'table'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <TableIcon className="w-3.5 h-3.5" />
+                <span>Leads Table</span>
+              </button>
+              <button
+                onClick={() => setActiveMainTab('analytics')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                  activeMainTab === 'analytics'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <BarChart3 className="w-3.5 h-3.5" />
+                <span>Analytics Charts</span>
+              </button>
+            </div>
           </div>
 
           {/* Executive KPI Metrics */}
           <KpiMetrics 
             leads={filteredLeads} 
             todayCount={freshLeadsToday.length} 
+            theme={theme}
           />
 
-          {/* Dedicated 08:30 AM Fresh Lead Inflow Shelf (Near Top!) */}
+          {/* Dedicated 08:30 AM Fresh Lead Inflow Shelf */}
           {activeBatch !== '2026-09-28' && activeBatch !== '2026-09-27' && (
             <Fresh830Shelf
               freshLeads={freshLeadsToday}
               onOpenPitch={(lead) => setPitchLead(lead)}
               onNavigateMap={handleNavigateMap}
+              theme={theme}
             />
           )}
 
-          {/* Visual Analytics (Dual Splines & Donuts) */}
-          <VisualAnalytics leads={filteredLeads} />
-
-          {/* Full Width Leads Matrix Table & Card Grid */}
-          <LeadsMatrixTable
-            leads={filteredLeads}
-            onOpenPitch={(lead) => setPitchLead(lead)}
-            onNavigateMap={handleNavigateMap}
-          />
+          {/* TABLE VIEW IS SHOWN DIRECTLY & PROMINENTLY */}
+          {activeMainTab === 'table' ? (
+            <>
+              <LeadsMatrixTable
+                leads={filteredLeads}
+                onOpenPitch={(lead) => setPitchLead(lead)}
+                onNavigateMap={handleNavigateMap}
+                theme={theme}
+              />
+              <VisualAnalytics leads={filteredLeads} theme={theme} />
+            </>
+          ) : (
+            <>
+              <VisualAnalytics leads={filteredLeads} theme={theme} />
+              <LeadsMatrixTable
+                leads={filteredLeads}
+                onOpenPitch={(lead) => setPitchLead(lead)}
+                onNavigateMap={handleNavigateMap}
+                theme={theme}
+              />
+            </>
+          )}
 
         </main>
       </div>
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-slate-800/80 bg-[#050811] py-4 px-4 text-center text-xs text-slate-500 w-full">
+      <footer className={`mt-auto border-t py-4 px-4 text-center text-xs w-full transition-colors ${
+        isDark ? 'border-slate-800/80 bg-[#050811] text-slate-500' : 'border-slate-200 bg-white text-slate-500'
+      }`}>
         <div className="flex flex-col sm:flex-row items-center justify-between max-w-full px-4 gap-2 text-[11px]">
           <span>Gujarat Highway Corridor B2B Prospecting Engine • Built with React 19 & Tailwind CSS</span>
           <span>Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar (320 KM) • Passcode Protected (2002)</span>

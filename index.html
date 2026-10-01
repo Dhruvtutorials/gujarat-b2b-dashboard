@@ -123,7 +123,7 @@
 <body class="theme-dark text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
 
   <!-- ========================================================================= -->
-  <!-- SECURITY PASSCODE RESTRICTED ACCESS OVERLAY (PIN: 1935) -->
+  <!-- SECURITY PASSCODE RESTRICTED ACCESS OVERLAY (PIN: 2002) -->
   <!-- ========================================================================= -->
   <div id="authLockScreen" class="fixed inset-0 z-[9999] bg-[#0A0E1A]/95 backdrop-blur-2xl flex items-center justify-center p-4 transition-all duration-300">
     <div class="dashboard-card max-w-sm w-full p-6 sm:p-7 border border-sky-500/40 shadow-2xl relative overflow-hidden text-center bg-[#13192D]">
@@ -1038,14 +1038,14 @@
   <script>
 
     // =========================================================================
-    // SECURITY PASSCODE PROTECTION (PIN: 1935)
+    // SECURITY PASSCODE PROTECTION (PIN: 2002)
     // =========================================================================
-    const SECRET_PIN = "1935";
+    const SECRET_PIN = "2002";
 
     function checkAuth() {
       const isAuth = sessionStorage.getItem("corridor_auth_token");
       const lockScreen = document.getElementById("authLockScreen");
-      if (isAuth === "verified_1935") {
+      if (isAuth === "verified_2002") {
         lockScreen.classList.add("hidden");
       } else {
         lockScreen.classList.remove("hidden");
@@ -1063,7 +1063,7 @@
       const val = (input.value || "").trim();
 
       if (val === SECRET_PIN) {
-        sessionStorage.setItem("corridor_auth_token", "verified_1935");
+        sessionStorage.setItem("corridor_auth_token", "verified_2002");
         if (err) err.classList.add("hidden");
         const lockScreen = document.getElementById("authLockScreen");
         lockScreen.style.opacity = "0";

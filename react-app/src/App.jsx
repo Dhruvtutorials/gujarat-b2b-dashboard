@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { CORRIDOR_LEADS } from './data/leadsData';
 import SecurityGate from './components/SecurityGate';
 import Navbar from './components/Navbar';
+import CorridorHighwayBar from './components/CorridorHighwayBar';
 import SidebarFilters from './components/SidebarFilters';
 import KpiMetrics from './components/KpiMetrics';
 import Fresh830Shelf from './components/Fresh830Shelf';
@@ -9,6 +10,7 @@ import VisualAnalytics from './components/VisualAnalytics';
 import LeadsMatrixTable from './components/LeadsMatrixTable';
 import PitchModal from './components/PitchModal';
 import AutoScanModal from './components/AutoScanModal';
+import { Sparkles, Flame, Globe2, Building2, Clock, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
   // Authentication State (Passcode: 2002)
@@ -16,13 +18,15 @@ export default function App() {
     return sessionStorage.getItem('gujarat_corridor_auth') === 'unlocked_2002';
   });
 
+  // Sidebar Open/Close toggle for ultra full screen experience
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCity, setSelectedCity] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('all');
   const [selectedWebStatus, setSelectedWebStatus] = useState('all');
-  const [selectedStage, setSelectedStage] = useState('all');
   const [activeBatch, setActiveBatch] = useState('all');
 
   // Modals
@@ -42,7 +46,6 @@ export default function App() {
     setSelectedType('all');
     setSelectedPriority('all');
     setSelectedWebStatus('all');
-    setSelectedStage('all');
     setActiveBatch('all');
   };
 
@@ -87,7 +90,7 @@ export default function App() {
   // Today's 08:30 AM fresh leads for dedicated shelf
   const freshLeadsToday = CORRIDOR_LEADS.filter((l) => l.isNewToday);
 
-  // Map route handler
+  // Map route navigation handler
   const handleNavigateMap = (lead) => {
     const query = encodeURIComponent(`${lead.name} ${lead.address}`);
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
@@ -147,9 +150,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#070a13] text-slate-100 flex flex-col font-sans selection:bg-blue-600 selection:text-white antialiased w-full overflow-x-hidden">
       
-      {/* Top Navigation */}
+      {/* 1. Ultra-Wide Top Navigation Bar */}
       <Navbar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -160,39 +163,110 @@ export default function App() {
         onLock={handleLock}
         activeBatch={activeBatch}
         setActiveBatch={setActiveBatch}
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
       />
 
-      {/* Main Container */}
-      <div className="max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 flex-1 flex flex-col lg:flex-row gap-6 items-start">
-        
-        {/* Left Filter Sidebar */}
-        <SidebarFilters
-          selectedCity={selectedCity}
-          setSelectedCity={setSelectedCity}
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
-          selectedPriority={selectedPriority}
-          setSelectedPriority={setSelectedPriority}
-          selectedWebStatus={selectedWebStatus}
-          setSelectedWebStatus={setSelectedWebStatus}
-          selectedStage={selectedStage}
-          setSelectedStage={setSelectedStage}
-          activeBatch={activeBatch}
-          setActiveBatch={setActiveBatch}
-          leads={filteredLeads}
-          onResetFilters={handleResetFilters}
-        />
+      {/* 2. Interactive 13 Corridor Hubs Highway Ribbon (Surat ➔ Gandhinagar) */}
+      <CorridorHighwayBar
+        selectedCity={selectedCity}
+        setSelectedCity={setSelectedCity}
+        leads={CORRIDOR_LEADS}
+      />
 
-        {/* Right Dashboard Body */}
+      {/* 3. Full-Width Main Cockpit Workspace */}
+      <div className="w-full px-3 lg:px-6 py-4 flex-1 flex flex-col lg:flex-row gap-5 items-start">
+        
+        {/* Left Filter Sidebar (Collapsible) */}
+        {isSidebarOpen && (
+          <SidebarFilters
+            selectedCity={selectedCity}
+            setSelectedCity={setSelectedCity}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            selectedPriority={selectedPriority}
+            setSelectedPriority={setSelectedPriority}
+            selectedWebStatus={selectedWebStatus}
+            setSelectedWebStatus={setSelectedWebStatus}
+            activeBatch={activeBatch}
+            setActiveBatch={setActiveBatch}
+            leads={filteredLeads}
+            onResetFilters={handleResetFilters}
+          />
+        )}
+
+        {/* Right Dashboard Body (Takes 100% fluid space when sidebar is collapsed or on wide screens) */}
         <main className="flex-1 w-full min-w-0 flex flex-col">
           
+          {/* Quick Filter Pills Row */}
+          <div className="w-full flex items-center gap-2 overflow-x-auto pb-3 mb-2 no-scrollbar">
+            <button
+              onClick={() => handleResetFilters()}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                selectedCity === 'all' && activeBatch === 'all' && selectedType === 'all' && selectedPriority === 'all' && selectedWebStatus === 'all'
+                  ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-600/30'
+                  : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800'
+              }`}
+            >
+              All Highway Leads ({CORRIDOR_LEADS.length})
+            </button>
+
+            <button
+              onClick={() => setActiveBatch(activeBatch === 'today' ? 'all' : 'today')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                activeBatch === 'today'
+                  ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md shadow-amber-500/30'
+                  : 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
+              }`}
+            >
+              <Clock className="w-3.5 h-3.5" />
+              <span>🌅 08:30 AM Inflow ({freshLeadsToday.length})</span>
+            </button>
+
+            <button
+              onClick={() => setSelectedPriority(selectedPriority === 'Hot' ? 'all' : 'Hot')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                selectedPriority === 'Hot'
+                  ? 'bg-rose-600 text-white border-rose-400 shadow-md shadow-rose-600/30'
+                  : 'bg-rose-500/10 text-rose-300 border-rose-500/30 hover:bg-rose-500/20'
+              }`}
+            >
+              <Flame className="w-3.5 h-3.5 text-rose-400" />
+              <span>Hot Priority (19)</span>
+            </button>
+
+            <button
+              onClick={() => setSelectedWebStatus(selectedWebStatus === 'No Website' ? 'all' : 'No Website')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                selectedWebStatus === 'No Website'
+                  ? 'bg-cyan-600 text-white border-cyan-400 shadow-md shadow-cyan-600/30'
+                  : 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30 hover:bg-cyan-500/20'
+              }`}
+            >
+              <Globe2 className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Zero Website Targets (25)</span>
+            </button>
+
+            <button
+              onClick={() => setSelectedType(selectedType === 'B2B' ? 'all' : 'B2B')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                selectedType === 'B2B'
+                  ? 'bg-indigo-600 text-white border-indigo-400 shadow-md shadow-indigo-600/30'
+                  : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
+              }`}
+            >
+              <Building2 className="w-3.5 h-3.5 text-indigo-400" />
+              <span>B2B Industrial (26)</span>
+            </button>
+          </div>
+
           {/* Executive KPI Metrics */}
           <KpiMetrics 
             leads={filteredLeads} 
             todayCount={freshLeadsToday.length} 
           />
 
-          {/* Dedicated 08:30 AM Fresh Lead Inflow Shelf */}
+          {/* Dedicated 08:30 AM Fresh Lead Inflow Shelf (Near Top!) */}
           {activeBatch !== '2026-09-28' && activeBatch !== '2026-09-27' && (
             <Fresh830Shelf
               freshLeads={freshLeadsToday}
@@ -201,10 +275,10 @@ export default function App() {
             />
           )}
 
-          {/* Visual Analytics (Spline Curves & Donut Distributions) */}
+          {/* Visual Analytics (Dual Splines & Donuts) */}
           <VisualAnalytics leads={filteredLeads} />
 
-          {/* Leads Matrix Table & Card Grid */}
+          {/* Full Width Leads Matrix Table & Card Grid */}
           <LeadsMatrixTable
             leads={filteredLeads}
             onOpenPitch={(lead) => setPitchLead(lead)}
@@ -215,10 +289,11 @@ export default function App() {
       </div>
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-slate-800/80 bg-[#070b13] py-4 px-4 text-center text-xs text-slate-500">
-        <p>
-          Gujarat Highway Corridor B2B Intelligence Portal • Built with React 19 & Tailwind CSS • Surat ➔ Gandhinagar Pipeline • Passcode Protected (2002)
-        </p>
+      <footer className="mt-auto border-t border-slate-800/80 bg-[#050811] py-4 px-4 text-center text-xs text-slate-500 w-full">
+        <div className="flex flex-col sm:flex-row items-center justify-between max-w-full px-4 gap-2 text-[11px]">
+          <span>Gujarat Highway Corridor B2B Prospecting Engine • Built with React 19 & Tailwind CSS</span>
+          <span>Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar (320 KM) • Passcode Protected (2002)</span>
+        </div>
       </footer>
 
       {/* WhatsApp & Meeting Pitch Modal */}

@@ -68,8 +68,31 @@ export default function App() {
     setActiveMainTab('table');
     const el = document.getElementById('leads-table-section');
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  };
+
+  // City selection handler with auto-scroll and conflict resolution
+  const handleSelectCity = (city) => {
+    if (!city || city === 'all') {
+      setSelectedCity('all');
+      return;
+    }
+    // Auto-align state if needed
+    const found = CORRIDOR_LEADS.find(
+      (l) => l.city.toLowerCase() === city.toLowerCase()
+    );
+    if (found && selectedState !== 'all' && selectedState !== found.state) {
+      setSelectedState(found.state);
+    }
+    setSelectedCity(city);
+    setActiveMainTab('table');
+    setTimeout(() => {
+      const el = document.getElementById('leads-table-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 60);
   };
 
   // Filter logic
@@ -207,6 +230,7 @@ export default function App() {
         setSelectedState={setSelectedState}
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
+        onSelectCity={handleSelectCity}
         leads={CORRIDOR_LEADS}
         theme={theme}
       />
@@ -217,10 +241,12 @@ export default function App() {
         {/* Left Filter Sidebar */}
         {isSidebarOpen && (
           <SidebarFilters
+            allLeads={CORRIDOR_LEADS}
             selectedState={selectedState}
             setSelectedState={setSelectedState}
             selectedCity={selectedCity}
             setSelectedCity={setSelectedCity}
+            onSelectCity={handleSelectCity}
             selectedType={selectedType}
             setSelectedType={setSelectedType}
             selectedPriority={selectedPriority}
@@ -394,6 +420,9 @@ export default function App() {
             <>
               <LeadsMatrixTable
                 leads={filteredLeads}
+                selectedCity={selectedCity}
+                onSelectCity={handleSelectCity}
+                onResetFilters={handleResetFilters}
                 onOpenPitch={(lead) => setPitchLead(lead)}
                 onNavigateMap={handleNavigateMap}
                 theme={theme}
@@ -405,6 +434,9 @@ export default function App() {
               <VisualAnalytics leads={filteredLeads} theme={theme} />
               <LeadsMatrixTable
                 leads={filteredLeads}
+                selectedCity={selectedCity}
+                onSelectCity={handleSelectCity}
+                onResetFilters={handleResetFilters}
                 onOpenPitch={(lead) => setPitchLead(lead)}
                 onNavigateMap={handleNavigateMap}
                 theme={theme}

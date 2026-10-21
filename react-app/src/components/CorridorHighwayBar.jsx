@@ -7,6 +7,7 @@ export default function CorridorHighwayBar({
   setSelectedState,
   selectedCity, 
   setSelectedCity, 
+  onSelectCity,
   leads, 
   theme = 'dark' 
 }) {
@@ -124,7 +125,15 @@ export default function CorridorHighwayBar({
             return (
               <React.Fragment key={stop.name}>
                 <button
-                  onClick={() => setSelectedCity(stop.name)}
+                  onClick={() => {
+                    if (isSelected) {
+                      if (onSelectCity) onSelectCity('all');
+                      else setSelectedCity('all');
+                    } else {
+                      if (onSelectCity) onSelectCity(stop.name);
+                      else setSelectedCity(stop.name);
+                    }
+                  }}
                   className={`group relative flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs transition-all whitespace-nowrap shadow-sm ${
                     isSelected
                       ? isRaj

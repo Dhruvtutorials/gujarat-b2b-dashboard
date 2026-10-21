@@ -7,17 +7,21 @@ import {
   RotateCcw, 
   Clock, 
   Building2, 
-  Milestone,
-  CheckCircle2,
-  Compass
+  Milestone, 
+  CheckCircle2, 
+  Compass,
+  Search,
+  Check
 } from 'lucide-react';
 import { CORRIDOR_CITIES, GUJARAT_CITIES, RAJASTHAN_CITIES } from '../data/leadsData';
 
 export default function SidebarFilters({
+  allLeads = [],
   selectedState = 'all',
   setSelectedState,
   selectedCity,
   setSelectedCity,
+  onSelectCity,
   selectedType,
   setSelectedType,
   selectedPriority,
@@ -26,22 +30,36 @@ export default function SidebarFilters({
   setSelectedWebStatus,
   activeBatch,
   setActiveBatch,
-  leads,
+  leads = [],
   onResetFilters,
   theme = 'dark'
 }) {
   const isDark = theme === 'dark';
+  const [citySearch, setCitySearch] = useState('');
 
-  const cityCounts = leads.reduce((acc, lead) => {
+  // Master counts: Actual total leads available in each city across the whole corridor
+  const masterCounts = (allLeads.length > 0 ? allLeads : leads).reduce((acc, lead) => {
     acc[lead.city] = (acc[lead.city] || 0) + 1;
     return acc;
   }, {});
 
-  const displayedCities = selectedState === 'Gujarat' 
+  // Active counts matching current filter
+  const activeCounts = leads.reduce((acc, lead) => {
+    acc[lead.city] = (acc[lead.city] || 0) + 1;
+    return acc;
+  }, {});
+
+  const baseCities = selectedState === 'Gujarat' 
     ? GUJARAT_CITIES 
     : selectedState === 'Rajasthan' 
       ? RAJASTHAN_CITIES 
       : CORRIDOR_CITIES;
+
+  const displayedCities = baseCities.filter((city) =>
+    city.toLowerCase().includes(citySearch.trim().toLowerCase())
+  );
+
+  const totalHubsCount = baseCities.reduce((sum, c) => sum + (masterCounts[c] || 0), 0);
 
   return (
     <aside className={`w-full lg:w-72 rounded-3xl p-4 lg:p-5 flex flex-col gap-5 shrink-0 shadow-2xl border transition-colors ${
@@ -164,63 +182,110 @@ export default function SidebarFilters({
           <span className={`text-[10px] font-mono ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>NH-48/58</span>
         </div>
 
-        <div className="max-h-52 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+        {/* Quick Search for Hubs */}
+        <div className="relative mb-2">
+          <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
+          <input
+            type="text"
+            placeholder="Search city / hub..."
+            value={citySearch}
+            onChange={(e) => setCitySearch(e.target.value)}
+            className={`w-full text-xs pl-8 pr-2.5 py-1.5 rounded-xl border transition-all ${
+              isDark 
+                ? 'bg-slate-900/90 border-slate-800 text-slate-200 placeholder-slate-500 focus:border-blue-500' 
+                : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-blue-500'
+            }`}
+          />
+        </div>
+
+        <div className="max-h-56 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
           <button
-            onClick={() => setSelectedCity('all')}
-            className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs transition-all ${
+            onClick={() => {
+              if (onSelectCity) onSelectCity('all');
+              else setSelectedCity('all');
+            }}
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
               selectedCity === 'all'
-                ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30'
+                ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30 ring-1 ring-blue-400'
                 : isDark
                   ? 'bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-slate-800/80'
                   : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <span>All Hubs in View</span>
-            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-              selectedCity === 'all' ? 'bg-blue-800 text-white' : isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-700'
+            <div className="flex items-center gap-1.5">
+              <span>All Hubs in View</span>
+              {selectedCity === 'all' && <Check className="w-3 h-3 text-white" />}
+            </div>
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
+              selectedCity === 'all' 
+                ? 'bg-blue-800 text-white' 
+                : isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-700'
             }`}>
-              {displayedCities.reduce((sum, c) => sum + (cityCounts[c] || 0), 0)}
+              {totalHubsCount}
             </span>
           </button>
 
           {displayedCities.map((city, idx) => {
-            const count = cityCounts[city] || 0;
+            const count = masterCounts[city] || 0;
             const isSelected = selectedCity === city;
             const isRaj = RAJASTHAN_CITIES.includes(city);
 
             return (
               <button
                 key={city}
-                onClick={() => setSelectedCity(city)}
-                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs transition-all ${
+                onClick={() => {
+                  if (isSelected) {
+                    if (onSelectCity) onSelectCity('all');
+                    else setSelectedCity('all');
+                  } else {
+                    if (onSelectCity) onSelectCity(city);
+                    else setSelectedCity(city);
+                  }
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all group ${
                   isSelected
                     ? isRaj
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-md shadow-blue-600/30'
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black shadow-lg shadow-amber-500/25 ring-2 ring-amber-400 scale-[1.01]'
+                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-lg shadow-blue-600/25 ring-2 ring-blue-400 scale-[1.01]'
                     : isDark
-                      ? 'bg-slate-900/40 hover:bg-slate-800/80 text-slate-300 border border-slate-800/60'
-                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
+                      ? 'bg-slate-900/40 hover:bg-slate-800 text-slate-300 border border-slate-800/60 hover:border-slate-700'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 hover:border-slate-300'
                 }`}
               >
                 <div className="flex items-center gap-2 truncate">
-                  <span className={`text-[10px] font-mono ${isSelected ? 'text-blue-200' : isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                  <span className={`text-[10px] font-mono ${
+                    isSelected 
+                      ? isRaj ? 'text-slate-950 font-bold' : 'text-blue-100 font-bold' 
+                      : isDark ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
                     {(idx + 1).toString().padStart(2, '0')}.
                   </span>
                   <span className="truncate">{city}</span>
                   {isRaj && (
-                    <span className="text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-500 font-mono">
+                    <span className={`text-[9px] px-1 py-0.2 rounded font-mono font-bold ${
+                      isSelected ? 'bg-slate-950/20 text-slate-950' : 'bg-amber-500/20 text-amber-500'
+                    }`}>
                       RJ
                     </span>
                   )}
+                  {isSelected && <Check className="w-3 h-3 shrink-0 ml-0.5" />}
                 </div>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                  isSelected ? 'bg-slate-900 text-white' : isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-600'
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
+                  isSelected 
+                    ? isRaj ? 'bg-slate-950 text-amber-300' : 'bg-blue-900 text-blue-100' 
+                    : isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-700'
                 }`}>
                   {count}
                 </span>
               </button>
             );
           })}
+
+          {displayedCities.length === 0 && (
+            <div className="py-4 text-center text-xs text-slate-400">
+              No hubs match "{citySearch}"
+            </div>
+          )}
         </div>
       </div>
 

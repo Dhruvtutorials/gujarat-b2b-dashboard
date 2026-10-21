@@ -14,11 +14,15 @@ import {
   Copy,
   Check,
   Search,
-  ExternalLink
+  ExternalLink,
+  RotateCcw
 } from 'lucide-react';
 
 export default function LeadsMatrixTable({ 
   leads, 
+  selectedCity = 'all',
+  onSelectCity,
+  onResetFilters,
   onOpenPitch, 
   onNavigateMap,
   theme = 'dark'
@@ -55,6 +59,9 @@ export default function LeadsMatrixTable({
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const totalPipeline = leads.reduce((sum, l) => sum + (l.webCost || 0), 0);
+  const totalMrr = leads.reduce((sum, l) => sum + (l.mrr || 0), 0);
+
   return (
     <div 
       id="leads-table-section" 
@@ -65,6 +72,50 @@ export default function LeadsMatrixTable({
       }`}
     >
       
+      {/* Active City Filter Highlight Ribbon */}
+      {selectedCity !== 'all' && (
+        <div className={`mb-5 p-4 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3 border shadow-xl transition-all ${
+          isDark 
+            ? 'bg-gradient-to-r from-blue-950/80 via-slate-900/95 to-indigo-950/80 border-blue-500/40 text-slate-100' 
+            : 'bg-gradient-to-r from-blue-50 via-white to-indigo-50 border-blue-300 text-slate-900'
+        }`}>
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400 shrink-0 shadow-lg shadow-blue-500/20">
+              <MapPin className="w-6 h-6 text-blue-500 animate-bounce" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-400">
+                  Active Industrial Hub:
+                </span>
+                <span className="text-base font-black px-3 py-0.5 rounded-lg bg-blue-600 text-white shadow-md shadow-blue-600/30">
+                  {selectedCity}
+                </span>
+                <span className={`text-xs px-2.5 py-0.5 rounded-full font-mono font-bold ${
+                  isDark ? 'bg-slate-800 text-slate-200 border border-slate-700' : 'bg-white text-slate-800 border border-slate-300'
+                }`}>
+                  {leads.length} Verified {leads.length === 1 ? 'Lead' : 'Leads'}
+                </span>
+                <span className="text-xs font-mono font-extrabold text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                  ₹{(totalPipeline / 1000).toFixed(0)}k Pipeline (+₹{(totalMrr / 1000).toFixed(0)}k/mo)
+                </span>
+              </div>
+              <p className={`text-xs mt-1 ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                Viewing verified physical factory and office locations in <strong className={isDark ? 'text-white' : 'text-slate-900'}>{selectedCity}</strong> with direct Google Maps navigation.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => onSelectCity ? onSelectCity('all') : null}
+            className="self-start md:self-auto text-xs px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-md shadow-blue-600/30 flex items-center gap-1.5 shrink-0 hover:scale-[1.02]"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Show All 21 Hubs</span>
+          </button>
+        </div>
+      )}
+
       {/* Table Header & View Controls */}
       <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b ${
         isDark ? 'border-slate-800/80' : 'border-slate-200'
@@ -459,13 +510,42 @@ export default function LeadsMatrixTable({
 
       {/* Fallback if 0 results */}
       {sortedLeads.length === 0 && (
-        <div className="py-12 text-center">
-          <p className={`text-base font-semibold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
-            No leads match current filters.
+        <div className={`py-12 px-4 text-center rounded-2xl border ${
+          isDark ? 'border-slate-800 bg-slate-900/40 text-slate-300' : 'border-slate-200 bg-slate-50 text-slate-700'
+        }`}>
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mx-auto mb-3">
+            <Building2 className="w-6 h-6" />
+          </div>
+          <p className="text-base font-bold">
+            {selectedCity !== 'all' 
+              ? `No leads found in "${selectedCity}" matching current additional filters.` 
+              : 'No leads match the current filters.'}
           </p>
-          <p className="text-xs text-slate-500 mt-1">
-            Please reset filters from the sidebar or click "All Highway Leads".
+          <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+            {selectedCity !== 'all'
+              ? `Try clicking "View All 21 Hubs" or reset search and batch filters to see all available leads.`
+              : 'Please reset filters from the sidebar or click "All Belt".'}
           </p>
+          <div className="mt-4 flex items-center justify-center gap-2.5 flex-wrap">
+            {selectedCity !== 'all' && (
+              <button
+                onClick={() => onSelectCity ? onSelectCity('all') : null}
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30"
+              >
+                View All 21 Hubs
+              </button>
+            )}
+            {onResetFilters && (
+              <button
+                onClick={onResetFilters}
+                className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
+                  isDark ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700' : 'bg-white hover:bg-slate-100 text-slate-800 border-slate-300'
+                }`}
+              >
+                Reset All Filters
+              </button>
+            )}
+          </div>
         </div>
       )}
 

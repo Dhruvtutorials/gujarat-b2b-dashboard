@@ -249,7 +249,7 @@ export default function Navbar({
           <button
             onClick={onLock}
             className="p-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 text-xs transition-all"
-            title="Lock Portal (Passcode: 2002)"
+            title="Lock Portal (Passcode: 1935)"
           >
             <Lock className="w-3.5 h-3.5" />
           </button>

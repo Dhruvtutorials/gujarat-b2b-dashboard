@@ -8,8 +8,8 @@ export default function SecurityGate({ onUnlock }) {
 
   const handleSubmit = (e) => {
     if (e) e.preventDefault();
-    if (pin === '2002') {
-      sessionStorage.setItem('gujarat_corridor_auth', 'unlocked_2002');
+    if (pin === '1935') {
+      sessionStorage.setItem('gujarat_corridor_auth', 'unlocked_1935');
       onUnlock();
     } else {
       setError(true);
@@ -25,8 +25,8 @@ export default function SecurityGate({ onUnlock }) {
       setPin(nextPin);
       setError(false);
       if (nextPin.length === 4) {
-        if (nextPin === '2002') {
-          sessionStorage.setItem('gujarat_corridor_auth', 'unlocked_2002');
+        if (nextPin === '1935') {
+          sessionStorage.setItem('gujarat_corridor_auth', 'unlocked_1935');
           setTimeout(() => onUnlock(), 150);
         } else {
           setTimeout(() => {
@@ -87,7 +87,7 @@ export default function SecurityGate({ onUnlock }) {
         {error && (
           <div className="flex items-center justify-center gap-2 text-rose-400 text-xs font-medium bg-rose-500/10 border border-rose-500/20 py-2 rounded-xl mb-4 animate-pulse">
             <ShieldAlert className="w-4 h-4" />
-            <span>Incorrect Passcode. Please enter 2002.</span>
+            <span>Incorrect Passcode. Please enter 1935.</span>
           </div>
         )}
 
@@ -153,7 +153,7 @@ export default function SecurityGate({ onUnlock }) {
 
         <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-center gap-2 text-xs text-slate-500">
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span>AES-Level Highway Pipeline Vault (PIN: 2002)</span>
+          <span>AES-Level Highway Pipeline Vault (PIN: 1935)</span>
         </div>
       </div>
     </div>

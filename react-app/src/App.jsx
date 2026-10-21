@@ -13,9 +13,9 @@ import AutoScanModal from './components/AutoScanModal';
 import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3 } from 'lucide-react';
 
 export default function App() {
-  // Authentication State (Passcode: 2002)
+  // Authentication State (Passcode: 1935)
   const [isUnlocked, setIsUnlocked] = useState(() => {
-    return sessionStorage.getItem('gujarat_corridor_auth') === 'unlocked_2002';
+    return sessionStorage.getItem('gujarat_corridor_auth') === 'unlocked_1935';
   });
 
   // White / Dark Mode Theme State
@@ -379,7 +379,7 @@ export default function App() {
       }`}>
         <div className="flex flex-col sm:flex-row items-center justify-between max-w-full px-4 gap-2 text-[11px]">
           <span>Gujarat Highway Corridor B2B Prospecting Engine • Built with React 19 & Tailwind CSS</span>
-          <span>Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar (320 KM) • Passcode Protected (2002)</span>
+          <span>Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar (320 KM) • Passcode Protected (1935)</span>
         </div>
       </footer>
 

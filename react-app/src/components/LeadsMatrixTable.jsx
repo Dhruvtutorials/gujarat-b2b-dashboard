@@ -85,7 +85,7 @@ export default function LeadsMatrixTable({
               </span>
             </div>
             <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-              Physical factory addresses & verified Google Maps routes from Surat to Gandhinagar
+              Physical factory addresses & verified Google Maps routes across Gujarat & Rajasthan (21 Hubs)
             </p>
           </div>
         </div>
@@ -242,9 +242,18 @@ export default function LeadsMatrixTable({
                   {/* City & Zone */}
                   <td className="py-3 px-3.5 whitespace-nowrap">
                     <div className="flex flex-col">
-                      <span className={`font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
-                        {lead.city}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
+                          {lead.city}
+                        </span>
+                        <span className={`text-[9px] px-1.5 py-0.2 rounded font-extrabold border ${
+                          lead.state === 'Rajasthan'
+                            ? 'bg-amber-500/15 text-amber-500 border-amber-500/30'
+                            : 'bg-blue-500/15 text-blue-500 border-blue-500/30'
+                        }`}>
+                          {lead.state === 'Rajasthan' ? 'RJ' : 'GJ'}
+                        </span>
+                      </div>
                       <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                         {lead.zone}
                       </span>
@@ -364,6 +373,13 @@ export default function LeadsMatrixTable({
                       isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-700'
                     }`}>
                       {lead.city}
+                    </span>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-extrabold border ${
+                      lead.state === 'Rajasthan'
+                        ? 'bg-amber-500/15 text-amber-500 border-amber-500/30'
+                        : 'bg-blue-500/15 text-blue-500 border-blue-500/30'
+                    }`}>
+                      {lead.state === 'Rajasthan' ? 'RJ' : 'GJ'}
                     </span>
                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
                       lead.type === 'B2B' ? 'bg-indigo-500/20 text-indigo-500' : 'bg-purple-500/20 text-purple-500'

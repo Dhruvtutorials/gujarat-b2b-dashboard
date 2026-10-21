@@ -20,6 +20,7 @@ export default function KpiMetrics({ leads, todayCount, theme = 'dark' }) {
   const noWebCount = leads.filter(l => l.website === 'No Website').length;
   const noWebPercentage = totalLeads > 0 ? Math.round((noWebCount / totalLeads) * 100) : 0;
   const hotLeads = leads.filter(l => l.priority === 'Hot').length;
+  const uniqueHubs = new Set(leads.map(l => l.city)).size;
 
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 mb-6">
@@ -54,7 +55,7 @@ export default function KpiMetrics({ leads, todayCount, theme = 'dark' }) {
         <div className={`mt-3 pt-2.5 border-t flex items-center justify-between text-xs ${
           isDark ? 'border-slate-800/60 text-slate-400' : 'border-slate-100 text-slate-500'
         }`}>
-          <span>Surat ➔ Gandhinagar</span>
+          <span>Gujarat & Rajasthan</span>
           <span className="text-rose-500 font-bold flex items-center gap-1">
             <Flame className="w-3.5 h-3.5" />
             {hotLeads} Hot Deals
@@ -148,12 +149,12 @@ export default function KpiMetrics({ leads, todayCount, theme = 'dark' }) {
           <span className="text-3xl font-black text-indigo-500 tracking-tight">100%</span>
           <span className={`text-xs font-mono ${
             isDark ? 'text-slate-400' : 'text-slate-500'
-          }`}>13 Hubs Mapped</span>
+          }`}>{uniqueHubs} Hubs Mapped</span>
         </div>
         <div className={`mt-3 pt-2.5 border-t flex items-center justify-between text-xs ${
           isDark ? 'border-slate-800/60 text-slate-400' : 'border-slate-100 text-slate-500'
         }`}>
-          <span>NH-48 & NE-1 Route</span>
+          <span>Western Industrial Route</span>
           <span className="text-indigo-500 font-bold flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5" />
             Verified Factory GPS

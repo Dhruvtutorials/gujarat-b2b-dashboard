@@ -36,6 +36,7 @@ export default function App() {
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedState, setSelectedState] = useState('all'); // 'all', 'Gujarat', 'Rajasthan'
   const [selectedCity, setSelectedCity] = useState('all');
   const [selectedType, setSelectedType] = useState('all');
   const [selectedPriority, setSelectedPriority] = useState('all');
@@ -55,6 +56,7 @@ export default function App() {
   // Reset all filters
   const handleResetFilters = () => {
     setSearchQuery('');
+    setSelectedState('all');
     setSelectedCity('all');
     setSelectedType('all');
     setSelectedPriority('all');
@@ -78,6 +80,7 @@ export default function App() {
       const match = 
         lead.name.toLowerCase().includes(q) ||
         lead.city.toLowerCase().includes(q) ||
+        lead.state.toLowerCase().includes(q) ||
         lead.dm.toLowerCase().includes(q) ||
         lead.category.toLowerCase().includes(q) ||
         lead.zone.toLowerCase().includes(q) ||
@@ -85,6 +88,9 @@ export default function App() {
         lead.id.toLowerCase().includes(q);
       if (!match) return false;
     }
+
+    // State / Region
+    if (selectedState !== 'all' && lead.state !== selectedState) return false;
 
     // City
     if (selectedCity !== 'all' && lead.city !== selectedCity) return false;
@@ -195,8 +201,10 @@ export default function App() {
         onScrollToTable={scrollToTable}
       />
 
-      {/* 2. Interactive 13 Corridor Hubs Highway Ribbon (Surat ➔ Gandhinagar) */}
+      {/* 2. Interactive Corridor Hubs Highway Ribbon (Gujarat + Rajasthan) */}
       <CorridorHighwayBar
+        selectedState={selectedState}
+        setSelectedState={setSelectedState}
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
         leads={CORRIDOR_LEADS}
@@ -209,6 +217,8 @@ export default function App() {
         {/* Left Filter Sidebar */}
         {isSidebarOpen && (
           <SidebarFilters
+            selectedState={selectedState}
+            setSelectedState={setSelectedState}
             selectedCity={selectedCity}
             setSelectedCity={setSelectedCity}
             selectedType={selectedType}
@@ -234,14 +244,46 @@ export default function App() {
               <button
                 onClick={() => handleResetFilters()}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  selectedCity === 'all' && activeBatch === 'all' && selectedType === 'all' && selectedPriority === 'all' && selectedWebStatus === 'all'
+                  selectedState === 'all' && selectedCity === 'all' && activeBatch === 'all' && selectedType === 'all' && selectedPriority === 'all' && selectedWebStatus === 'all'
                     ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-600/30'
                     : isDark 
                       ? 'bg-slate-900/80 text-slate-300 border-slate-800 hover:bg-slate-800' 
                       : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                All Highway Leads ({CORRIDOR_LEADS.length})
+                All Belt ({CORRIDOR_LEADS.length})
+              </button>
+
+              <button
+                onClick={() => {
+                  setSelectedState(selectedState === 'Gujarat' ? 'all' : 'Gujarat');
+                  setSelectedCity('all');
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                  selectedState === 'Gujarat'
+                    ? 'bg-blue-600 text-white border-blue-400 shadow-md shadow-blue-600/30'
+                    : isDark
+                      ? 'bg-blue-500/10 text-blue-300 border-blue-500/30 hover:bg-blue-500/20'
+                      : 'bg-blue-50 text-blue-800 border-blue-300 hover:bg-blue-100'
+                }`}
+              >
+                <span>🦁 Gujarat (36)</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setSelectedState(selectedState === 'Rajasthan' ? 'all' : 'Rajasthan');
+                  setSelectedCity('all');
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
+                  selectedState === 'Rajasthan'
+                    ? 'bg-amber-600 text-white border-amber-400 shadow-md shadow-amber-600/30'
+                    : isDark
+                      ? 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
+                      : 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100'
+                }`}
+              >
+                <span>🏰 Rajasthan (23)</span>
               </button>
 
               <button
@@ -255,7 +297,7 @@ export default function App() {
                 }`}
               >
                 <Clock className="w-3.5 h-3.5" />
-                <span>🌅 08:30 AM Inflow ({freshLeadsToday.length})</span>
+                <span>🌅 08:30 AM Fresh ({freshLeadsToday.length})</span>
               </button>
 
               <button
@@ -269,7 +311,7 @@ export default function App() {
                 }`}
               >
                 <Flame className="w-3.5 h-3.5 text-rose-500" />
-                <span>Hot Deals (19)</span>
+                <span>Hot Deals</span>
               </button>
 
               <button
@@ -283,7 +325,7 @@ export default function App() {
                 }`}
               >
                 <Globe2 className="w-3.5 h-3.5 text-cyan-500" />
-                <span>Zero Website (25)</span>
+                <span>Zero Website</span>
               </button>
 
               <button
@@ -297,7 +339,7 @@ export default function App() {
                 }`}
               >
                 <Building2 className="w-3.5 h-3.5 text-indigo-500" />
-                <span>B2B Industrial (26)</span>
+                <span>B2B Industrial</span>
               </button>
             </div>
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   MapPin, 
   Layers, 
@@ -8,11 +8,14 @@ import {
   Clock, 
   Building2, 
   Milestone,
-  CheckCircle2
+  CheckCircle2,
+  Compass
 } from 'lucide-react';
-import { CORRIDOR_CITIES } from '../data/leadsData';
+import { CORRIDOR_CITIES, GUJARAT_CITIES, RAJASTHAN_CITIES } from '../data/leadsData';
 
 export default function SidebarFilters({
+  selectedState = 'all',
+  setSelectedState,
   selectedCity,
   setSelectedCity,
   selectedType,
@@ -34,6 +37,12 @@ export default function SidebarFilters({
     return acc;
   }, {});
 
+  const displayedCities = selectedState === 'Gujarat' 
+    ? GUJARAT_CITIES 
+    : selectedState === 'Rajasthan' 
+      ? RAJASTHAN_CITIES 
+      : CORRIDOR_CITIES;
+
   return (
     <aside className={`w-full lg:w-72 rounded-3xl p-4 lg:p-5 flex flex-col gap-5 shrink-0 shadow-2xl border transition-colors ${
       isDark 
@@ -50,11 +59,14 @@ export default function SidebarFilters({
           <h3 className={`text-xs font-black tracking-wider uppercase ${
             isDark ? 'text-white' : 'text-slate-900'
           }`}>
-            Highway Filters
+            Corridor Filters
           </h3>
         </div>
         <button
-          onClick={onResetFilters}
+          onClick={() => {
+            setSelectedState('all');
+            onResetFilters();
+          }}
           className={`flex items-center gap-1 text-[11px] font-medium transition-colors ${
             isDark ? 'text-slate-400 hover:text-blue-400' : 'text-slate-500 hover:text-blue-600'
           }`}
@@ -63,6 +75,42 @@ export default function SidebarFilters({
           <RotateCcw className="w-3 h-3" />
           <span>Reset</span>
         </button>
+      </div>
+
+      {/* State / Region Selector */}
+      <div>
+        <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
+          isDark ? 'text-slate-200' : 'text-slate-700'
+        }`}>
+          <Compass className="w-3.5 h-3.5 text-blue-500" />
+          <span>State / Region</span>
+        </span>
+        <div className="grid grid-cols-3 gap-1.5">
+          {[
+            { id: 'all', label: 'All (59)' },
+            { id: 'Gujarat', label: 'Gujarat' },
+            { id: 'Rajasthan', label: 'Rajasthan' },
+          ].map((st) => (
+            <button
+              key={st.id}
+              onClick={() => {
+                setSelectedState(st.id);
+                setSelectedCity('all');
+              }}
+              className={`py-1.5 text-center rounded-xl text-xs font-bold transition-all border ${
+                selectedState === st.id
+                  ? st.id === 'Rajasthan'
+                    ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30 border-amber-400'
+                    : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
+                  : isDark
+                    ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
+                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+              }`}
+            >
+              {st.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* 08:30 AM Daily Inflow Filter */}
@@ -102,16 +150,18 @@ export default function SidebarFilters({
         </div>
       </div>
 
-      {/* Corridor Highway Cities (Surat ➔ Gandhinagar) */}
+      {/* Corridor Cities (Gujarat & Rajasthan) */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <span className={`text-xs font-bold flex items-center gap-1.5 ${
             isDark ? 'text-slate-200' : 'text-slate-700'
           }`}>
             <Milestone className="w-3.5 h-3.5 text-blue-500" />
-            <span>13 Corridor Hubs</span>
+            <span>
+              {selectedState === 'Gujarat' ? '13 Gujarat Hubs' : selectedState === 'Rajasthan' ? '8 Rajasthan Hubs' : '21 Industrial Hubs'}
+            </span>
           </span>
-          <span className={`text-[10px] font-mono ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>NH-48</span>
+          <span className={`text-[10px] font-mono ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>NH-48/58</span>
         </div>
 
         <div className="max-h-52 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
@@ -125,24 +175,28 @@ export default function SidebarFilters({
                   : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
             }`}
           >
-            <span>All 13 Hubs</span>
+            <span>All Hubs in View</span>
             <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
               selectedCity === 'all' ? 'bg-blue-800 text-white' : isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-700'
             }`}>
-              36
+              {displayedCities.reduce((sum, c) => sum + (cityCounts[c] || 0), 0)}
             </span>
           </button>
 
-          {CORRIDOR_CITIES.map((city, idx) => {
+          {displayedCities.map((city, idx) => {
             const count = cityCounts[city] || 0;
             const isSelected = selectedCity === city;
+            const isRaj = RAJASTHAN_CITIES.includes(city);
+
             return (
               <button
                 key={city}
                 onClick={() => setSelectedCity(city)}
                 className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs transition-all ${
                   isSelected
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-md shadow-blue-600/30'
+                    ? isRaj
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold shadow-md shadow-blue-600/30'
                     : isDark
                       ? 'bg-slate-900/40 hover:bg-slate-800/80 text-slate-300 border border-slate-800/60'
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
@@ -153,9 +207,14 @@ export default function SidebarFilters({
                     {(idx + 1).toString().padStart(2, '0')}.
                   </span>
                   <span className="truncate">{city}</span>
+                  {isRaj && (
+                    <span className="text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-500 font-mono">
+                      RJ
+                    </span>
+                  )}
                 </div>
                 <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                  isSelected ? 'bg-blue-900 text-white' : isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-600'
+                  isSelected ? 'bg-slate-900 text-white' : isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-600'
                 }`}>
                   {count}
                 </span>
@@ -203,8 +262,8 @@ export default function SidebarFilters({
         <div className="space-y-1.5">
           {[
             { id: 'all', label: 'All Statuses' },
-            { id: 'No Website', label: '❌ Zero Website (Prime)', badge: '25' },
-            { id: 'Outdated', label: '⚠️ Outdated (Revamp)', badge: '11' },
+            { id: 'No Website', label: '❌ Zero Website (Prime)' },
+            { id: 'Outdated', label: '⚠️ Outdated (Revamp)' },
           ].map((item) => (
             <button
               key={item.id}
@@ -218,13 +277,6 @@ export default function SidebarFilters({
               }`}
             >
               <span>{item.label}</span>
-              {item.badge && (
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                  isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-600'
-                }`}>
-                  {item.badge}
-                </span>
-              )}
             </button>
           ))}
         </div>

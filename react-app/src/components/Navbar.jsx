@@ -96,18 +96,18 @@ export default function Navbar({
                 <h1 className={`text-sm lg:text-base font-extrabold tracking-tight leading-none ${
                   isDark ? 'text-white' : 'text-slate-900'
                 }`}>
-                  GUJARAT B2B CORRIDOR
+                  GUJARAT & RAJASTHAN CORRIDOR
                 </h1>
                 <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-500 border border-blue-500/30 font-mono font-bold uppercase">
-                  PRO 2.0
+                  ENTERPRISE
                 </span>
               </div>
               <p className={`text-[11px] flex items-center gap-1 leading-none mt-1 ${
                 isDark ? 'text-slate-400' : 'text-slate-500'
               }`}>
-                <span className="font-semibold">Surat ➔ Gandhinagar</span>
+                <span className="font-semibold">Surat ➔ Gandhinagar ➔ Udaipur ➔ Jodhpur ➔ Jaipur</span>
                 <span>|</span>
-                <span className="text-emerald-500 font-mono font-semibold">36 Qualified Leads</span>
+                <span className="text-emerald-500 font-mono font-semibold">{totalLeads} Leads</span>
               </p>
             </div>
           </div>

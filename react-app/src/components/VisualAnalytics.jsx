@@ -12,18 +12,33 @@ import {
 export default function VisualAnalytics({ leads, theme = 'dark' }) {
   const isDark = theme === 'dark';
 
-  // City revenue aggregates
-  const cityAggregates = [
-    { city: 'Surat', rev: 255000, mrr: 137000, leads: 4, tag: 'Textile & Diamonds' },
-    { city: 'Ankleshwar', rev: 235000, mrr: 110000, leads: 3, tag: 'Chemical GIDC' },
-    { city: 'Bharuch & Dahej', rev: 375000, mrr: 165000, leads: 5, tag: 'PCPIR Port' },
-    { city: 'Vadodara', rev: 380000, mrr: 175000, leads: 5, tag: 'Engineering Hub' },
-    { city: 'Anand & Nadiad', rev: 360000, mrr: 177000, leads: 5, tag: 'Food Tech' },
-    { city: 'Ahmedabad', rev: 490000, mrr: 235000, leads: 6, tag: 'Mega Industrial' },
-    { city: 'Gandhinagar', rev: 275000, mrr: 135000, leads: 3, tag: 'Capital & IT' },
-  ];
+  // Group leads by city and calculate total rev, mrr, lead count dynamically
+  const cityMap = {};
+  leads.forEach((l) => {
+    if (!cityMap[l.city]) {
+      cityMap[l.city] = {
+        city: l.city,
+        state: l.state,
+        rev: 0,
+        mrr: 0,
+        leads: 0,
+        tag: l.zone || l.category
+      };
+    }
+    cityMap[l.city].rev += (l.webCost || 0);
+    cityMap[l.city].mrr += (l.mrr || 0);
+    cityMap[l.city].leads += 1;
+  });
 
-  const maxRev = 500000;
+  const cityAggregates = Object.values(cityMap)
+    .sort((a, b) => b.rev - a.rev)
+    .slice(0, 8);
+
+  const maxRev = cityAggregates.length > 0 
+    ? Math.max(...cityAggregates.map(c => c.rev), 1) 
+    : 500000;
+
+  const totalRev = leads.reduce((sum, l) => sum + (l.webCost || 0), 0);
 
   // Split calculation
   const b2bCount = leads.filter(l => l.type === 'B2B').length;
@@ -58,7 +73,7 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
                 <h3 className={`text-base font-extrabold tracking-tight ${
                   isDark ? 'text-white' : 'text-slate-900'
                 }`}>
-                  Corridor Revenue Velocity (Surat ➔ Gandhinagar)
+                  Corridor Revenue Velocity (Gujarat & Rajasthan Hubs)
                 </h3>
                 <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                   Targeted Web Dev Contract (₹) vs Monthly Retainer (MRR) along Highway Nodes
@@ -92,6 +107,13 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
                     <div className="flex items-center gap-2">
                       <span className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-800'}`}>
                         {item.city}
+                      </span>
+                      <span className={`text-[9px] px-1 py-0.2 rounded font-extrabold border ${
+                        item.state === 'Rajasthan'
+                          ? 'bg-amber-500/15 text-amber-500 border-amber-500/30'
+                          : 'bg-blue-500/15 text-blue-500 border-blue-500/30'
+                      }`}>
+                        {item.state === 'Rajasthan' ? 'RJ' : 'GJ'}
                       </span>
                       <span className={`text-[10px] hidden sm:inline ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                         ({item.tag})
@@ -132,8 +154,8 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
         <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${
           isDark ? 'border-slate-800/80 text-slate-400' : 'border-slate-200 text-slate-500'
         }`}>
-          <span>NH-48 Corridor Span: 320 KM</span>
-          <span className="text-emerald-500 font-extrabold font-mono">₹23.8L Total Corridor Web Revenue</span>
+          <span>Western Corridor Span: Gujarat + Rajasthan</span>
+          <span className="text-emerald-500 font-extrabold font-mono">₹{(totalRev / 100000).toFixed(1)}L Total Pipeline Potential</span>
         </div>
       </div>
 

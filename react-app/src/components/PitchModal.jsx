@@ -9,19 +9,25 @@ import {
   ExternalLink, 
   Sparkles, 
   MapPin, 
-  Building2 
+  Building2,
+  Send,
+  Loader2,
+  CheckCircle2
 } from 'lucide-react';
+import { apiService } from '../services/apiService';
 
 export default function PitchModal({ lead, onClose }) {
   if (!lead) return null;
 
   const [copied, setCopied] = useState(false);
+  const [isSendingWebhook, setIsSendingWebhook] = useState(false);
+  const [webhookResult, setWebhookResult] = useState(null);
 
   // Generate personalized WhatsApp pitch with physical meeting address
   const generatePitchText = () => {
     return `Namaste ${lead.dm} ji,
 
-I am Dhruv Rana from WebCorridor Solutions. We specialize in B2B Web Portals, Online Catalogues & Google Lead Acceleration for leading manufacturers across Gujarat (Surat ➔ Gandhinagar corridor).
+I am Dhruv Rana from WebCorridor Solutions. We specialize in B2B Web Portals, Online Catalogues & Google Lead Acceleration for leading manufacturers across ${lead.state} (${lead.city} corridor).
 
 We reviewed *${lead.name}* in ${lead.city} (${lead.zone}).
 Currently, your digital footprint shows: ${lead.website === 'No Website' ? 'No dedicated digital portal / website' : 'Outdated catalogue'}. 
@@ -57,6 +63,19 @@ Phone: +91 98250 19350`;
     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
   };
 
+  const handleSendWebhook = async () => {
+    setIsSendingWebhook(true);
+    setWebhookResult(null);
+    try {
+      const res = await apiService.sendPitchWebhook(lead, pitchText);
+      setWebhookResult(res);
+    } catch (e) {
+      setWebhookResult({ success: false, error: e.message });
+    } finally {
+      setIsSendingWebhook(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
       <div className="relative w-full max-w-2xl bg-[#0f172a] border border-slate-700/80 rounded-3xl p-6 shadow-2xl backdrop-blur-2xl flex flex-col max-h-[90vh]">
@@ -75,7 +94,7 @@ Phone: +91 98250 19350`;
                 </span>
               </h3>
               <p className="text-xs text-slate-400">
-                To: <span className="text-slate-200 font-semibold">{lead.dm}</span> ({lead.name}) - {lead.city}
+                To: <span className="text-slate-200 font-semibold">{lead.dm}</span> ({lead.name}) - {lead.city}, {lead.state}
               </p>
             </div>
           </div>
@@ -101,6 +120,19 @@ Phone: +91 98250 19350`;
         <div className="flex-1 overflow-y-auto mb-4 bg-slate-950/80 border border-slate-800/80 rounded-2xl p-4 text-xs font-mono text-slate-300 whitespace-pre-wrap leading-relaxed">
           {pitchText}
         </div>
+
+        {/* Webhook Response Banner */}
+        {webhookResult && (
+          <div className="mb-3 p-2.5 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 text-xs flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <span>HTTP 200 OK: Webhook logged ({webhookResult.source})</span>
+            </div>
+            <span className="text-[10px] font-mono text-slate-400">
+              {new Date().toLocaleTimeString()}
+            </span>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2.5">
@@ -128,6 +160,15 @@ Phone: +91 98250 19350`;
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
               <span>{copied ? 'Copied!' : 'Copy Text'}</span>
+            </button>
+
+            <button
+              disabled={isSendingWebhook}
+              onClick={handleSendWebhook}
+              className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-semibold transition-all shadow-md shadow-indigo-600/20 disabled:opacity-50"
+            >
+              {isSendingWebhook ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+              <span>Trigger API Webhook</span>
             </button>
 
             <button

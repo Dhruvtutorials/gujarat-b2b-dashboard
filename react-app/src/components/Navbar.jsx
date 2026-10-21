@@ -16,7 +16,9 @@ import {
   Flame,
   Sun,
   Moon,
-  Table as TableIcon
+  Table as TableIcon,
+  Plus,
+  Activity
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -25,6 +27,8 @@ export default function Navbar({
   totalLeads, 
   todayCount, 
   onOpenAutoScan, 
+  onOpenAddLead,
+  onOpenApiStatus,
   onExportCsv, 
   onLock,
   activeBatch,
@@ -142,6 +146,30 @@ export default function Navbar({
         {/* Right Section: Controls */}
         <div className="flex items-center gap-2 shrink-0">
           
+          {/* Live API Health Status Indicator */}
+          <button
+            onClick={onOpenApiStatus}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border shadow-sm ${
+              isDark 
+                ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/30' 
+                : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300'
+            }`}
+            title="Inspect Live API Gateway, Latency & Endpoints"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="hidden sm:inline">API: Live</span>
+          </button>
+
+          {/* Add Lead Quick Button via API */}
+          <button
+            onClick={onOpenAddLead}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/30 hover:scale-[1.02]"
+            title="Add New Verified B2B Lead via API"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Add Lead</span>
+          </button>
+
           {/* View Table Quick Button */}
           <button
             onClick={onScrollToTable}

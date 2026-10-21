@@ -10,7 +10,10 @@ import VisualAnalytics from './components/VisualAnalytics';
 import LeadsMatrixTable from './components/LeadsMatrixTable';
 import PitchModal from './components/PitchModal';
 import AutoScanModal from './components/AutoScanModal';
-import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3 } from 'lucide-react';
+import AddLeadModal from './components/AddLeadModal';
+import ApiStatusModal from './components/ApiStatusModal';
+import { apiService } from './services/apiService';
+import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3, Plus, Activity } from 'lucide-react';
 
 export default function App() {
   // Authentication State (Passcode: 1935)
@@ -43,9 +46,60 @@ export default function App() {
   const [selectedWebStatus, setSelectedWebStatus] = useState('all');
   const [activeBatch, setActiveBatch] = useState('all');
 
+  // Persistent Leads Database State loaded from apiService / localStorage
+  const [allLeads, setAllLeads] = useState(() => {
+    try {
+      const raw = localStorage.getItem('corridor_leads_database_v2');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return CORRIDOR_LEADS;
+  });
+
   // Modals
   const [pitchLead, setPitchLead] = useState(null);
   const [isAutoScanOpen, setIsAutoScanOpen] = useState(false);
+  const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+  const [isApiStatusOpen, setIsApiStatusOpen] = useState(false);
+  const [harvesterCity, setHarvesterCity] = useState('all');
+
+  // API Action Handlers
+  const handleCreateLead = async (leadData) => {
+    const res = await apiService.createLead(leadData);
+    if (res.success && res.data) {
+      setAllLeads((prev) => [res.data, ...prev]);
+      handleSelectCity(res.data.city);
+    }
+  };
+
+  const handleDeleteLead = async (id) => {
+    await apiService.deleteLead(id);
+    setAllLeads((prev) => prev.filter((l) => l.id !== id));
+  };
+
+  const handleLeadsHarvested = (newLeads) => {
+    if (newLeads && newLeads.length > 0) {
+      setAllLeads((prev) => {
+        const existingIds = new Set(prev.map((l) => l.id));
+        const filteredNew = newLeads.filter((l) => !existingIds.has(l.id));
+        return [...filteredNew, ...prev];
+      });
+      handleSelectCity(newLeads[0].city);
+    }
+  };
+
+  const handleResetDatabase = () => {
+    apiService.resetToDefault();
+    setAllLeads(CORRIDOR_LEADS);
+    setIsApiStatusOpen(false);
+  };
+
+  const handleTriggerCityScan = (cityName) => {
+    setHarvesterCity(cityName);
+    setIsAutoScanOpen(true);
+  };
 
   // Lock portal
   const handleLock = () => {
@@ -79,7 +133,7 @@ export default function App() {
       return;
     }
     // Auto-align state if needed
-    const found = CORRIDOR_LEADS.find(
+    const found = allLeads.find(
       (l) => l.city.toLowerCase() === city.toLowerCase()
     );
     if (found && selectedState !== 'all' && selectedState !== found.state) {
@@ -95,8 +149,8 @@ export default function App() {
     }, 60);
   };
 
-  // Filter logic
-  const filteredLeads = CORRIDOR_LEADS.filter((lead) => {
+  // Filter logic based on live allLeads state
+  const filteredLeads = allLeads.filter((lead) => {
     // Search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -138,7 +192,7 @@ export default function App() {
   });
 
   // Today's 08:30 AM fresh leads for dedicated shelf
-  const freshLeadsToday = CORRIDOR_LEADS.filter((l) => l.isNewToday);
+  const freshLeadsToday = allLeads.filter((l) => l.isNewToday);
 
   // Map route navigation handler
   const handleNavigateMap = (lead) => {
@@ -210,9 +264,14 @@ export default function App() {
       <Navbar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        totalLeads={CORRIDOR_LEADS.length}
+        totalLeads={allLeads.length}
         todayCount={freshLeadsToday.length}
-        onOpenAutoScan={() => setIsAutoScanOpen(true)}
+        onOpenAddLead={() => setIsAddLeadOpen(true)}
+        onOpenApiStatus={() => setIsApiStatusOpen(true)}
+        onOpenAutoScan={() => {
+          setHarvesterCity('all');
+          setIsAutoScanOpen(true);
+        }}
         onExportCsv={handleExportCsv}
         onLock={handleLock}
         activeBatch={activeBatch}
@@ -231,7 +290,7 @@ export default function App() {
         selectedCity={selectedCity}
         setSelectedCity={setSelectedCity}
         onSelectCity={handleSelectCity}
-        leads={CORRIDOR_LEADS}
+        leads={allLeads}
         theme={theme}
       />
 
@@ -241,7 +300,7 @@ export default function App() {
         {/* Left Filter Sidebar */}
         {isSidebarOpen && (
           <SidebarFilters
-            allLeads={CORRIDOR_LEADS}
+            allLeads={allLeads}
             selectedState={selectedState}
             setSelectedState={setSelectedState}
             selectedCity={selectedCity}
@@ -277,7 +336,7 @@ export default function App() {
                       : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                 }`}
               >
-                All Belt ({CORRIDOR_LEADS.length})
+                All Belt ({allLeads.length})
               </button>
 
               <button
@@ -293,7 +352,7 @@ export default function App() {
                       : 'bg-blue-50 text-blue-800 border-blue-300 hover:bg-blue-100'
                 }`}
               >
-                <span>🦁 Gujarat (36)</span>
+                <span>🦁 Gujarat ({allLeads.filter(l => l.state === 'Gujarat').length})</span>
               </button>
 
               <button
@@ -309,7 +368,7 @@ export default function App() {
                       : 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100'
                 }`}
               >
-                <span>🏰 Rajasthan (23)</span>
+                <span>🏰 Rajasthan ({allLeads.filter(l => l.state === 'Rajasthan').length})</span>
               </button>
 
               <button
@@ -423,6 +482,8 @@ export default function App() {
                 selectedCity={selectedCity}
                 onSelectCity={handleSelectCity}
                 onResetFilters={handleResetFilters}
+                onTriggerCityScan={handleTriggerCityScan}
+                onDeleteLead={handleDeleteLead}
                 onOpenPitch={(lead) => setPitchLead(lead)}
                 onNavigateMap={handleNavigateMap}
                 theme={theme}
@@ -437,6 +498,8 @@ export default function App() {
                 selectedCity={selectedCity}
                 onSelectCity={handleSelectCity}
                 onResetFilters={handleResetFilters}
+                onTriggerCityScan={handleTriggerCityScan}
+                onDeleteLead={handleDeleteLead}
                 onOpenPitch={(lead) => setPitchLead(lead)}
                 onNavigateMap={handleNavigateMap}
                 theme={theme}
@@ -452,8 +515,8 @@ export default function App() {
         isDark ? 'border-slate-800/80 bg-[#050811] text-slate-500' : 'border-slate-200 bg-white text-slate-500'
       }`}>
         <div className="flex flex-col sm:flex-row items-center justify-between max-w-full px-4 gap-2 text-[11px]">
-          <span>Gujarat Highway Corridor B2B Prospecting Engine • Built with React 19 & Tailwind CSS</span>
-          <span>Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar (320 KM) • Passcode Protected (1935)</span>
+          <span>Gujarat & Rajasthan Corridor B2B Prospecting Engine • Live API & Overpass Harvester</span>
+          <span>Surat ➔ Gandhinagar ➔ Udaipur ➔ Jodhpur ➔ Jaipur (950 KM) • Passcode Protected (1935)</span>
         </div>
       </footer>
 
@@ -465,10 +528,32 @@ export default function App() {
         />
       )}
 
-      {/* Corridor Auto Scanner Modal */}
+      {/* Corridor Auto Scanner / Overpass Harvester Modal */}
       {isAutoScanOpen && (
         <AutoScanModal
+          defaultCity={harvesterCity}
+          onLeadsHarvested={handleLeadsHarvested}
           onClose={() => setIsAutoScanOpen(false)}
+          theme={theme}
+        />
+      )}
+
+      {/* Add Lead Modal via API */}
+      {isAddLeadOpen && (
+        <AddLeadModal
+          onClose={() => setIsAddLeadOpen(false)}
+          onLeadCreated={handleCreateLead}
+          theme={theme}
+        />
+      )}
+
+      {/* API Gateway & Health Diagnostics Modal */}
+      {isApiStatusOpen && (
+        <ApiStatusModal
+          onClose={() => setIsApiStatusOpen(false)}
+          totalLeadsCount={allLeads.length}
+          onResetDatabase={handleResetDatabase}
+          theme={theme}
         />
       )}
 

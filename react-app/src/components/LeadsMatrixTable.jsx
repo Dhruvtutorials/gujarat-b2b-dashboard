@@ -15,7 +15,9 @@ import {
   Check,
   Search,
   ExternalLink,
-  RotateCcw
+  RotateCcw,
+  Zap,
+  Trash2
 } from 'lucide-react';
 
 export default function LeadsMatrixTable({ 
@@ -23,6 +25,8 @@ export default function LeadsMatrixTable({
   selectedCity = 'all',
   onSelectCity,
   onResetFilters,
+  onTriggerCityScan,
+  onDeleteLead,
   onOpenPitch, 
   onNavigateMap,
   theme = 'dark'
@@ -106,13 +110,26 @@ export default function LeadsMatrixTable({
             </div>
           </div>
 
-          <button
-            onClick={() => onSelectCity ? onSelectCity('all') : null}
-            className="self-start md:self-auto text-xs px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all shadow-md shadow-blue-600/30 flex items-center gap-1.5 shrink-0 hover:scale-[1.02]"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Show All 21 Hubs</span>
-          </button>
+          <div className="flex items-center gap-2 self-start md:self-auto shrink-0 flex-wrap">
+            {onTriggerCityScan && (
+              <button
+                onClick={() => onTriggerCityScan(selectedCity)}
+                className="text-xs px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all shadow-md shadow-emerald-600/30 flex items-center gap-1.5 hover:scale-[1.02]"
+                title={`Run live Overpass API harvester for ${selectedCity}`}
+              >
+                <Zap className="w-3.5 h-3.5" />
+                <span>Harvest More via API</span>
+              </button>
+            )}
+
+            <button
+              onClick={() => onSelectCity ? onSelectCity('all') : null}
+              className="text-xs px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-bold transition-all border border-slate-700 flex items-center gap-1.5"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Show All 21 Hubs</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -246,7 +263,15 @@ export default function LeadsMatrixTable({
                   {/* ID + Inflow Badge */}
                   <td className="py-3 px-3.5 whitespace-nowrap">
                     <div className="flex flex-col gap-1">
-                      <span className="font-mono text-blue-500 font-bold">{lead.id}</span>
+                      <div className="flex items-center gap-1">
+                        <span className="font-mono text-blue-500 font-bold">{lead.id}</span>
+                        {lead.apiSynced && (
+                          <span className="inline-flex items-center gap-0.5 text-[8px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 font-bold font-mono">
+                            <Zap className="w-2 h-2" />
+                            <span>API</span>
+                          </span>
+                        )}
+                      </div>
                       {lead.isNewToday ? (
                         <span className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-500 border border-amber-500/40 font-bold uppercase w-fit">
                           <Clock className="w-2.5 h-2.5 animate-pulse" />
@@ -397,6 +422,20 @@ export default function LeadsMatrixTable({
                         <MessageCircle className="w-3.5 h-3.5" />
                         <span>Pitch</span>
                       </button>
+
+                      {onDeleteLead && (
+                        <button
+                          onClick={() => onDeleteLead(lead.id)}
+                          className={`p-2 rounded-xl transition-all border ${
+                            isDark 
+                              ? 'bg-slate-900 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 border-slate-800 hover:border-rose-500/40' 
+                              : 'bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border-slate-200 hover:border-rose-300'
+                          }`}
+                          title="Delete Lead via API"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>

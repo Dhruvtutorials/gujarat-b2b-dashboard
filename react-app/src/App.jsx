@@ -12,6 +12,7 @@ import PitchModal from './components/PitchModal';
 import AutoScanModal from './components/AutoScanModal';
 import AddLeadModal from './components/AddLeadModal';
 import ApiStatusModal from './components/ApiStatusModal';
+import GooglePlacesSetup from './components/GooglePlacesSetup';
 import { apiService } from './services/apiService';
 import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3, Plus, Activity } from 'lucide-react';
 
@@ -64,6 +65,7 @@ export default function App() {
   const [isAutoScanOpen, setIsAutoScanOpen] = useState(false);
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
   const [isApiStatusOpen, setIsApiStatusOpen] = useState(false);
+  const [isGoogleSetupOpen, setIsGoogleSetupOpen] = useState(false);
   const [harvesterCity, setHarvesterCity] = useState('all');
 
   // API Action Handlers
@@ -269,6 +271,7 @@ export default function App() {
         todayCount={freshLeadsToday.length}
         onOpenAddLead={() => setIsAddLeadOpen(true)}
         onOpenApiStatus={() => setIsApiStatusOpen(true)}
+            onOpenGoogleSetup={() => setIsGoogleSetupOpen(true)}
         onOpenAutoScan={() => {
           setHarvesterCity('all');
           setIsAutoScanOpen(true);
@@ -555,6 +558,15 @@ export default function App() {
           onClose={() => setIsApiStatusOpen(false)}
           totalLeadsCount={allLeads.length}
           onResetDatabase={handleResetDatabase}
+          theme={theme}
+        />
+      )}
+
+      {/* Google Places Real Leads Setup Modal */}
+      {isGoogleSetupOpen && (
+        <GooglePlacesSetup
+          onLeadsHarvested={handleLeadsHarvested}
+          onClose={() => setIsGoogleSetupOpen(false)}
           theme={theme}
         />
       )}

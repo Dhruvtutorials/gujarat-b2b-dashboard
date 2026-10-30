@@ -32,6 +32,7 @@ export default function Navbar({
   onOpenAutoScan, 
   onOpenAddLead,
   onOpenApiStatus,
+  onOpenGoogleSetup,
   onExportCsv, 
   onLock,
   activeBatch,
@@ -185,6 +186,16 @@ export default function Navbar({
           >
             <Plus className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Add Lead</span>
+          </button>
+
+          {/* Real Leads - Google Places Setup (Desktop) */}
+          <button
+            onClick={onOpenGoogleSetup}
+            className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/30 animate-pulse"
+            title="Fetch 100% Real Google-Verified Business Leads"
+          >
+            <span className="text-sm leading-none">⚡</span>
+            <span>Real Leads</span>
           </button>
 
           {/* View Table Quick Button (Desktop) */}
@@ -361,6 +372,17 @@ export default function Navbar({
           >
             <Activity className="w-3.5 h-3.5" />
             <span>API Gateway</span>
+          </button>
+
+          <button
+            onClick={() => {
+              onOpenGoogleSetup();
+              setIsMobileMenuOpen(false);
+            }}
+            className="flex items-center gap-2 p-2 rounded-xl bg-rose-600/80 text-white text-xs font-bold justify-center"
+          >
+            <span className="text-sm leading-none">⚡</span>
+            <span>Real Leads</span>
           </button>
 
           <button

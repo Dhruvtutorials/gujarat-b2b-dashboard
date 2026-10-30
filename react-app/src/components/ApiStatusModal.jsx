@@ -11,14 +11,16 @@ import {
   FileCode2,
   ShieldCheck,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  KeyRound
 } from 'lucide-react';
-import { apiService } from '../services/apiService';
+import { apiService, getGoogleApiKey } from '../services/apiService';
 
 export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDatabase, theme = 'dark' }) {
   const isDark = theme === 'dark';
   const [healthData, setHealthData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const hasGoogleKey = !!getGoogleApiKey();
 
   const fetchStatus = async () => {
     setIsLoading(true);
@@ -62,7 +64,7 @@ export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDataba
                 </span>
               </h3>
               <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Real-time API gateway, OpenStreetMap Overpass Harvester & database state
+                Real-time API gateway, Google Places Live API & database state
               </p>
             </div>
           </div>
@@ -93,15 +95,15 @@ export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDataba
             </div>
 
             <p className="text-sm font-bold text-white mb-1">
-              {healthData?.mode || 'Client REST & Overpass Engine (v2.4)'}
+              {healthData?.mode || 'Client REST & Google Places Engine (v2.5)'}
             </p>
             <p className="text-xs text-slate-400">
-              Production corridor endpoint with offline persistent fallback and live OSM Harvester.
+              Production corridor endpoint with 100% Real Google-verified business leads and offline caching.
             </p>
           </div>
 
-          {/* Metrics 3-box */}
-          <div className="grid grid-cols-3 gap-2 text-center text-xs">
+          {/* Metrics 4-box */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
             <div className={`p-3 rounded-xl border ${
               isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
             }`}>
@@ -112,16 +114,25 @@ export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDataba
             <div className={`p-3 rounded-xl border ${
               isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
             }`}>
+              <KeyRound className={`w-4 h-4 mx-auto mb-1 ${hasGoogleKey ? 'text-emerald-400' : 'text-amber-400'}`} />
+              <span className="text-[10px] text-slate-400 block">Google Places</span>
+              <span className={`font-mono font-bold text-xs ${hasGoogleKey ? 'text-emerald-400' : 'text-amber-400'}`}>
+                {hasGoogleKey ? 'Key Active' : 'Setup Needed'}
+              </span>
+            </div>
+            <div className={`p-3 rounded-xl border ${
+              isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
+            }`}>
               <Wifi className="w-4 h-4 mx-auto mb-1 text-emerald-400" />
-              <span className="text-[10px] text-slate-400 block">Harvester API</span>
-              <span className="font-mono font-bold text-xs text-emerald-400">Overpass Live</span>
+              <span className="text-[10px] text-slate-400 block">Harvester</span>
+              <span className="font-mono font-bold text-xs text-emerald-400">Live API</span>
             </div>
             <div className={`p-3 rounded-xl border ${
               isDark ? 'bg-slate-900/60 border-slate-800' : 'bg-slate-50 border-slate-200'
             }`}>
               <ShieldCheck className="w-4 h-4 mx-auto mb-1 text-indigo-400" />
-              <span className="text-[10px] text-slate-400 block">Security Gate</span>
-              <span className="font-mono font-bold text-xs text-indigo-400">Passcode 1935</span>
+              <span className="text-[10px] text-slate-400 block">Gate Passcode</span>
+              <span className="font-mono font-bold text-xs text-indigo-400">1935</span>
             </div>
           </div>
 
@@ -130,13 +141,13 @@ export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDataba
             isDark ? 'bg-slate-950/70 border-slate-800' : 'bg-slate-100 border-slate-200'
           }`}>
             <span className="text-[10px] font-mono text-slate-400 uppercase font-bold tracking-wider block mb-1">
-              Active Endpoints
+              Active Endpoints & Integrations
             </span>
             {[
               { method: 'GET', path: '/api/leads', desc: 'All leads + filter params', status: '200' },
               { method: 'POST', path: '/api/leads', desc: 'Insert new B2B lead', status: '201' },
-              { method: 'POST', path: '/api/leads/scan', desc: 'Real OpenStreetMap Harvester', status: '200' },
-              { method: 'POST', path: '/api/pitch', desc: 'WhatsApp & Meeting Webhook', status: '200' },
+              { method: 'POST', path: 'places.googleapis.com', desc: 'Google Places (New) Real Leads API', status: hasGoogleKey ? 'Active' : 'Config' },
+              { method: 'POST', path: '/api/pitch', desc: 'WhatsApp & Meeting Pitch Hook', status: '200' },
             ].map((ep) => (
               <div key={ep.path} className="flex items-center justify-between text-xs font-mono py-1 border-b border-slate-800/40 last:border-0">
                 <div className="flex items-center gap-2">
@@ -158,7 +169,7 @@ export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDataba
           <button
             onClick={onResetDatabase}
             className="text-rose-400 hover:text-rose-300 flex items-center gap-1 font-semibold"
-            title="Restore original 59 corridor leads"
+            title="Restore original corridor leads"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Database</span>

@@ -105,9 +105,9 @@ export default function SidebarFilters({
         </span>
         <div className="grid grid-cols-3 gap-1.5">
           {[
-            { id: 'all', label: 'All (59)' },
-            { id: 'Gujarat', label: 'Gujarat' },
-            { id: 'Rajasthan', label: 'Rajasthan' },
+            { id: 'all', label: `All (${(allLeads.length > 0 ? allLeads : leads).length})` },
+            { id: 'Gujarat', label: `Gujarat (${(allLeads.length > 0 ? allLeads : leads).filter(l => l.state === 'Gujarat').length})` },
+            { id: 'Rajasthan', label: `Rajasthan (${(allLeads.length > 0 ? allLeads : leads).filter(l => l.state === 'Rajasthan').length})` },
           ].map((st) => (
             <button
               key={st.id}

@@ -32,7 +32,7 @@ export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDataba
   }, []);
 
   const handleExportJson = () => {
-    const raw = localStorage.getItem('corridor_leads_database_v2') || '[]';
+    const raw = localStorage.getItem('corridor_leads_database_v3') || '[]';
     const blob = new Blob([raw], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

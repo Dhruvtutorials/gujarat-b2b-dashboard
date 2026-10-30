@@ -49,12 +49,13 @@ export default function App() {
   // Persistent Leads Database State loaded from apiService / localStorage
   const [allLeads, setAllLeads] = useState(() => {
     try {
-      const raw = localStorage.getItem('corridor_leads_database_v2');
+      const raw = localStorage.getItem('corridor_leads_database_v3');
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length >= CORRIDOR_LEADS.length) return parsed;
       }
     } catch {}
+    localStorage.setItem('corridor_leads_database_v3', JSON.stringify(CORRIDOR_LEADS));
     return CORRIDOR_LEADS;
   });
 

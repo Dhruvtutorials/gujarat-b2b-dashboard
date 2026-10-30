@@ -4,7 +4,7 @@ import { CORRIDOR_LEADS } from '../data/leadsData';
 // 1. Live REST Backend (auto-connects if http://localhost:5000 is running)
 // 2. High-Performance Client API Engine with LocalStorage persistence & Real OpenStreetMap Overpass API harvester
 
-const STORAGE_KEY = 'corridor_leads_database_v2';
+const STORAGE_KEY = 'corridor_leads_database_v3';
 const API_BASE_URL = 'http://localhost:5000/api';
 
 // Initialize persistent database in browser
@@ -16,9 +16,13 @@ function getStoredLeads() {
       return CORRIDOR_LEADS;
     }
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed) || parsed.length === 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(CORRIDOR_LEADS));
-      return CORRIDOR_LEADS;
+    if (!Array.isArray(parsed) || parsed.length < CORRIDOR_LEADS.length) {
+      // Merge any user-added leads with current CORRIDOR_LEADS
+      const existingIds = new Set((parsed || []).map(l => l.id));
+      const missing = CORRIDOR_LEADS.filter(l => !existingIds.has(l.id));
+      const merged = [...(parsed || []), ...missing];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      return merged;
     }
     return parsed;
   } catch (e) {

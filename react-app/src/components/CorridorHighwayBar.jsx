@@ -90,7 +90,7 @@ export default function CorridorHighwayBar({
                   : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              All (59)
+              All (${leads.length})
             </button>
             <button
               onClick={() => { if (setSelectedState) setSelectedState('Gujarat'); setSelectedCity('all'); }}
@@ -100,7 +100,7 @@ export default function CorridorHighwayBar({
                   : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Gujarat (36)
+              Gujarat (${leads.filter(l => l.state === 'Gujarat').length})
             </button>
             <button
               onClick={() => { if (setSelectedState) setSelectedState('Rajasthan'); setSelectedCity('all'); }}
@@ -110,7 +110,7 @@ export default function CorridorHighwayBar({
                   : isDark ? 'text-amber-400 hover:text-white' : 'text-amber-700 hover:text-slate-900'
               }`}
             >
-              <span>Rajasthan (23)</span>
+              <span>Rajasthan (${leads.filter(l => l.state === 'Rajasthan').length})</span>
             </button>
           </div>
         </div>

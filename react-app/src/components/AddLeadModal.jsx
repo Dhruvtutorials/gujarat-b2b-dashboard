@@ -78,8 +78,8 @@ export default function AddLeadModal({ onClose, onLeadCreated, theme = 'dark' })
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-y-auto">
-      <div className={`relative w-full max-w-2xl rounded-3xl p-6 shadow-2xl backdrop-blur-2xl border transition-all my-8 ${
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 overflow-y-auto">
+      <div className={`relative w-full max-w-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl backdrop-blur-2xl border transition-all my-auto max-h-[92vh] overflow-y-auto ${
         isDark ? 'bg-[#0f172a] border-blue-500/40 text-slate-100' : 'bg-white border-slate-200 text-slate-900 shadow-2xl'
       }`}>
         

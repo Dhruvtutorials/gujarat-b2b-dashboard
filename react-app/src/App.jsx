@@ -35,7 +35,7 @@ export default function App() {
   const [activeMainTab, setActiveMainTab] = useState('table');
 
   // Sidebar Open/Close toggle
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => (typeof window !== "undefined" ? window.innerWidth >= 1024 : true));
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -296,7 +296,7 @@ export default function App() {
       />
 
       {/* 3. Full-Width Main Cockpit Workspace */}
-      <div className="w-full px-3 lg:px-6 py-4 flex-1 flex flex-col lg:flex-row gap-5 items-start">
+      <div className="w-full px-2 sm:px-4 lg:px-6 py-3 sm:py-4 flex-1 flex flex-col lg:flex-row gap-4 lg:gap-5 items-start">
         
         {/* Left Filter Sidebar */}
         {isSidebarOpen && (
@@ -317,6 +317,7 @@ export default function App() {
             setActiveBatch={setActiveBatch}
             leads={filteredLeads}
             onResetFilters={handleResetFilters}
+            onClose={() => setIsSidebarOpen(false)}
             theme={theme}
           />
         )}
@@ -325,7 +326,7 @@ export default function App() {
         <main className="flex-1 w-full min-w-0 flex flex-col">
           
           {/* Quick Filter Pills Row */}
-          <div className="w-full flex items-center justify-between gap-3 overflow-x-auto pb-3 mb-2 no-scrollbar">
+          <div className="w-full flex items-center justify-between gap-2 sm:gap-3 overflow-x-auto pb-2.5 mb-2 no-scrollbar touch-pan-x scroll-smooth">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleResetFilters()}

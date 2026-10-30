@@ -43,8 +43,8 @@ export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDataba
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4">
-      <div className={`relative w-full max-w-lg rounded-3xl p-6 shadow-2xl backdrop-blur-2xl border transition-all ${
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4">
+      <div className={`relative w-full max-w-lg rounded-2xl sm:rounded-3xl p-4 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl backdrop-blur-2xl border transition-all ${
         isDark ? 'bg-[#0f172a] border-emerald-500/40 text-slate-100' : 'bg-white border-slate-200 text-slate-900 shadow-2xl'
       }`}>
         

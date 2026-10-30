@@ -78,7 +78,7 @@ Phone: +91 98250 19350`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-      <div className="relative w-full max-w-2xl bg-[#0f172a] border border-slate-700/80 rounded-3xl p-6 shadow-2xl backdrop-blur-2xl flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-2xl bg-[#0f172a] border border-slate-700/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl backdrop-blur-2xl flex flex-col max-h-[92vh]">
         
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-800">
@@ -135,7 +135,7 @@ Phone: +91 98250 19350`;
         )}
 
         {/* Action Buttons */}
-        <div className="pt-2 border-t border-slate-800 flex flex-wrap items-center justify-between gap-2.5">
+        <div className="pt-2.5 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <button
               onClick={handleMapRoute}

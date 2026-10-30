@@ -11,7 +11,8 @@ import {
   CheckCircle2, 
   Compass,
   Search,
-  Check
+  Check,
+  X
 } from 'lucide-react';
 import { CORRIDOR_CITIES, GUJARAT_CITIES, RAJASTHAN_CITIES } from '../data/leadsData';
 
@@ -32,6 +33,7 @@ export default function SidebarFilters({
   setActiveBatch,
   leads = [],
   onResetFilters,
+  onClose,
   theme = 'dark'
 }) {
   const isDark = theme === 'dark';
@@ -62,320 +64,350 @@ export default function SidebarFilters({
   const totalHubsCount = baseCities.reduce((sum, c) => sum + (masterCounts[c] || 0), 0);
 
   return (
-    <aside className={`w-full lg:w-72 rounded-3xl p-4 lg:p-5 flex flex-col gap-5 shrink-0 shadow-2xl border transition-colors ${
-      isDark 
-        ? 'bg-[#0c1222]/95 backdrop-blur-xl border-slate-800/90 text-slate-100' 
-        : 'bg-white border-slate-200 text-slate-800 shadow-xl'
-    }`}>
-      
-      {/* Header */}
-      <div className={`flex items-center justify-between pb-3 border-b ${
-        isDark ? 'border-slate-800' : 'border-slate-200'
-      }`}>
-        <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 text-blue-500" />
-          <h3 className={`text-xs font-black tracking-wider uppercase ${
-            isDark ? 'text-white' : 'text-slate-900'
-          }`}>
-            Corridor Filters
-          </h3>
-        </div>
-        <button
-          onClick={() => {
-            setSelectedState('all');
-            onResetFilters();
-          }}
-          className={`flex items-center gap-1 text-[11px] font-medium transition-colors ${
-            isDark ? 'text-slate-400 hover:text-blue-400' : 'text-slate-500 hover:text-blue-600'
-          }`}
-          title="Reset all filters"
-        >
-          <RotateCcw className="w-3 h-3" />
-          <span>Reset</span>
-        </button>
-      </div>
+    <>
+      {/* Mobile Backdrop */}
+      <div 
+        onClick={onClose}
+        className="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm lg:hidden transition-opacity"
+      />
 
-      {/* State / Region Selector */}
-      <div>
-        <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
-          isDark ? 'text-slate-200' : 'text-slate-700'
+      <aside className={`fixed inset-y-0 left-0 z-50 w-[85vw] max-w-xs sm:w-80 lg:static lg:z-auto lg:w-72 h-full lg:h-auto overflow-y-auto rounded-r-3xl lg:rounded-3xl p-4 lg:p-5 flex flex-col gap-5 shrink-0 shadow-2xl border transition-colors ${
+        isDark 
+          ? 'bg-[#0c1222] lg:bg-[#0c1222]/95 backdrop-blur-xl border-slate-800/90 text-slate-100' 
+          : 'bg-white border-slate-200 text-slate-800 shadow-xl'
+      }`}>
+        
+        {/* Header */}
+        <div className={`flex items-center justify-between pb-3 border-b ${
+          isDark ? 'border-slate-800' : 'border-slate-200'
         }`}>
-          <Compass className="w-3.5 h-3.5 text-blue-500" />
-          <span>State / Region</span>
-        </span>
-        <div className="grid grid-cols-3 gap-1.5">
-          {[
-            { id: 'all', label: `All (${(allLeads.length > 0 ? allLeads : leads).length})` },
-            { id: 'Gujarat', label: `Gujarat (${(allLeads.length > 0 ? allLeads : leads).filter(l => l.state === 'Gujarat').length})` },
-            { id: 'Rajasthan', label: `Rajasthan (${(allLeads.length > 0 ? allLeads : leads).filter(l => l.state === 'Rajasthan').length})` },
-          ].map((st) => (
+          <div className="flex items-center gap-2">
+            <Layers className="w-4 h-4 text-blue-500" />
+            <h3 className={`text-xs font-black tracking-wider uppercase ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>
+              Corridor Filters
+            </h3>
+          </div>
+          
+          <div className="flex items-center gap-2">
             <button
-              key={st.id}
               onClick={() => {
-                setSelectedState(st.id);
-                setSelectedCity('all');
+                if (setSelectedState) setSelectedState('all');
+                onResetFilters();
               }}
-              className={`py-1.5 text-center rounded-xl text-xs font-bold transition-all border ${
-                selectedState === st.id
-                  ? st.id === 'Rajasthan'
-                    ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30 border-amber-400'
-                    : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
+              className={`flex items-center gap-1 text-[11px] font-medium transition-colors ${
+                isDark ? 'text-slate-400 hover:text-blue-400' : 'text-slate-500 hover:text-blue-600'
+              }`}
+              title="Reset all filters"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>Reset</span>
+            </button>
+
+            {/* Close Button on Mobile */}
+            {onClose && (
+              <button
+                onClick={onClose}
+                className={`lg:hidden p-1 rounded-lg ${
+                  isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-700'
+                }`}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* State / Region Selector */}
+        <div>
+          <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
+            isDark ? 'text-slate-200' : 'text-slate-700'
+          }`}>
+            <Compass className="w-3.5 h-3.5 text-blue-500" />
+            <span>State / Region</span>
+          </span>
+          <div className="grid grid-cols-3 gap-1.5">
+            {[
+              { id: 'all', label: `All (${(allLeads.length > 0 ? allLeads : leads).length})` },
+              { id: 'Gujarat', label: `Gujarat (${(allLeads.length > 0 ? allLeads : leads).filter(l => l.state === 'Gujarat').length})` },
+              { id: 'Rajasthan', label: `Rajasthan (${(allLeads.length > 0 ? allLeads : leads).filter(l => l.state === 'Rajasthan').length})` },
+            ].map((st) => (
+              <button
+                key={st.id}
+                onClick={() => {
+                  setSelectedState(st.id);
+                  setSelectedCity('all');
+                }}
+                className={`py-1.5 px-1 text-center rounded-xl text-xs font-bold transition-all border ${
+                  selectedState === st.id
+                    ? st.id === 'Rajasthan'
+                      ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30 border-amber-500'
+                      : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
+                    : isDark
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                }`}
+              >
+                {st.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Corridor Hubs Navigation list */}
+        <div>
+          <div className="flex items-center justify-between mb-2">
+            <span className={`text-xs font-bold flex items-center gap-1.5 ${
+              isDark ? 'text-slate-200' : 'text-slate-700'
+            }`}>
+              <Milestone className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Corridor Hubs ({baseCities.length})</span>
+            </span>
+            <span className="text-[10px] font-mono text-emerald-500 font-bold">
+              {totalHubsCount} Leads
+            </span>
+          </div>
+
+          {/* Quick city search */}
+          <div className="relative mb-2">
+            <Search className={`w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 ${
+              isDark ? 'text-slate-500' : 'text-slate-400'
+            }`} />
+            <input
+              type="text"
+              value={citySearch}
+              onChange={(e) => setCitySearch(e.target.value)}
+              placeholder="Filter cities..."
+              className={`w-full pl-8 pr-6 py-1 rounded-xl text-xs transition-all border focus:outline-none ${
+                isDark 
+                  ? 'bg-slate-900/90 border-slate-800 text-slate-200 placeholder-slate-500 focus:border-blue-500' 
+                  : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-blue-600'
+              }`}
+            />
+            {citySearch && (
+              <button
+                onClick={() => setCitySearch('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-slate-400"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* City selection pills */}
+          <div className="max-h-56 overflow-y-auto space-y-1 custom-scrollbar pr-1">
+            <button
+              onClick={() => {
+                if (onSelectCity) onSelectCity('all');
+                else setSelectedCity('all');
+              }}
+              className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs font-medium transition-all border ${
+                selectedCity === 'all'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500 font-bold'
                   : isDark
-                    ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+                    ? 'bg-slate-900/40 hover:bg-slate-800/80 text-slate-300 border-slate-800/80'
+                    : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
               }`}
             >
-              {st.label}
+              <span>All 21 Hubs</span>
+              <span className={`text-[10px] px-2 py-0.2 rounded-full font-mono font-bold ${
+                selectedCity === 'all'
+                  ? 'bg-white text-blue-700'
+                  : isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-700'
+              }`}>
+                {(allLeads.length > 0 ? allLeads : leads).length}
+              </span>
             </button>
-          ))}
-        </div>
-      </div>
 
-      {/* 08:30 AM Daily Inflow Filter */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <span className={`text-xs font-bold flex items-center gap-1.5 ${
+            {displayedCities.map((city) => {
+              const totalCount = masterCounts[city] || 0;
+              const isSelected = selectedCity.toLowerCase() === city.toLowerCase();
+              const isRaj = RAJASTHAN_CITIES.includes(city);
+
+              return (
+                <button
+                  key={city}
+                  onClick={() => {
+                    if (isSelected) {
+                      if (onSelectCity) onSelectCity('all');
+                      else setSelectedCity('all');
+                    } else {
+                      if (onSelectCity) onSelectCity(city);
+                      else setSelectedCity(city);
+                    }
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs transition-all border ${
+                    isSelected
+                      ? isRaj
+                        ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30 border-amber-500 font-bold'
+                        : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500 font-bold'
+                      : isDark
+                        ? 'bg-slate-900/40 hover:bg-slate-800/80 text-slate-300 border-slate-800/80'
+                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                  }`}
+                >
+                  <div className="flex items-center gap-1.5 truncate">
+                    <span className={`w-1.5 h-1.5 rounded-full ${
+                      isSelected 
+                        ? 'bg-white' 
+                        : isRaj ? 'bg-amber-500' : 'bg-blue-500'
+                    }`} />
+                    <span className="truncate">{city}</span>
+                  </div>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-bold shrink-0 ${
+                    isSelected
+                      ? 'bg-white text-slate-900'
+                      : totalCount > 0 
+                        ? isDark ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-emerald-100 text-emerald-800'
+                        : isDark ? 'bg-slate-800 text-slate-500' : 'bg-slate-200 text-slate-500'
+                  }`}>
+                    {totalCount}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Batch / Inflow Filter */}
+        <div>
+          <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
             isDark ? 'text-slate-200' : 'text-slate-700'
           }`}>
             <Clock className="w-3.5 h-3.5 text-amber-500" />
-            <span>08:30 AM Inflows</span>
+            <span>Harvester Timestamp</span>
           </span>
-          <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-600 font-mono font-bold">
-            Daily Auto
-          </span>
-        </div>
-        <div className="grid grid-cols-2 gap-1.5">
-          {[
-            { id: 'all', label: 'All Inflows' },
-            { id: 'today', label: '🌅 Today (8:30 AM)' },
-            { id: '2026-09-28', label: '28 Sep Batch' },
-            { id: '2026-09-27', label: '27 Sep Batch' },
-          ].map((batch) => (
-            <button
-              key={batch.id}
-              onClick={() => setActiveBatch(batch.id)}
-              className={`text-left px-2.5 py-2 rounded-xl text-xs transition-all border ${
-                activeBatch === batch.id
-                  ? 'bg-amber-500/20 text-amber-600 border-amber-500 font-bold shadow-md shadow-amber-500/10'
-                  : isDark
-                    ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
-              }`}
-            >
-              {batch.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Corridor Cities (Gujarat & Rajasthan) */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <span className={`text-xs font-bold flex items-center gap-1.5 ${
-            isDark ? 'text-slate-200' : 'text-slate-700'
-          }`}>
-            <Milestone className="w-3.5 h-3.5 text-blue-500" />
-            <span>
-              {selectedState === 'Gujarat' ? '13 Gujarat Hubs' : selectedState === 'Rajasthan' ? '8 Rajasthan Hubs' : '21 Industrial Hubs'}
-            </span>
-          </span>
-          <span className={`text-[10px] font-mono ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>NH-48/58</span>
-        </div>
-
-        {/* Quick Search for Hubs */}
-        <div className="relative mb-2">
-          <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
-          <input
-            type="text"
-            placeholder="Search city / hub..."
-            value={citySearch}
-            onChange={(e) => setCitySearch(e.target.value)}
-            className={`w-full text-xs pl-8 pr-2.5 py-1.5 rounded-xl border transition-all ${
-              isDark 
-                ? 'bg-slate-900/90 border-slate-800 text-slate-200 placeholder-slate-500 focus:border-blue-500' 
-                : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:border-blue-500'
-            }`}
-          />
-        </div>
-
-        <div className="max-h-56 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-          <button
-            onClick={() => {
-              if (onSelectCity) onSelectCity('all');
-              else setSelectedCity('all');
-            }}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all ${
-              selectedCity === 'all'
-                ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30 ring-1 ring-blue-400'
-                : isDark
-                  ? 'bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-slate-800/80'
-                  : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200'
-            }`}
-          >
-            <div className="flex items-center gap-1.5">
-              <span>All Hubs in View</span>
-              {selectedCity === 'all' && <Check className="w-3 h-3 text-white" />}
-            </div>
-            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-              selectedCity === 'all' 
-                ? 'bg-blue-800 text-white' 
-                : isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-700'
-            }`}>
-              {totalHubsCount}
-            </span>
-          </button>
-
-          {displayedCities.map((city, idx) => {
-            const count = masterCounts[city] || 0;
-            const isSelected = selectedCity === city;
-            const isRaj = RAJASTHAN_CITIES.includes(city);
-
-            return (
+          <div className="flex flex-col gap-1.5">
+            {[
+              { id: 'all', label: 'All Historic Leads' },
+              { id: 'today', label: "🌅 Today's 08:30 AM Fresh" },
+              { id: '2026-09-28', label: '28 Sep 2026 Batch' },
+              { id: '2026-09-27', label: '27 Sep 2026 Batch' },
+            ].map((b) => (
               <button
-                key={city}
-                onClick={() => {
-                  if (isSelected) {
-                    if (onSelectCity) onSelectCity('all');
-                    else setSelectedCity('all');
-                  } else {
-                    if (onSelectCity) onSelectCity(city);
-                    else setSelectedCity(city);
-                  }
-                }}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all group ${
-                  isSelected
-                    ? isRaj
-                      ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black shadow-lg shadow-amber-500/25 ring-2 ring-amber-400 scale-[1.01]'
-                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black shadow-lg shadow-blue-600/25 ring-2 ring-blue-400 scale-[1.01]'
+                key={b.id}
+                onClick={() => setActiveBatch(b.id)}
+                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
+                  activeBatch === b.id
+                    ? b.id === 'today'
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/30 border-amber-400'
+                      : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
                     : isDark
-                      ? 'bg-slate-900/40 hover:bg-slate-800 text-slate-300 border border-slate-800/60 hover:border-slate-700'
-                      : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 hover:border-slate-300'
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
                 }`}
               >
-                <div className="flex items-center gap-2 truncate">
-                  <span className={`text-[10px] font-mono ${
-                    isSelected 
-                      ? isRaj ? 'text-slate-950 font-bold' : 'text-blue-100 font-bold' 
-                      : isDark ? 'text-slate-500' : 'text-slate-400'
-                  }`}>
-                    {(idx + 1).toString().padStart(2, '0')}.
-                  </span>
-                  <span className="truncate">{city}</span>
-                  {isRaj && (
-                    <span className={`text-[9px] px-1 py-0.2 rounded font-mono font-bold ${
-                      isSelected ? 'bg-slate-950/20 text-slate-950' : 'bg-amber-500/20 text-amber-500'
-                    }`}>
-                      RJ
-                    </span>
-                  )}
-                  {isSelected && <Check className="w-3 h-3 shrink-0 ml-0.5" />}
-                </div>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
-                  isSelected 
-                    ? isRaj ? 'bg-slate-950 text-amber-300' : 'bg-blue-900 text-blue-100' 
-                    : isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-700'
-                }`}>
-                  {count}
-                </span>
+                <span>{b.label}</span>
+                {activeBatch === b.id && <Check className="w-3.5 h-3.5" />}
               </button>
-            );
-          })}
-
-          {displayedCities.length === 0 && (
-            <div className="py-4 text-center text-xs text-slate-400">
-              No hubs match "{citySearch}"
-            </div>
-          )}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Business Model Type */}
-      <div>
-        <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
-          isDark ? 'text-slate-200' : 'text-slate-700'
-        }`}>
-          <Building2 className="w-3.5 h-3.5 text-indigo-500" />
-          <span>Business Model</span>
-        </span>
-        <div className="grid grid-cols-3 gap-1.5">
-          {['all', 'B2B', 'D2C'].map((type) => (
+        {/* Business Type */}
+        <div>
+          <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
+            isDark ? 'text-slate-200' : 'text-slate-700'
+          }`}>
+            <Building2 className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Industrial Type</span>
+          </span>
+          <div className="grid grid-cols-3 gap-1.5">
+            {['all', 'B2B', 'D2C'].map((tp) => (
+              <button
+                key={tp}
+                onClick={() => setSelectedType(tp)}
+                className={`py-1.5 text-center rounded-xl text-xs font-bold transition-all border ${
+                  selectedType === tp
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border-indigo-500'
+                    : isDark
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+                }`}
+              >
+                {tp === 'all' ? 'All' : tp}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Website Presence */}
+        <div>
+          <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
+            isDark ? 'text-slate-200' : 'text-slate-700'
+          }`}>
+            <Globe2 className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Web Presence Status</span>
+          </span>
+          <div className="flex flex-col gap-1.5">
+            {[
+              { id: 'all', label: 'All Digital Footprints' },
+              { id: 'No Website', label: '❌ Zero Website (Urgent Pitch)' },
+              { id: 'Outdated Site', label: '⚠️ Outdated Catalogue (Redesign)' },
+            ].map((ws) => (
+              <button
+                key={ws.id}
+                onClick={() => setSelectedWebStatus(ws.id)}
+                className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
+                  selectedWebStatus === ws.id
+                    ? ws.id === 'No Website'
+                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 border-rose-500'
+                      : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
+                    : isDark
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+                }`}
+              >
+                <span>{ws.label}</span>
+                {selectedWebStatus === ws.id && <Check className="w-3.5 h-3.5" />}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Priority */}
+        <div>
+          <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
+            isDark ? 'text-slate-200' : 'text-slate-700'
+          }`}>
+            <Flame className="w-3.5 h-3.5 text-rose-500" />
+            <span>Lead Priority</span>
+          </span>
+          <div className="grid grid-cols-3 gap-1.5">
+            {['all', 'Hot', 'Warm'].map((pri) => (
+              <button
+                key={pri}
+                onClick={() => setSelectedPriority(pri)}
+                className={`py-1.5 text-center rounded-xl text-xs font-bold transition-all border ${
+                  selectedPriority === pri
+                    ? pri === 'Hot' 
+                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 border-rose-500'
+                      : 'bg-amber-600 text-white shadow-md shadow-amber-600/30 border-amber-500'
+                    : isDark
+                      ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
+                      : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
+                }`}
+              >
+                {pri === 'all' ? 'All' : pri === 'Hot' ? '🔥 Hot' : '⚡ Warm'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile Sticky Bottom Action Button */}
+        {onClose && (
+          <div className="lg:hidden mt-2 pt-3 border-t border-slate-800 sticky bottom-0 bg-inherit pb-2">
             <button
-              key={type}
-              onClick={() => setSelectedType(type)}
-              className={`py-1.5 text-center rounded-xl text-xs font-bold transition-all border ${
-                selectedType === type
-                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 border-indigo-500'
-                  : isDark
-                    ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
-              }`}
+              onClick={onClose}
+              className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/40 flex items-center justify-center gap-2"
             >
-              {type === 'all' ? 'All' : type}
+              <span>Apply & View {leads.length} Leads</span>
             </button>
-          ))}
-        </div>
-      </div>
+          </div>
+        )}
 
-      {/* Digital Footprint */}
-      <div>
-        <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
-          isDark ? 'text-slate-200' : 'text-slate-700'
-        }`}>
-          <Globe2 className="w-3.5 h-3.5 text-cyan-500" />
-          <span>Digital Status</span>
-        </span>
-        <div className="space-y-1.5">
-          {[
-            { id: 'all', label: 'All Statuses' },
-            { id: 'No Website', label: '❌ Zero Website (Prime)' },
-            { id: 'Outdated', label: '⚠️ Outdated (Revamp)' },
-          ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setSelectedWebStatus(item.id)}
-              className={`w-full flex items-center justify-between px-3 py-1.5 rounded-xl text-xs transition-all border ${
-                selectedWebStatus === item.id
-                  ? 'bg-cyan-600/20 text-cyan-600 border-cyan-500 font-bold'
-                  : isDark
-                    ? 'bg-slate-900/50 hover:bg-slate-800 text-slate-400 border-slate-800/80'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
-              }`}
-            >
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Priority */}
-      <div>
-        <span className={`text-xs font-bold flex items-center gap-1.5 mb-2 ${
-          isDark ? 'text-slate-200' : 'text-slate-700'
-        }`}>
-          <Flame className="w-3.5 h-3.5 text-rose-500" />
-          <span>Lead Priority</span>
-        </span>
-        <div className="grid grid-cols-3 gap-1.5">
-          {['all', 'Hot', 'Warm'].map((pri) => (
-            <button
-              key={pri}
-              onClick={() => setSelectedPriority(pri)}
-              className={`py-1.5 text-center rounded-xl text-xs font-bold transition-all border ${
-                selectedPriority === pri
-                  ? pri === 'Hot' 
-                    ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 border-rose-500'
-                    : 'bg-amber-600 text-white shadow-md shadow-amber-600/30 border-amber-500'
-                  : isDark
-                    ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
-                    : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
-              }`}
-            >
-              {pri === 'all' ? 'All' : pri === 'Hot' ? '🔥 Hot' : '⚡ Warm'}
-            </button>
-          ))}
-        </div>
-      </div>
-
-    </aside>
+      </aside>
+    </>
   );
 }

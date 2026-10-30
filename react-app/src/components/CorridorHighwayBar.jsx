@@ -51,12 +51,12 @@ export default function CorridorHighwayBar({
   });
 
   return (
-    <div className={`w-full border-y px-3 lg:px-6 py-2.5 backdrop-blur-xl relative z-20 transition-colors shadow-sm ${
+    <div className={`w-full border-y px-2.5 sm:px-4 lg:px-6 py-2 sm:py-2.5 backdrop-blur-xl relative z-20 transition-colors shadow-sm ${
       isDark 
         ? 'bg-[#090d18]/95 border-slate-800/80 text-slate-100' 
         : 'bg-white/95 border-slate-200 text-slate-800'
     }`}>
-      <div className="w-full flex items-center justify-between gap-3 overflow-x-auto no-scrollbar">
+      <div className="w-full flex items-center justify-between gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar touch-pan-x scroll-smooth pb-0.5">
         
         {/* Left Badge: Corridor Route Indicator & Region Switcher */}
         <div className={`flex items-center gap-2 shrink-0 pr-3 border-r ${
@@ -90,7 +90,7 @@ export default function CorridorHighwayBar({
                   : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              All (${leads.length})
+              {`All (${leads.length})`}
             </button>
             <button
               onClick={() => { if (setSelectedState) setSelectedState('Gujarat'); setSelectedCity('all'); }}
@@ -100,7 +100,7 @@ export default function CorridorHighwayBar({
                   : isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Gujarat (${leads.filter(l => l.state === 'Gujarat').length})
+              {`Gujarat (${leads.filter(l => l.state === 'Gujarat').length})`}
             </button>
             <button
               onClick={() => { if (setSelectedState) setSelectedState('Rajasthan'); setSelectedCity('all'); }}
@@ -110,7 +110,7 @@ export default function CorridorHighwayBar({
                   : isDark ? 'text-amber-400 hover:text-white' : 'text-amber-700 hover:text-slate-900'
               }`}
             >
-              <span>Rajasthan (${leads.filter(l => l.state === 'Rajasthan').length})</span>
+              <span>{`Rajasthan (${leads.filter(l => l.state === 'Rajasthan').length})`}</span>
             </button>
           </div>
         </div>

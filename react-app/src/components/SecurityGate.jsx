@@ -51,10 +51,10 @@ export default function SecurityGate({ onUnlock }) {
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none" />
 
-      <div className={`relative w-full max-w-md bg-[#0f172a]/90 border border-slate-800 rounded-3xl p-8 shadow-2xl backdrop-blur-2xl text-center transition-transform ${shake ? 'animate-bounce' : ''}`}>
+      <div className={`relative w-full max-w-md bg-[#0f172a]/90 border border-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl backdrop-blur-2xl text-center transition-transform ${shake ? 'animate-bounce' : ''}`}>
         {/* Shield Icon */}
-        <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/25 mb-5 ring-4 ring-blue-500/10">
-          <Lock className="w-8 h-8 text-white" />
+        <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/25 mb-3 sm:mb-5 ring-4 ring-blue-500/10">
+          <Lock className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
         </div>
 
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-3">
@@ -62,13 +62,13 @@ export default function SecurityGate({ onUnlock }) {
           <span>Gujarat Corridor Intelligence</span>
         </div>
 
-        <h2 className="text-2xl font-bold text-white tracking-tight">Protected Executive Portal</h2>
-        <p className="text-sm text-slate-400 mt-1 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Protected Executive Portal</h2>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 mb-4 sm:mb-6">
           Enter 4-Digit Security Passcode to access live Highway Leads & Physical Meeting Addresses.
         </p>
 
         {/* PIN Dots Display */}
-        <div className="flex justify-center items-center gap-3 mb-6">
+        <div className="flex justify-center items-center gap-2.5 sm:gap-3 mb-4 sm:mb-6">
           {[0, 1, 2, 3].map((idx) => {
             const isFilled = pin.length > idx;
             return (

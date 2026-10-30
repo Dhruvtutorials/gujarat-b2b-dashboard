@@ -53,10 +53,10 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
   const outdatedPercent = 100 - noWebPercent;
 
   return (
-    <div className="w-full grid grid-cols-1 xl:grid-cols-3 gap-4 mb-6">
+    <div className="w-full grid grid-cols-1 xl:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
       
       {/* 2-Columns: Highway Corridor Spline / Revenue Chart */}
-      <div className={`xl:col-span-2 rounded-3xl p-4 lg:p-6 shadow-2xl backdrop-blur-xl flex flex-col justify-between border transition-colors ${
+      <div className={`xl:col-span-2 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 lg:p-6 shadow-2xl backdrop-blur-xl flex flex-col justify-between border transition-colors ${
         isDark 
           ? 'bg-[#0c1222]/90 border-slate-800/90 text-slate-100' 
           : 'bg-white border-slate-200 text-slate-900 shadow-xl'

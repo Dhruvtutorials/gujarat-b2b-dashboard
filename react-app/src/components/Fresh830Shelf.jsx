@@ -14,7 +14,7 @@ export default function Fresh830Shelf({ freshLeads, onOpenPitch, onNavigateMap, 
   const isDark = theme === 'dark';
 
   return (
-    <div className={`w-full mb-6 border-2 rounded-3xl p-4 lg:p-6 shadow-2xl relative overflow-hidden backdrop-blur-2xl transition-colors ${
+    <div className={`w-full mb-4 sm:mb-6 border-2 rounded-2xl sm:rounded-3xl p-3 sm:p-5 lg:p-6 shadow-2xl relative overflow-hidden backdrop-blur-2xl transition-colors ${
       isDark 
         ? 'bg-gradient-to-r from-amber-950/30 via-slate-900/90 to-blue-950/30 border-amber-500/40 text-slate-100 shadow-amber-500/10' 
         : 'bg-gradient-to-r from-amber-50/80 via-white to-blue-50/80 border-amber-400 text-slate-900 shadow-lg'

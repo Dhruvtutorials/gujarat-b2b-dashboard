@@ -13,6 +13,8 @@ import AutoScanModal from './components/AutoScanModal';
 import AddLeadModal from './components/AddLeadModal';
 import ApiStatusModal from './components/ApiStatusModal';
 import GooglePlacesSetup from './components/GooglePlacesSetup';
+import LeadNotesModal from './components/LeadNotesModal';
+import BulkHarvesterModal from './components/BulkHarvesterModal';
 import { apiService } from './services/apiService';
 import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3, Plus, Activity } from 'lucide-react';
 
@@ -66,6 +68,8 @@ export default function App() {
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
   const [isApiStatusOpen, setIsApiStatusOpen] = useState(false);
   const [isGoogleSetupOpen, setIsGoogleSetupOpen] = useState(false);
+  const [activeNotesLead, setActiveNotesLead] = useState(null);
+  const [isBulkHarvesterOpen, setIsBulkHarvesterOpen] = useState(false);
   const [harvesterCity, setHarvesterCity] = useState('all');
 
   // API Action Handlers
@@ -80,6 +84,14 @@ export default function App() {
   const handleDeleteLead = async (id) => {
     await apiService.deleteLead(id);
     setAllLeads((prev) => prev.filter((l) => l.id !== id));
+  };
+
+  const handleSaveLead = (updatedLead) => {
+    setAllLeads((prev) => {
+      const updated = prev.map((l) => (l.id === updatedLead.id ? updatedLead : l));
+      localStorage.setItem('corridor_leads_database_v3', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const handleLeadsHarvested = (newLeads) => {
@@ -272,6 +284,7 @@ export default function App() {
         onOpenAddLead={() => setIsAddLeadOpen(true)}
         onOpenApiStatus={() => setIsApiStatusOpen(true)}
             onOpenGoogleSetup={() => setIsGoogleSetupOpen(true)}
+        onOpenBulkHarvester={() => setIsBulkHarvesterOpen(true)}
         onOpenAutoScan={() => {
           setHarvesterCity('all');
           setIsAutoScanOpen(true);
@@ -491,6 +504,8 @@ export default function App() {
                 onDeleteLead={handleDeleteLead}
                 onOpenPitch={(lead) => setPitchLead(lead)}
                 onNavigateMap={handleNavigateMap}
+                onOpenNotes={(lead) => setActiveNotesLead(lead)}
+                onOpenBulkHarvester={() => setIsBulkHarvesterOpen(true)}
                 theme={theme}
               />
               <VisualAnalytics leads={filteredLeads} theme={theme} />
@@ -507,6 +522,8 @@ export default function App() {
                 onDeleteLead={handleDeleteLead}
                 onOpenPitch={(lead) => setPitchLead(lead)}
                 onNavigateMap={handleNavigateMap}
+                onOpenNotes={(lead) => setActiveNotesLead(lead)}
+                onOpenBulkHarvester={() => setIsBulkHarvesterOpen(true)}
                 theme={theme}
               />
             </>
@@ -567,6 +584,25 @@ export default function App() {
         <GooglePlacesSetup
           onLeadsHarvested={handleLeadsHarvested}
           onClose={() => setIsGoogleSetupOpen(false)}
+          theme={theme}
+        />
+      )}
+
+      {/* Mini CRM Lead Notes & Pipeline Status Modal */}
+      {activeNotesLead && (
+        <LeadNotesModal
+          lead={activeNotesLead}
+          onClose={() => setActiveNotesLead(null)}
+          onSaveLead={handleSaveLead}
+          theme={theme}
+        />
+      )}
+
+      {/* Populate All 10 Corridor Cities Highway Harvester Modal */}
+      {isBulkHarvesterOpen && (
+        <BulkHarvesterModal
+          onClose={() => setIsBulkHarvesterOpen(false)}
+          onLeadsHarvested={handleLeadsHarvested}
           theme={theme}
         />
       )}

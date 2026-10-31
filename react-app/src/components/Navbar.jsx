@@ -21,7 +21,8 @@ import {
   Activity,
   Filter,
   MoreVertical,
-  X
+  X,
+  Zap
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -33,6 +34,7 @@ export default function Navbar({
   onOpenAddLead,
   onOpenApiStatus,
   onOpenGoogleSetup,
+  onOpenBulkHarvester,
   onExportCsv, 
   onLock,
   activeBatch,
@@ -196,6 +198,16 @@ export default function Navbar({
           >
             <span className="text-sm leading-none">⚡</span>
             <span>Real Leads</span>
+          </button>
+
+                    {/* 10-City Harvest (Desktop) */}
+          <button
+            onClick={onOpenBulkHarvester}
+            className="hidden lg:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600 hover:opacity-90 text-white shadow-md shadow-indigo-600/30"
+            title="Populate All 10 Gujarat & Rajasthan Corridor Cities"
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span>10-City Harvest</span>
           </button>
 
           {/* View Table Quick Button (Desktop) */}
@@ -372,6 +384,17 @@ export default function Navbar({
           >
             <Activity className="w-3.5 h-3.5" />
             <span>API Gateway</span>
+          </button>
+
+                    <button
+            onClick={() => {
+              onOpenBulkHarvester();
+              setIsMobileMenuOpen(false);
+            }}
+            className="flex items-center gap-2 p-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold justify-center col-span-2 shadow-md"
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span>Populate All 10 Corridor Cities</span>
           </button>
 
           <button

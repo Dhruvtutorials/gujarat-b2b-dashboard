@@ -31,7 +31,7 @@ export function generateQuotationPdf(lead) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(203, 213, 225);
-  doc.text('GUJARAT & RAJASTHAN INDUSTRIAL CORRIDOR DIGITAL ACCELERATOR', 14, 25);
+  doc.text('GUJARAT INDUSTRIAL CORRIDOR DIGITAL ACCELERATOR', 14, 25);
 
   // Quote Reference & Date (Right side)
   const quoteNo = `QT-${(lead.id || 'LEAD').replace(/[^a-zA-Z0-9]/g, '')}-${new Date().getFullYear()}`;
@@ -96,7 +96,7 @@ export function generateQuotationPdf(lead) {
     },
     {
       title: 'Local & Export Search Engine Optimization (SEO)',
-      desc: 'Targeted ranking for relevant B2B manufacturing keywords across Gujarat & Rajasthan industrial hubs.'
+      desc: 'Targeted ranking for relevant B2B manufacturing keywords across Gujarat industrial hubs.'
     },
     {
       title: 'High-Speed Cloud Hosting, SSL & Professional Business Email',
@@ -228,7 +228,7 @@ export function generateQuotationPdf(lead) {
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(...mutedText);
-  doc.text('Gujarat & Rajasthan B2B Corridor Web Solutions', 14, y);
+  doc.text('Gujarat B2B Corridor Web Solutions', 14, y);
   doc.text(`For: ${lead.name || 'Company Authorized Signatory'}`, pageWidth - 14, y, { align: 'right' });
 
   // Clean filename

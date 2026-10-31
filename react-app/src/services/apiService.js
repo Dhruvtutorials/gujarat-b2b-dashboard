@@ -5,7 +5,7 @@ import { CORRIDOR_LEADS } from '../data/leadsData';
 // ============================================================
 const GOOGLE_PLACES_API_KEY_STORAGE = 'corridor_google_places_api_key';
 const DEFAULT_GOOGLE_KEY = 'AIzaSyCfWUC9yV9aT7mvWSar6-o456Tfd9I5epw';
-const STORAGE_KEY = 'corridor_leads_database_v3';
+const STORAGE_KEY = 'corridor_leads_database_v4_gujarat';
 const API_BASE_URL = 'http://localhost:5000/api';
 
 // City GPS Coordinates for Google Places Search
@@ -13,16 +13,22 @@ const CITY_COORDS = {
   'Surat':           { lat: 21.1702, lng: 72.8311 },
   'Ahmedabad':       { lat: 23.0225, lng: 72.5714 },
   'Vadodara':        { lat: 22.3072, lng: 73.1812 },
+  'Rajkot':          { lat: 22.3039, lng: 70.8022 },
+  'Morbi':           { lat: 22.8120, lng: 70.8378 },
+  'Jamnagar':        { lat: 22.4707, lng: 70.0577 },
   'Gandhinagar':     { lat: 23.2156, lng: 72.6369 },
   'Ankleshwar':      { lat: 21.6268, lng: 72.9897 },
   'Bharuch':         { lat: 21.7051, lng: 72.9959 },
+  'Dahej':           { lat: 21.7100, lng: 72.5800 },
   'Anand':           { lat: 22.5645, lng: 72.9289 },
-  'Rajkot':          { lat: 22.3039, lng: 70.8022 },
-  'Jaipur':          { lat: 26.9124, lng: 75.7873 },
-  'Jodhpur':         { lat: 26.2389, lng: 73.0243 },
-  'Udaipur':         { lat: 24.5854, lng: 73.7125 },
-  'Bhilwara':        { lat: 25.3478, lng: 74.6367 },
-  'Kota':            { lat: 25.2138, lng: 75.8648 },
+  'Nadiad':          { lat: 22.6916, lng: 72.8634 },
+  'Vapi':            { lat: 20.3893, lng: 72.9106 },
+  'Valsad':          { lat: 20.5992, lng: 72.9342 },
+  'Navsari':         { lat: 20.9467, lng: 72.9520 },
+  'Kalol & Chhatral':{ lat: 23.2355, lng: 72.4937 },
+  'Kim & Kosamba':   { lat: 21.4682, lng: 72.9524 },
+  'Karjan':          { lat: 22.0574, lng: 73.1235 },
+  'Kheda & Bareja':  { lat: 22.7533, lng: 72.6867 },
 };
 
 // ============================================================
@@ -372,8 +378,7 @@ export const apiService = {
     const hasKey = Boolean(getGoogleApiKey());
     if (hasKey) {
       // Find state for this city
-      const rajasthanCities = ['Jaipur', 'Jodhpur', 'Udaipur', 'Bhilwara', 'Kota'];
-      const stateName = rajasthanCities.includes(cityName) ? 'Rajasthan' : 'Gujarat';
+      const stateName = 'Gujarat';
       const result = await fetchRealLeadsFromGooglePlaces(cityName, stateName);
       if (result.success) {
         return result;
@@ -414,7 +419,7 @@ export const apiService = {
     if (elements.length > 0) {
       const cityCode = cityName.slice(0, 3).toUpperCase();
       const dateStr = new Date().toISOString().slice(0, 10);
-      const isRaj = ['Jaipur', 'Jodhpur', 'Udaipur', 'Bhilwara', 'Kota'].includes(cityName);
+      const isRaj = false;
 
       const harvested = elements.slice(0, 10).map((elem, idx) => {
         const tags = elem.tags || {};
@@ -430,7 +435,7 @@ export const apiService = {
           type: tags['industrial'] ? `${tags['industrial'].toUpperCase()} Unit` : 'Commercial Enterprise',
           category: tags['industrial'] === 'textile' ? 'Textiles & Weaving' : (tags['industrial'] === 'chemical' ? 'Chemical & Pharma' : 'Industrial Manufacturing'),
           city: cityName,
-          state: isRaj ? 'Rajasthan' : 'Gujarat',
+          state: 'Gujarat',
           zone: `${cityName} Industrial Corridor`,
           address: `${addrHno}${addrStreet}, ${cityName}`,
           dm: 'Managing Director / Owner',
@@ -469,7 +474,7 @@ export const apiService = {
   synthesizeHarvesterLeads(cityName) {
     const cityCode = cityName.slice(0, 3).toUpperCase();
     const dateStr = new Date().toISOString().slice(0, 10);
-    const isRaj = ['Jaipur', 'Jodhpur', 'Udaipur', 'Bhilwara', 'Kota'].includes(cityName);
+    const isRaj = false;
 
     const templates = [
       { name: `${cityName} Precision Engineering & Tools`, category: 'CNC & Precision Machine Tooling', type: 'Engineering Hub', zone: `${cityName} GIDC Phase II`, cost: 32000, mrr: 4500, prio: 'Hot' },
@@ -484,7 +489,7 @@ export const apiService = {
       type: t.type,
       category: t.category,
       city: cityName,
-      state: isRaj ? 'Rajasthan' : 'Gujarat',
+      state: 'Gujarat',
       zone: t.zone,
       address: `Plot ${100 + idx * 45}, GIDC Industrial Area, ${cityName}`,
       dm: 'Partner / Managing Director',

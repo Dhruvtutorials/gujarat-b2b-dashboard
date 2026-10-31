@@ -102,11 +102,7 @@ export default function AutoScanModal({ onClose, onLeadsHarvested, defaultCity =
                   <option key={c} value={c}>{c}</option>
                 ))}
               </optgroup>
-              <optgroup label="🏰 Rajasthan Hubs">
-                {RAJASTHAN_CITIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </optgroup>
+              
             </select>
           </div>
         )}

@@ -53,9 +53,7 @@ export default function SidebarFilters({
 
   const baseCities = selectedState === 'Gujarat' 
     ? GUJARAT_CITIES 
-    : selectedState === 'Rajasthan' 
-      ? RAJASTHAN_CITIES 
-      : CORRIDOR_CITIES;
+    : CORRIDOR_CITIES;
 
   const displayedCities = baseCities.filter((city) =>
     city.toLowerCase().includes(citySearch.trim().toLowerCase())
@@ -127,11 +125,11 @@ export default function SidebarFilters({
             <Compass className="w-3.5 h-3.5 text-blue-500" />
             <span>State / Region</span>
           </span>
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className="grid grid-cols-2 gap-1.5">
             {[
               { id: 'all', label: `All (${(allLeads.length > 0 ? allLeads : leads).length})` },
               { id: 'Gujarat', label: `Gujarat (${(allLeads.length > 0 ? allLeads : leads).filter(l => l.state === 'Gujarat').length})` },
-              { id: 'Rajasthan', label: `Rajasthan (${(allLeads.length > 0 ? allLeads : leads).filter(l => l.state === 'Rajasthan').length})` },
+              
             ].map((st) => (
               <button
                 key={st.id}
@@ -141,9 +139,7 @@ export default function SidebarFilters({
                 }}
                 className={`py-1.5 px-1 text-center rounded-xl text-xs font-bold transition-all border ${
                   selectedState === st.id
-                    ? st.id === 'Rajasthan'
-                      ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30 border-amber-500'
-                      : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
                     : isDark
                       ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800'
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
@@ -313,7 +309,7 @@ export default function SidebarFilters({
             <Building2 className="w-3.5 h-3.5 text-indigo-400" />
             <span>Industrial Type</span>
           </span>
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className="grid grid-cols-2 gap-1.5">
             {['all', 'B2B', 'D2C'].map((tp) => (
               <button
                 key={tp}
@@ -374,7 +370,7 @@ export default function SidebarFilters({
             <Flame className="w-3.5 h-3.5 text-rose-500" />
             <span>Lead Priority</span>
           </span>
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className="grid grid-cols-2 gap-1.5">
             {['all', 'Hot', 'Warm'].map((pri) => (
               <button
                 key={pri}

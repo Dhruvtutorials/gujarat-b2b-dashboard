@@ -117,7 +117,7 @@ export default function Navbar({
                   isDark ? 'text-white' : 'text-slate-900'
                 }`}>
                   <span className="sm:hidden">CORRIDOR B2B</span>
-                  <span className="hidden sm:inline">GUJARAT & RAJASTHAN CORRIDOR</span>
+                  <span className="hidden sm:inline">GUJARAT B2B CORRIDOR</span>
                 </h1>
                 <span className="text-[9px] px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-500 border border-blue-500/30 font-mono font-bold uppercase hidden sm:inline">
                   ENTERPRISE
@@ -129,7 +129,7 @@ export default function Navbar({
               <p className={`text-[10px] sm:text-[11px] items-center gap-1 leading-none mt-1 hidden sm:flex ${
                 isDark ? 'text-slate-400' : 'text-slate-500'
               }`}>
-                <span className="font-semibold">Surat ➔ Gandhinagar ➔ Udaipur ➔ Jodhpur ➔ Jaipur</span>
+                <span className="font-semibold">Vapi ➔ Surat ➔ Vadodara ➔ Ahmedabad ➔ Rajkot ➔ Morbi</span>
                 <span>|</span>
                 <span className="text-emerald-500 font-mono font-semibold">{totalLeads} Leads</span>
               </p>
@@ -204,7 +204,7 @@ export default function Navbar({
           <button
             onClick={onOpenBulkHarvester}
             className="hidden lg:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600 hover:opacity-90 text-white shadow-md shadow-indigo-600/30"
-            title="Populate All 10 Gujarat & Rajasthan Corridor Cities"
+            title="Populate All 10 Gujarat Industrial Hubs"
           >
             <Zap className="w-3.5 h-3.5" />
             <span>10-City Harvest</span>
@@ -394,7 +394,7 @@ export default function Navbar({
             className="flex items-center gap-2 p-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-bold justify-center col-span-2 shadow-md"
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Populate All 10 Corridor Cities</span>
+            <span>Populate 10 Gujarat Hubs</span>
           </button>
 
           <button

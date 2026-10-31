@@ -52,13 +52,13 @@ export default function App() {
   // Persistent Leads Database State loaded from apiService / localStorage
   const [allLeads, setAllLeads] = useState(() => {
     try {
-      const raw = localStorage.getItem('corridor_leads_database_v3');
+      const raw = localStorage.getItem('corridor_leads_database_v4_gujarat');
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length >= CORRIDOR_LEADS.length) return parsed;
       }
     } catch {}
-    localStorage.setItem('corridor_leads_database_v3', JSON.stringify(CORRIDOR_LEADS));
+    localStorage.setItem('corridor_leads_database_v4_gujarat', JSON.stringify(CORRIDOR_LEADS));
     return CORRIDOR_LEADS;
   });
 
@@ -89,7 +89,7 @@ export default function App() {
   const handleSaveLead = (updatedLead) => {
     setAllLeads((prev) => {
       const updated = prev.map((l) => (l.id === updatedLead.id ? updatedLead : l));
-      localStorage.setItem('corridor_leads_database_v3', JSON.stringify(updated));
+      localStorage.setItem('corridor_leads_database_v4_gujarat', JSON.stringify(updated));
       return updated;
     });
   };
@@ -373,21 +373,7 @@ export default function App() {
                 <span>🦁 Gujarat ({allLeads.filter(l => l.state === 'Gujarat').length})</span>
               </button>
 
-              <button
-                onClick={() => {
-                  setSelectedState(selectedState === 'Rajasthan' ? 'all' : 'Rajasthan');
-                  setSelectedCity('all');
-                }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all border ${
-                  selectedState === 'Rajasthan'
-                    ? 'bg-amber-600 text-white border-amber-400 shadow-md shadow-amber-600/30'
-                    : isDark
-                      ? 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20'
-                      : 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100'
-                }`}
-              >
-                <span>🏰 Rajasthan ({allLeads.filter(l => l.state === 'Rajasthan').length})</span>
-              </button>
+
 
               <button
                 onClick={() => setActiveBatch(activeBatch === 'today' ? 'all' : 'today')}
@@ -537,8 +523,8 @@ export default function App() {
         isDark ? 'border-slate-800/80 bg-[#050811] text-slate-500' : 'border-slate-200 bg-white text-slate-500'
       }`}>
         <div className="flex flex-col sm:flex-row items-center justify-between max-w-full px-4 gap-2 text-[11px]">
-          <span>Gujarat & Rajasthan Corridor B2B Prospecting Engine • Live API & Overpass Harvester</span>
-          <span>Surat ➔ Gandhinagar ➔ Udaipur ➔ Jodhpur ➔ Jaipur (950 KM) • Passcode Protected (1935)</span>
+          <span>Gujarat Golden Industrial Corridor B2B Prospecting Engine (Vapi to Morbi) • Live API & Overpass Harvester</span>
+          <span>Vapi ➔ Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar ➔ Rajkot ➔ Morbi (550 KM) • Passcode Protected (1935)</span>
         </div>
       </footer>
 

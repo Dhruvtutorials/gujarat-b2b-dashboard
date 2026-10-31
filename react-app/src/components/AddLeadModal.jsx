@@ -162,7 +162,7 @@ export default function AddLeadModal({ onClose, onLeadCreated, theme = 'dark' })
                 }`}
               >
                 <option value="Gujarat">🦁 Gujarat</option>
-                <option value="Rajasthan">🏰 Rajasthan</option>
+                
               </select>
             </div>
 
@@ -207,7 +207,7 @@ export default function AddLeadModal({ onClose, onLeadCreated, theme = 'dark' })
             <textarea
               required
               rows={2}
-              placeholder="e.g. Plot No. 245, Road No. 8, RIICO Industrial Area, Phase II, Sitapura, Jaipur, Rajasthan - 302022"
+              placeholder="e.g. Plot No. 245, Road No. 8, GIDC Industrial Estate, Sachin, Surat, Gujarat - 302022"
               value={formData.address}
               onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               className={`w-full text-xs px-3 py-2 rounded-xl border focus:outline-none focus:border-blue-500 leading-relaxed ${

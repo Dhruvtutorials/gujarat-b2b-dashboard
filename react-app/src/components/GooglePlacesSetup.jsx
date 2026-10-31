@@ -293,28 +293,10 @@ export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = '
             </h4>
           </div>
 
-          {/* State Selector */}
-          <div className="grid grid-cols-2 gap-2 mb-3">
-            {['Gujarat', 'Rajasthan'].map(state => (
-              <button
-                key={state}
-                onClick={() => {
-                  setSelectedState(state);
-                  setSelectedCity(state === 'Gujarat' ? 'Surat' : 'Jaipur');
-                }}
-                className={`py-2 rounded-xl text-xs font-bold border transition-all ${
-                  selectedState === state
-                    ? state === 'Gujarat'
-                      ? 'bg-blue-600 text-white border-blue-500'
-                      : 'bg-amber-600 text-white border-amber-500'
-                    : isDark
-                      ? 'bg-slate-800 text-slate-400 border-slate-700'
-                      : 'bg-white text-slate-600 border-slate-200'
-                }`}
-              >
-                {state === 'Gujarat' ? '🦁 Gujarat' : '🏰 Rajasthan'}
-              </button>
-            ))}
+          {/* State Indicator */}
+          <div className="mb-3 p-2 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-between text-xs">
+            <span className="font-bold text-blue-400">🦁 Target Region: Gujarat Industrial Belt</span>
+            <span className="font-mono text-[10px] text-blue-300">100% Verified GIDC Units</span>
           </div>
 
           {/* City Selector */}

@@ -412,11 +412,9 @@ export default function LeadsMatrixTable({
                             {lead.city}
                           </span>
                           <span className={`text-[9px] px-1.5 py-0.2 rounded font-extrabold border ${
-                            lead.state === 'Rajasthan'
-                              ? 'bg-amber-500/15 text-amber-500 border-amber-500/30'
-                              : 'bg-blue-500/15 text-blue-500 border-blue-500/30'
+                            'bg-blue-500/15 text-blue-500 border-blue-500/30'
                           }`}>
-                            {lead.state === 'Rajasthan' ? 'RJ' : 'GJ'}
+                            'GJ'
                           </span>
                         </div>
                         <span className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
@@ -609,11 +607,9 @@ export default function LeadsMatrixTable({
                         {lead.city}
                       </span>
                       <span className={`text-[9px] px-1.5 py-0.2 rounded font-extrabold border ${
-                        lead.state === 'Rajasthan'
-                          ? 'bg-amber-500/15 text-amber-500 border-amber-500/30'
-                          : 'bg-blue-500/15 text-blue-500 border-blue-500/30'
+                        'bg-blue-500/15 text-blue-500 border-blue-500/30'
                       }`}>
-                        {lead.state === 'Rajasthan' ? 'RJ' : 'GJ'}
+                        'GJ'
                       </span>
                     </div>
                   </div>

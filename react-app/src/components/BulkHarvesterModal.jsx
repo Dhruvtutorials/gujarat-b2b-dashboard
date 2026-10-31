@@ -13,17 +13,17 @@ import {
 } from 'lucide-react';
 import { fetchRealLeadsFromGooglePlaces } from '../services/apiService';
 
-const CORRIDOR_CITIES = [
-  { city: 'Surat', state: 'Gujarat', hub: 'Textiles & Diamond Polishing', keyword: 'textile manufacturer factory' },
-  { city: 'Ahmedabad', state: 'Gujarat', hub: 'Pharma & Precision Engineering', keyword: 'engineering manufacturing factory' },
-  { city: 'Vadodara', state: 'Gujarat', hub: 'Chemical & Heavy Electricals', keyword: 'chemical manufacturer GIDC' },
-  { city: 'Rajkot', state: 'Gujarat', hub: 'CNC Machine Tools & Auto Casting', keyword: 'machine tools foundry manufacturer' },
-  { city: 'Gandhinagar', state: 'Gujarat', hub: 'Electronics & IT Hardware', keyword: 'electronics industrial unit' },
-  { city: 'Ankleshwar', state: 'Gujarat', hub: 'Bulk Drugs & Dye Intermediates', keyword: 'chemical pharma manufacturing' },
-  { city: 'Jaipur', state: 'Rajasthan', hub: 'Gems, Jewellery & Garments', keyword: 'garments export manufacturer Sitapura' },
-  { city: 'Jodhpur', state: 'Rajasthan', hub: 'Handicrafts & Steel Fabrication', keyword: 'handicrafts furniture manufacturer' },
-  { city: 'Udaipur', state: 'Rajasthan', hub: 'Marble, Granite & Minerals', keyword: 'marble processing factory' },
-  { city: 'Kota', state: 'Rajasthan', hub: 'Chemicals, Stone & Engineering', keyword: 'industrial manufacturer factory Kota' },
+const GUJARAT_CORRIDOR_CITIES = [
+  { city: 'Surat', hub: 'Textiles, Diamonds & Synthetic Weaving', keyword: 'textile manufacturer factory Surat' },
+  { city: 'Ahmedabad', hub: 'Active Pharma & Heavy Engineering GIDC', keyword: 'engineering manufacturing factory Ahmedabad' },
+  { city: 'Vadodara', hub: 'Chemical, Switchgears & Power Equipment', keyword: 'chemical manufacturer GIDC Vadodara' },
+  { city: 'Rajkot', hub: 'CNC Machine Tools, Auto Castings & Foundry', keyword: 'machine tools foundry manufacturer Rajkot' },
+  { city: 'Morbi', hub: 'Ceramic Tiles, Sanitaryware & Vitrified Slabs', keyword: 'ceramic tiles manufacturer factory Morbi' },
+  { city: 'Jamnagar', hub: 'Brass Turned Components & Sanitary Parts', keyword: 'brass components manufacturer Jamnagar' },
+  { city: 'Gandhinagar', hub: 'Electronics, IT Hardware & Infocity', keyword: 'electronics industrial unit Gandhinagar' },
+  { city: 'Ankleshwar', hub: 'Bulk Drugs, Dyes & Active Pharma Hub', keyword: 'chemical pharma manufacturing Ankleshwar' },
+  { city: 'Bharuch', hub: 'Fertilizers, PCPIR Chemicals & Port SEZ', keyword: 'chemical manufacturer Bharuch Dahej' },
+  { city: 'Vapi', hub: 'Kraft Paper, Corrugation & Specialty Dyes', keyword: 'paper packaging chemicals factory Vapi' },
 ];
 
 export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 'dark' }) {
@@ -42,8 +42,8 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
     let accumulatedLeads = [];
     let countTotal = 0;
 
-    for (let i = 0; i < CORRIDOR_CITIES.length; i++) {
-      const target = CORRIDOR_CITIES[i];
+    for (let i = 0; i < GUJARAT_CORRIDOR_CITIES.length; i++) {
+      const target = GUJARAT_CORRIDOR_CITIES[i];
       setCurrentCityIndex(i);
       setCityProgress((prev) => ({
         ...prev,
@@ -51,7 +51,7 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
       }));
 
       try {
-        const res = await fetchRealLeadsFromGooglePlaces(target.city, target.state, target.keyword);
+        const res = await fetchRealLeadsFromGooglePlaces(target.city, 'Gujarat', target.keyword);
         if (res.success && res.data && res.data.length > 0) {
           accumulatedLeads = [...res.data, ...accumulatedLeads];
           countTotal += res.data.length;
@@ -87,7 +87,7 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
   };
 
   const completedCount = Object.values(cityProgress).filter(p => p.status === 'success' || p.status === 'warning').length;
-  const progressPercent = Math.round((completedCount / CORRIDOR_CITIES.length) * 100);
+  const progressPercent = Math.round((completedCount / GUJARAT_CORRIDOR_CITIES.length) * 100);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4">
@@ -103,13 +103,13 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold border border-rose-500/30 uppercase">
-                  Corridor Highway Harvester
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-bold border border-blue-500/30 uppercase">
+                  Gujarat Golden Corridor
                 </span>
                 <span className="text-xs text-emerald-400 font-bold">100% Real Google Verified</span>
               </div>
               <h3 className="text-base sm:text-lg font-black tracking-tight mt-0.5">
-                Populate All 10 Corridor Cities
+                Populate All 10 Gujarat Industrial Hubs
               </h3>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
 
         {/* Info Banner */}
         <p className={`text-xs leading-relaxed mb-4 ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-          Ye automated scanner poore **950 KM Corridor (Gujarat + Rajasthan)** ki 10 industrial cities se 100% real Google Maps verified business leads (company names, physical factory addresses aur direct phone numbers) ek saath fetch karta hai.
+          Ye automated scanner poore **Gujarat Golden Industrial Corridor (Vapi to Morbi)** ke 10 top industrial hubs se 100% real Google Maps verified business leads (company names, physical factory addresses aur direct phone numbers) ek saath fetch karta hai.
         </p>
 
         {/* Progress Bar when running */}
@@ -136,7 +136,7 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
             <div className="flex items-center justify-between text-xs mb-1.5 font-bold">
               <span className="text-blue-400 flex items-center gap-1.5">
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>Scanning: {CORRIDOR_CITIES[currentCityIndex]?.city}...</span>
+                <span>Scanning: {GUJARAT_CORRIDOR_CITIES[currentCityIndex]?.city}...</span>
               </span>
               <span className="text-emerald-400 font-mono">{progressPercent}% Completed</span>
             </div>
@@ -155,7 +155,7 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
             <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />
             <div>
               <h4 className="text-xs font-bold text-emerald-300">
-                10-City Corridor Harvest Complete!
+                Gujarat 10-Hub Harvest Complete!
               </h4>
               <p className="text-[11px] text-emerald-400/90 mt-0.5">
                 {totalHarvestedCount} Real Google Verified Leads successfully synced into your dashboard table.
@@ -166,7 +166,7 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
 
         {/* 10 Cities List Cards */}
         <div className="space-y-2 mb-5 max-h-60 overflow-y-auto pr-1">
-          {CORRIDOR_CITIES.map((item, idx) => {
+          {GUJARAT_CORRIDOR_CITIES.map((item, idx) => {
             const prog = cityProgress[item.city];
             const isCurrentlyScanning = isRunning && currentCityIndex === idx;
 
@@ -182,18 +182,14 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <div className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold font-mono ${
-                    item.state === 'Rajasthan'
-                      ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
-                      : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                  }`}>
+                  <div className="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center text-xs font-bold font-mono">
                     {idx + 1}
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span className="font-bold text-xs">{item.city}</span>
-                      <span className="text-[9px] px-1 rounded bg-slate-800 text-slate-400 font-mono">
-                        {item.state === 'Rajasthan' ? 'RJ' : 'GJ'}
+                      <span className="text-[9px] px-1 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30 font-mono font-bold">
+                        GJ
                       </span>
                     </div>
                     <span className="text-[10px] text-slate-400 block">{item.hub}</span>
@@ -253,12 +249,12 @@ export default function BulkHarvesterModal({ onClose, onLeadsHarvested, theme = 
                 {isRunning ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Harvesting 10 Cities...</span>
+                    <span>Harvesting Gujarat...</span>
                   </>
                 ) : (
                   <>
                     <Zap className="w-4 h-4" />
-                    <span>Start 10-City Harvest</span>
+                    <span>Start Gujarat Harvest</span>
                   </>
                 )}
               </button>

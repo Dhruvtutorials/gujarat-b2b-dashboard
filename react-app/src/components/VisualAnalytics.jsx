@@ -73,7 +73,7 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
                 <h3 className={`text-base font-extrabold tracking-tight ${
                   isDark ? 'text-white' : 'text-slate-900'
                 }`}>
-                  Corridor Revenue Velocity (Gujarat & Rajasthan Hubs)
+                  Corridor Revenue Velocity (Gujarat Golden Industrial Hubs)
                 </h3>
                 <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                   Targeted Web Dev Contract (₹) vs Monthly Retainer (MRR) along Highway Nodes
@@ -113,7 +113,7 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
                           ? 'bg-amber-500/15 text-amber-500 border-amber-500/30'
                           : 'bg-blue-500/15 text-blue-500 border-blue-500/30'
                       }`}>
-                        {item.state === 'Rajasthan' ? 'RJ' : 'GJ'}
+                        'GJ'
                       </span>
                       <span className={`text-[10px] hidden sm:inline ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                         ({item.tag})
@@ -154,7 +154,7 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
         <div className={`mt-4 pt-3 border-t flex items-center justify-between text-xs ${
           isDark ? 'border-slate-800/80 text-slate-400' : 'border-slate-200 text-slate-500'
         }`}>
-          <span>Western Corridor Span: Gujarat + Rajasthan</span>
+          <span>Gujarat Golden Corridor: Vapi to Morbi (550 KM)</span>
           <span className="text-emerald-500 font-extrabold font-mono">₹{(totalRev / 100000).toFixed(1)}L Total Pipeline Potential</span>
         </div>
       </div>

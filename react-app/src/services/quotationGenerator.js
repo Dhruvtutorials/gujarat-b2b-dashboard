@@ -224,11 +224,14 @@ export function generateQuotationPdf(lead) {
   doc.text('Prepared By:', 14, y);
   doc.text('Accepted & Authorized By (Client):', pageWidth - 14, y, { align: 'right' });
 
+  const senderPhone = localStorage.getItem('corridor_sender_phone') || '+91 98700 98180';
+  const senderName = localStorage.getItem('corridor_sender_name') || 'Dhruv Rana';
+
   y += 4;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(...mutedText);
-  doc.text('Gujarat B2B Corridor Web Solutions', 14, y);
+  doc.text(`Gujarat B2B Corridor Web Solutions (${senderName} • ${senderPhone})`, 14, y);
   doc.text(`For: ${lead.name || 'Company Authorized Signatory'}`, pageWidth - 14, y, { align: 'right' });
 
   // Clean filename

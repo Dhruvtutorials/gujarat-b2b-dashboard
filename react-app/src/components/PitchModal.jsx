@@ -54,8 +54,14 @@ Phone: +91 98250 19350`;
 
   const handleWhatsApp = () => {
     const encoded = encodeURIComponent(pitchText);
-    const cleanPhone = lead.phone.replace(/\D/g, '');
-    window.open(`https://wa.me/91${cleanPhone}?text=${encoded}`, '_blank');
+    let digits = (lead.phone || '').replace(/\D/g, '');
+    if (digits.startsWith('0')) {
+      digits = digits.substring(1);
+    }
+    if (!digits.startsWith('91') && digits.length === 10) {
+      digits = '91' + digits;
+    }
+    window.open(`https://wa.me/${digits}?text=${encoded}`, '_blank');
   };
 
   const handleMapRoute = () => {

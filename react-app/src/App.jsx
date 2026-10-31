@@ -147,12 +147,10 @@ export default function App() {
       setSelectedCity('all');
       return;
     }
-    // Auto-align state if needed
-    const found = allLeads.find(
-      (l) => l.city.toLowerCase() === city.toLowerCase()
-    );
-    if (found && selectedState !== 'all' && selectedState !== found.state) {
-      setSelectedState(found.state);
+    // Toggle: if already selected, reset to all
+    if (selectedCity && selectedCity.toLowerCase() === city.toLowerCase()) {
+      setSelectedCity('all');
+      return;
     }
     setSelectedCity(city);
     setActiveMainTab('table');
@@ -164,37 +162,55 @@ export default function App() {
     }, 60);
   };
 
-  // Filter logic based on live allLeads state
+  // Filter logic based on live allLeads state (100% click-tolerant)
   const filteredLeads = allLeads.filter((lead) => {
     // Search query
     if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.toLowerCase().trim();
       const match = 
-        lead.name.toLowerCase().includes(q) ||
-        lead.city.toLowerCase().includes(q) ||
-        lead.state.toLowerCase().includes(q) ||
-        lead.dm.toLowerCase().includes(q) ||
-        lead.category.toLowerCase().includes(q) ||
-        lead.zone.toLowerCase().includes(q) ||
-        lead.address.toLowerCase().includes(q) ||
-        lead.id.toLowerCase().includes(q);
+        (lead.name || '').toLowerCase().includes(q) ||
+        (lead.city || '').toLowerCase().includes(q) ||
+        (lead.state || '').toLowerCase().includes(q) ||
+        (lead.dm || '').toLowerCase().includes(q) ||
+        (lead.category || '').toLowerCase().includes(q) ||
+        (lead.zone || '').toLowerCase().includes(q) ||
+        (lead.address || '').toLowerCase().includes(q) ||
+        (lead.id || '').toLowerCase().includes(q) ||
+        (lead.notes || '').toLowerCase().includes(q);
       if (!match) return false;
     }
 
-    // State / Region
-    if (selectedState !== 'all' && lead.state !== selectedState) return false;
+    // City (case-insensitive)
+    if (selectedCity !== 'all') {
+      if ((lead.city || '').toLowerCase() !== selectedCity.toLowerCase()) return false;
+    }
 
-    // City
-    if (selectedCity !== 'all' && lead.city !== selectedCity) return false;
+    // Industrial Type
+    if (selectedType !== 'all') {
+      if ((lead.type || '').toLowerCase() !== selectedType.toLowerCase()) return false;
+    }
 
-    // Type
-    if (selectedType !== 'all' && lead.type !== selectedType) return false;
+    // Priority (matches Hot / Ultra Hot)
+    if (selectedPriority !== 'all') {
+      const prio = (lead.priority || '').toLowerCase();
+      if (selectedPriority === 'Hot') {
+        if (!prio.includes('hot')) return false;
+      } else if (prio !== selectedPriority.toLowerCase()) {
+        return false;
+      }
+    }
 
-    // Priority
-    if (selectedPriority !== 'all' && lead.priority !== selectedPriority) return false;
-
-    // Website status
-    if (selectedWebStatus !== 'all' && lead.website !== selectedWebStatus) return false;
+    // Website status (tolerant match for Google Places & Seeded data)
+    if (selectedWebStatus !== 'all') {
+      const web = (lead.website || '').toLowerCase();
+      if (selectedWebStatus === 'No Website' || selectedWebStatus === 'No Web Presence') {
+        if (!web.includes('no') && !web.includes('zero')) return false;
+      } else if (selectedWebStatus === 'Outdated' || selectedWebStatus === 'Outdated Site') {
+        if (!web.includes('outdated')) return false;
+      } else if (selectedWebStatus === 'Active Website') {
+        if (!web.includes('active')) return false;
+      }
+    }
 
     // Batch / Inflow
     if (activeBatch === 'today') {

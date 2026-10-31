@@ -184,7 +184,12 @@ export default function LeadNotesModal({ lead, onClose, onSaveLead, theme = 'dar
               <PhoneCall className="w-4 h-4" />
             </a>
             <a
-              href={`https://wa.me/${(lead.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Namaste Sir, Gujarat B2B Web Solutions se Dhruv Rana bol raha hoon. We noticed ${lead.name} does not have a verified digital catalog yet.`)}`}
+              href={`https://wa.me/${(() => {
+                let d = (lead.phone || '').replace(/\D/g, '');
+                if (d.startsWith('0')) d = d.substring(1);
+                if (!d.startsWith('91') && d.length === 10) d = '91' + d;
+                return d;
+              })()}?text=${encodeURIComponent(`Namaste Sir, Gujarat B2B Web Solutions se Dhruv Rana bol raha hoon. We noticed ${lead.name} does not have a verified digital catalog yet.`)}`}
               target="_blank"
               rel="noreferrer"
               className="p-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/40 flex items-center justify-center text-xs font-bold transition-all"

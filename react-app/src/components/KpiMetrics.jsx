@@ -17,9 +17,9 @@ export default function KpiMetrics({ leads, todayCount, theme = 'dark' }) {
   const totalLeads = leads.length;
   const totalWebDev = leads.reduce((acc, l) => acc + (l.webCost || 0), 0);
   const totalMrr = leads.reduce((acc, l) => acc + (l.mrr || 0), 0);
-  const noWebCount = leads.filter(l => l.website === 'No Website').length;
+  const noWebCount = leads.filter(l => (l.website || '').toLowerCase().includes('no') || (l.website || '').toLowerCase().includes('zero')).length;
   const noWebPercentage = totalLeads > 0 ? Math.round((noWebCount / totalLeads) * 100) : 0;
-  const hotLeads = leads.filter(l => l.priority === 'Hot').length;
+  const hotLeads = leads.filter(l => (l.priority || '').toLowerCase().includes('hot')).length;
   const uniqueHubs = new Set(leads.map(l => l.city)).size;
 
   return (

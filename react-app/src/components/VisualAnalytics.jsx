@@ -47,7 +47,7 @@ export default function VisualAnalytics({ leads, theme = 'dark' }) {
   const b2bPercent = Math.round((b2bCount / total) * 100);
   const d2cPercent = 100 - b2bPercent;
 
-  const noWeb = leads.filter(l => l.website === 'No Website').length;
+  const noWeb = leads.filter(l => (l.website || '').toLowerCase().includes('no') || (l.website || '').toLowerCase().includes('zero')).length;
   const outdatedWeb = total - noWeb;
   const noWebPercent = Math.round((noWeb / total) * 100);
   const outdatedPercent = 100 - noWebPercent;

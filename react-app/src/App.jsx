@@ -15,6 +15,7 @@ import ApiStatusModal from './components/ApiStatusModal';
 import GooglePlacesSetup from './components/GooglePlacesSetup';
 import LeadNotesModal from './components/LeadNotesModal';
 import BulkHarvesterModal from './components/BulkHarvesterModal';
+import ShareLeadModal from './components/ShareLeadModal';
 import { apiService } from './services/apiService';
 import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3, Plus, Activity } from 'lucide-react';
 
@@ -69,6 +70,7 @@ export default function App() {
   const [isApiStatusOpen, setIsApiStatusOpen] = useState(false);
   const [isGoogleSetupOpen, setIsGoogleSetupOpen] = useState(false);
   const [activeNotesLead, setActiveNotesLead] = useState(null);
+  const [activeShareLead, setActiveShareLead] = useState(null);
   const [isBulkHarvesterOpen, setIsBulkHarvesterOpen] = useState(false);
   const [harvesterCity, setHarvesterCity] = useState('all');
 
@@ -507,6 +509,7 @@ export default function App() {
                 onOpenPitch={(lead) => setPitchLead(lead)}
                 onNavigateMap={handleNavigateMap}
                 onOpenNotes={(lead) => setActiveNotesLead(lead)}
+                onOpenShare={(lead) => setActiveShareLead(lead)}
                 onOpenBulkHarvester={() => setIsBulkHarvesterOpen(true)}
                 theme={theme}
               />
@@ -525,6 +528,7 @@ export default function App() {
                 onOpenPitch={(lead) => setPitchLead(lead)}
                 onNavigateMap={handleNavigateMap}
                 onOpenNotes={(lead) => setActiveNotesLead(lead)}
+                onOpenShare={(lead) => setActiveShareLead(lead)}
                 onOpenBulkHarvester={() => setIsBulkHarvesterOpen(true)}
                 theme={theme}
               />
@@ -605,6 +609,15 @@ export default function App() {
         <BulkHarvesterModal
           onClose={() => setIsBulkHarvesterOpen(false)}
           onLeadsHarvested={handleLeadsHarvested}
+          theme={theme}
+        />
+      )}
+
+      {/* 1-Click Share Lead Dossier Modal */}
+      {activeShareLead && (
+        <ShareLeadModal
+          lead={activeShareLead}
+          onClose={() => setActiveShareLead(null)}
           theme={theme}
         />
       )}

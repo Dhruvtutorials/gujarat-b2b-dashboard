@@ -23,7 +23,8 @@ import {
   StickyNote,
   Tag,
   CheckCircle2,
-  FileText
+  FileText,
+  Share2
 } from 'lucide-react';
 import { generateQuotationPdf } from '../services/quotationGenerator';
 
@@ -46,6 +47,7 @@ export default function LeadsMatrixTable({
   onOpenPitch, 
   onNavigateMap,
   onOpenNotes,
+  onOpenShare,
   onOpenBulkHarvester,
   theme = 'dark'
 }) {
@@ -531,7 +533,20 @@ export default function LeadsMatrixTable({
                           <span>Pitch</span>
                         </button>
 
-                        {/* 4. Map */}
+                        {/* 4. Share Lead Dossier Button */}
+                        <button
+                          onClick={() => onOpenShare && onOpenShare(lead)}
+                          className={`p-2 rounded-xl transition-all border shadow-sm ${
+                            isDark 
+                              ? 'bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border-blue-500/40' 
+                              : 'bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200'
+                          }`}
+                          title="Share Complete Lead Dossier"
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </button>
+
+                        {/* 5. Map */}
                         <button
                           onClick={() => onNavigateMap(lead)}
                           className={`p-2 rounded-xl transition-all border shadow-sm ${
@@ -606,11 +621,15 @@ export default function LeadsMatrixTable({
                       }`}>
                         {lead.city}
                       </span>
-                      <span className={`text-[9px] px-1.5 py-0.2 rounded font-extrabold border ${
-                        'bg-blue-500/15 text-blue-500 border-blue-500/30'
-                      }`}>
-                        'GJ'
-                      </span>
+                      <button
+                        onClick={() => onOpenShare && onOpenShare(lead)}
+                        className={`p-1 rounded-lg border transition-all ${
+                          isDark ? 'bg-slate-800 text-blue-400 border-slate-700 hover:bg-slate-700' : 'bg-white text-blue-600 border-slate-200 hover:bg-slate-100'
+                        }`}
+                        title="Share Lead"
+                      >
+                        <Share2 className="w-3 h-3" />
+                      </button>
                     </div>
                   </div>
 
@@ -693,14 +712,14 @@ export default function LeadsMatrixTable({
                   </div>
                 </div>
 
-                {/* Action Buttons: 4 Touch-Friendly Targets for Phones */}
-                <div className={`pt-2.5 border-t grid grid-cols-4 gap-1.5 ${
+                {/* Action Buttons: 5 Touch-Friendly Targets for Mobile / Cards */}
+                <div className={`pt-2.5 border-t grid grid-cols-5 gap-1 sm:gap-1.5 ${
                   isDark ? 'border-slate-800' : 'border-slate-200'
                 }`}>
                   {/* 1. CRM Notes */}
                   <button
                     onClick={() => onOpenNotes && onOpenNotes(lead)}
-                    className={`flex items-center justify-center gap-1 py-2 rounded-xl text-xs font-bold transition-all border ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
                       lead.notes 
                         ? 'bg-amber-500/20 text-amber-300 border-amber-500/40' 
                         : isDark ? 'bg-slate-800 text-slate-300 border-slate-700' : 'bg-slate-100 text-slate-700 border-slate-200'
@@ -714,7 +733,7 @@ export default function LeadsMatrixTable({
                   {/* 2. PDF Quote */}
                   <button
                     onClick={() => handleDownloadPdf(lead)}
-                    className={`flex items-center justify-center gap-1 py-2 rounded-xl text-xs font-bold transition-all border ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
                       isDark
                         ? 'bg-indigo-600/20 text-indigo-300 border-indigo-500/40'
                         : 'bg-indigo-50 text-indigo-700 border-indigo-200'
@@ -725,10 +744,24 @@ export default function LeadsMatrixTable({
                     <span>Quote</span>
                   </button>
 
-                  {/* 3. Direct Phone Call */}
+                  {/* 3. Share Lead Dossier */}
+                  <button
+                    onClick={() => onOpenShare && onOpenShare(lead)}
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
+                      isDark
+                        ? 'bg-blue-600/20 text-blue-300 border-blue-500/40 hover:bg-blue-600/30'
+                        : 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
+                    }`}
+                    title="Share Lead Details"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Share</span>
+                  </button>
+
+                  {/* 4. Direct Phone Call */}
                   <a
                     href={`tel:${lead.phone}`}
-                    className={`flex items-center justify-center gap-1 py-2 rounded-xl text-xs font-bold transition-all border ${
+                    className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
                       isDark
                         ? 'bg-blue-600/15 text-blue-400 border-blue-500/30'
                         : 'bg-blue-50 text-blue-700 border-blue-200'
@@ -739,10 +772,10 @@ export default function LeadsMatrixTable({
                     <span>Call</span>
                   </a>
 
-                  {/* 4. WhatsApp Pitch */}
+                  {/* 5. WhatsApp Pitch */}
                   <button
                     onClick={() => onOpenPitch(lead)}
-                    className="flex items-center justify-center gap-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-600/30"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-[10px] sm:text-xs font-bold transition-all shadow-md shadow-emerald-600/30"
                     title="WhatsApp Pitch"
                   >
                     <MessageCircle className="w-3.5 h-3.5" />

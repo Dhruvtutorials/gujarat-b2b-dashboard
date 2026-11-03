@@ -63,16 +63,16 @@ export default function SidebarFilters({
 
   return (
     <>
-      {/* Mobile Backdrop */}
+      {/* Slide-over Backdrop */}
       <div 
         onClick={onClose}
-        className="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm lg:hidden transition-opacity"
+        className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm transition-opacity"
       />
 
-      <aside className={`fixed inset-y-0 left-0 z-50 w-[85vw] max-w-xs sm:w-80 lg:static lg:z-auto lg:w-72 h-full lg:h-auto overflow-y-auto rounded-r-3xl lg:rounded-3xl p-4 lg:p-5 flex flex-col gap-5 shrink-0 shadow-2xl border transition-colors ${
+      <aside className={`fixed inset-y-0 left-0 z-50 w-[85vw] max-w-sm h-full overflow-y-auto rounded-r-3xl p-4 sm:p-5 flex flex-col gap-5 shadow-2xl border transition-all ${
         isDark 
-          ? 'bg-[#0c1222] lg:bg-[#0c1222]/95 backdrop-blur-xl border-slate-800/90 text-slate-100' 
-          : 'bg-white border-slate-200 text-slate-800 shadow-xl'
+          ? 'bg-[#0c1222] border-slate-800 text-slate-100 shadow-2xl' 
+          : 'bg-white border-slate-200 text-slate-800 shadow-2xl'
       }`}>
         
         {/* Header */}

@@ -39,8 +39,8 @@ export default function App() {
   // View Sections: 'table' or 'analytics'
   const [activeMainTab, setActiveMainTab] = useState('table');
 
-  // Sidebar Open/Close toggle
-  const [isSidebarOpen, setIsSidebarOpen] = useState(() => (typeof window !== "undefined" ? window.innerWidth >= 1024 : true));
+  // Sidebar Open/Close toggle (Drawer mode)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
@@ -350,7 +350,7 @@ export default function App() {
       />
 
       {/* 3. Full-Width Main Cockpit Workspace */}
-      <div className="w-full px-2 sm:px-4 lg:px-6 py-3 sm:py-4 flex-1 flex flex-col lg:flex-row gap-4 lg:gap-5 items-start">
+      <div className="w-full px-2 sm:px-4 lg:px-6 py-3 sm:py-4 flex-1 flex flex-col">
         
         {/* Left Filter Sidebar */}
         {isSidebarOpen && (

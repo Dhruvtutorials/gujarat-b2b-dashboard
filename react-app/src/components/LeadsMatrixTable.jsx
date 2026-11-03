@@ -390,9 +390,7 @@ export default function LeadsMatrixTable({
                     <ArrowUpDown className="w-3 h-3" />
                   </div>
                 </th>
-                <th className={`py-3 px-3 text-right sticky right-0 z-20 shadow-[-10px_0_15px_rgba(0,0,0,0.3)] border-l ${
-                  isDark ? 'bg-[#0c1222] border-slate-800 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700'
-                }`}>
+                <th className="py-3 px-3 text-right whitespace-nowrap">
                   Actions
                 </th>
               </tr>
@@ -591,10 +589,8 @@ export default function LeadsMatrixTable({
                       </div>
                     </td>
 
-                    {/* Actions: Pitch (First!), Quote, Share, Notes - Sticky Right Toolbar */}
-                    <td className={`py-3 px-3 whitespace-nowrap text-right sticky right-0 z-10 shadow-[-10px_0_15px_rgba(0,0,0,0.3)] border-l transition-colors ${
-                      isDark ? 'bg-[#0c1222] border-slate-800/80 group-hover:bg-[#131d33]' : 'bg-white border-slate-200 group-hover:bg-blue-50'
-                    }`}>
+                    {/* Actions: Pitch (First!), Quote, Share, Notes */}
+                    <td className="py-3 px-3 whitespace-nowrap text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         {/* 1. WhatsApp Pitch Button (PRIMARY) */}
                         <button

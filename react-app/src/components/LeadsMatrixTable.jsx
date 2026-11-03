@@ -339,7 +339,7 @@ export default function LeadsMatrixTable({
         <div className={`overflow-x-auto w-full custom-scrollbar rounded-2xl border touch-pan-x relative ${
           isDark ? 'border-slate-800/80 bg-slate-950/40' : 'border-slate-200 bg-white'
         }`}>
-          <table className="w-full text-left border-collapse min-w-[980px]">
+          <table className="w-full text-left border-separate border-spacing-0 min-w-[940px]">
             <thead>
               <tr className={`border-b text-[11px] font-bold uppercase tracking-wider sticky top-0 z-10 backdrop-blur-md ${
                 isDark 
@@ -348,7 +348,7 @@ export default function LeadsMatrixTable({
               }`}>
                 <th 
                   onClick={() => handleSort('id')} 
-                  className="py-3 px-3 cursor-pointer hover:text-blue-500"
+                  className="py-3 px-3 cursor-pointer hover:text-blue-500 whitespace-nowrap"
                 >
                   <div className="flex items-center gap-1">
                     <span>ID</span>
@@ -357,41 +357,41 @@ export default function LeadsMatrixTable({
                 </th>
                 <th 
                   onClick={() => handleSort('name')} 
-                  className="py-3 px-3.5 cursor-pointer hover:text-blue-500"
+                  className="py-3 px-3 cursor-pointer hover:text-blue-500 min-w-[170px]"
                 >
                   <div className="flex items-center gap-1">
                     <span>Company & Owner</span>
                     <ArrowUpDown className="w-3 h-3" />
                   </div>
                 </th>
-                <th className="py-3 px-3">CRM Stage</th>
+                <th className="py-3 px-2.5 whitespace-nowrap">CRM Stage</th>
                 <th 
                   onClick={() => handleSort('city')} 
-                  className="py-3 px-3 cursor-pointer hover:text-blue-500"
+                  className="py-3 px-2.5 cursor-pointer hover:text-blue-500 whitespace-nowrap"
                 >
                   <div className="flex items-center gap-1">
                     <span>City</span>
                     <ArrowUpDown className="w-3 h-3" />
                   </div>
                 </th>
-                <th className="py-3 px-3.5 min-w-[240px]">
+                <th className="py-3 px-3 min-w-[190px] max-w-[230px]">
                   <div className="flex items-center gap-1 text-amber-500 font-bold">
                     <MapPin className="w-3.5 h-3.5 text-rose-500" />
                     <span>Physical Meeting Address</span>
                   </div>
                 </th>
-                <th className="py-3 px-3">Opportunity</th>
+                <th className="py-3 px-3 min-w-[150px]">Opportunity</th>
                 <th 
                   onClick={() => handleSort('webCost')} 
-                  className="py-3 px-3 cursor-pointer hover:text-blue-500"
+                  className="py-3 px-2.5 cursor-pointer hover:text-blue-500 whitespace-nowrap"
                 >
                   <div className="flex items-center gap-1">
                     <span>Pipeline</span>
                     <ArrowUpDown className="w-3 h-3" />
                   </div>
                 </th>
-                <th className={`py-3 px-3 text-right sticky right-0 z-20 shadow-[-6px_0_12px_rgba(0,0,0,0.25)] ${
-                  isDark ? 'bg-[#0f172a]' : 'bg-slate-100'
+                <th className={`py-3 px-3 text-right sticky right-0 z-20 shadow-[-10px_0_15px_rgba(0,0,0,0.3)] border-l ${
+                  isDark ? 'bg-[#0c1222] border-slate-800 text-slate-300' : 'bg-slate-100 border-slate-200 text-slate-700'
                 }`}>
                   Actions
                 </th>
@@ -591,30 +591,25 @@ export default function LeadsMatrixTable({
                       </div>
                     </td>
 
-                    {/* Actions: CRM Notes, PDF Quote, Pitch, Map */}
-                    <td className={`py-3 px-3 whitespace-nowrap text-right sticky right-0 z-10 shadow-[-6px_0_12px_rgba(0,0,0,0.18)] transition-colors ${
-                      isDark ? 'bg-[#0b1120] group-hover:bg-[#111a2e]' : 'bg-white group-hover:bg-blue-50/90'
+                    {/* Actions: Pitch (First!), Quote, Share, Notes - Sticky Right Toolbar */}
+                    <td className={`py-3 px-3 whitespace-nowrap text-right sticky right-0 z-10 shadow-[-10px_0_15px_rgba(0,0,0,0.3)] border-l transition-colors ${
+                      isDark ? 'bg-[#0c1222] border-slate-800/80 group-hover:bg-[#131d33]' : 'bg-white border-slate-200 group-hover:bg-blue-50'
                     }`}>
                       <div className="flex items-center justify-end gap-1.5">
-                        {/* 1. CRM Notes Button */}
+                        {/* 1. WhatsApp Pitch Button (PRIMARY) */}
                         <button
-                          onClick={() => onOpenNotes && onOpenNotes(lead)}
-                          className={`p-2 rounded-xl transition-all border shadow-sm ${
-                            lead.notes 
-                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 ring-1 ring-amber-500/50' 
-                              : isDark 
-                                ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700' 
-                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
-                          }`}
-                          title="Notes & CRM Status"
+                          onClick={() => onOpenPitch(lead)}
+                          className="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-600/30 shrink-0"
+                          title="Send WhatsApp Pitch"
                         >
-                          <StickyNote className="w-4 h-4" />
+                          <MessageCircle className="w-3.5 h-3.5 fill-white" />
+                          <span>Pitch</span>
                         </button>
 
-                        {/* 2. 1-Click Quotation PDF Download Button */}
+                        {/* 2. Quotation PDF Download Button */}
                         <button
                           onClick={() => handleDownloadPdf(lead)}
-                          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border shadow-sm ${
+                          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border shadow-sm shrink-0 ${
                             downloadingPdfId === lead.id
                               ? 'bg-emerald-600 text-white border-emerald-500 animate-bounce'
                               : isDark
@@ -624,59 +619,36 @@ export default function LeadsMatrixTable({
                           title="Download 1-Click PDF Commercial Proposal"
                         >
                           <FileDown className="w-3.5 h-3.5" />
-                          <span className="hidden xl:inline">Quote</span>
+                          <span>Quote</span>
                         </button>
 
-                        {/* 3. WhatsApp Pitch Button */}
-                        <button
-                          onClick={() => onOpenPitch(lead)}
-                          className="flex items-center gap-1.5 px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-600/30"
-                          title="Send WhatsApp Pitch"
-                        >
-                          <MessageCircle className="w-3.5 h-3.5" />
-                          <span>Pitch</span>
-                        </button>
-
-                        {/* 4. Share Lead Dossier Button */}
+                        {/* 3. Share Lead Dossier Button */}
                         <button
                           onClick={() => onOpenShare && onOpenShare(lead)}
-                          className={`p-2 rounded-xl transition-all border shadow-sm ${
+                          className={`p-2 rounded-xl transition-all border shadow-sm shrink-0 ${
                             isDark 
                               ? 'bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border-blue-500/40' 
                               : 'bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200'
                           }`}
                           title="Share Complete Lead Dossier"
                         >
-                          <Share2 className="w-4 h-4" />
+                          <Share2 className="w-3.5 h-3.5" />
                         </button>
 
-                        {/* 5. Map */}
+                        {/* 4. CRM Notes Button */}
                         <button
-                          onClick={() => onNavigateMap(lead)}
-                          className={`p-2 rounded-xl transition-all border shadow-sm ${
-                            isDark 
-                              ? 'bg-slate-800 hover:bg-slate-700 text-rose-400 border-slate-700' 
-                              : 'bg-slate-100 hover:bg-slate-200 text-rose-600 border-slate-200'
+                          onClick={() => onOpenNotes && onOpenNotes(lead)}
+                          className={`p-2 rounded-xl transition-all border shadow-sm shrink-0 ${
+                            lead.notes 
+                              ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 ring-1 ring-amber-500/50' 
+                              : isDark 
+                                ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700' 
+                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200'
                           }`}
-                          title="Open Google Maps Route"
+                          title="Notes & CRM Status"
                         >
-                          <MapPin className="w-4 h-4" />
+                          <StickyNote className="w-3.5 h-3.5" />
                         </button>
-
-                        {/* Delete (if provided) */}
-                        {onDeleteLead && (
-                          <button
-                            onClick={() => onDeleteLead(lead.id)}
-                            className={`p-1.5 rounded-xl transition-all border ${
-                              isDark 
-                                ? 'bg-slate-900 hover:bg-rose-500/20 text-slate-500 hover:text-rose-400 border-slate-800' 
-                                : 'bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 border-slate-200'
-                            }`}
-                            title="Delete Lead"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        )}
                       </div>
                     </td>
                   </tr>

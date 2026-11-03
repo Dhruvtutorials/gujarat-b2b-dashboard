@@ -16,6 +16,7 @@ import GooglePlacesSetup from './components/GooglePlacesSetup';
 import LeadNotesModal from './components/LeadNotesModal';
 import BulkHarvesterModal from './components/BulkHarvesterModal';
 import ShareLeadModal from './components/ShareLeadModal';
+import WebsiteIntelligenceSection from './components/WebsiteIntelligenceSection';
 import { apiService } from './services/apiService';
 import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3, Plus, Activity } from 'lucide-react';
 
@@ -515,12 +516,23 @@ export default function App() {
             />
           )}
 
+          {/* Dedicated Website Intelligence & Redesign Splitter Section */}
+          <WebsiteIntelligenceSection
+            allLeads={allLeads}
+            selectedWebStatus={selectedWebStatus}
+            onSelectWebStatus={setSelectedWebStatus}
+            theme={theme}
+          />
+
           {/* TABLE VIEW IS SHOWN DIRECTLY & PROMINENTLY */}
           {activeMainTab === 'table' ? (
             <>
               <LeadsMatrixTable
                 leads={filteredLeads}
+                allLeads={allLeads}
                 selectedCity={selectedCity}
+                selectedWebStatus={selectedWebStatus}
+                onSelectWebStatus={setSelectedWebStatus}
                 onSelectCity={handleSelectCity}
                 onResetFilters={handleResetFilters}
                 onTriggerCityScan={handleTriggerCityScan}
@@ -539,7 +551,10 @@ export default function App() {
               <VisualAnalytics leads={filteredLeads} theme={theme} />
               <LeadsMatrixTable
                 leads={filteredLeads}
+                allLeads={allLeads}
                 selectedCity={selectedCity}
+                selectedWebStatus={selectedWebStatus}
+                onSelectWebStatus={setSelectedWebStatus}
                 onSelectCity={handleSelectCity}
                 onResetFilters={handleResetFilters}
                 onTriggerCityScan={handleTriggerCityScan}

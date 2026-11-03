@@ -24,7 +24,9 @@ import {
   Tag,
   CheckCircle2,
   FileText,
-  Share2
+  Share2,
+  Globe,
+  RefreshCw
 } from 'lucide-react';
 import { generateQuotationPdf } from '../services/quotationGenerator';
 
@@ -460,18 +462,37 @@ export default function LeadsMatrixTable({
                     {/* Web Opportunity */}
                     <td className="py-3 px-3 whitespace-nowrap">
                       <div className="flex flex-col gap-1">
-                        <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold w-fit ${
-                          lead.website && lead.website.toLowerCase().includes('no')
-                            ? 'bg-rose-500/20 text-rose-500 border border-rose-500/30'
-                            : 'bg-amber-500/20 text-amber-600 border border-amber-500/30'
-                        }`}>
-                          {lead.website}
-                        </span>
-                        <span className={`text-[10px] truncate max-w-[140px] ${
-                          isDark ? 'text-slate-400' : 'text-slate-500'
-                        }`}>
-                          {lead.category}
-                        </span>
+                        {lead.websiteUrl ? (
+                          <div className="flex flex-col gap-1 items-start">
+                            <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold w-fit bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                              <RefreshCw className="w-2.5 h-2.5" />
+                              <span>Needs Redesign</span>
+                            </span>
+                            <a
+                              href={lead.websiteUrl.startsWith('http') ? lead.websiteUrl : `http://${lead.websiteUrl}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-[11px] font-mono text-blue-400 hover:text-blue-300 hover:underline max-w-[170px] truncate"
+                              title={`Inspect ${lead.websiteUrl}`}
+                            >
+                              <Globe className="w-3 h-3 text-cyan-400 shrink-0" />
+                              <span className="truncate">{lead.websiteUrl.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                              <ExternalLink className="w-2.5 h-2.5 shrink-0 opacity-70" />
+                            </a>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-0.5 items-start">
+                            <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold w-fit bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                              <Globe className="w-2.5 h-2.5" />
+                              <span>No Website</span>
+                            </span>
+                            <span className={`text-[10px] truncate max-w-[140px] ${
+                              isDark ? 'text-slate-500' : 'text-slate-400'
+                            }`}>
+                              Needs Fresh Portal
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </td>
 
@@ -639,9 +660,37 @@ export default function LeadsMatrixTable({
                   }`}>
                     {lead.name}
                   </h3>
-                  <p className={`text-xs mt-0.5 mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                  <p className={`text-xs mt-0.5 mb-1.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                     {lead.category} • <span className="font-mono text-[11px] text-blue-400">{lead.zone}</span>
                   </p>
+
+                  {/* Digital Footprint / Website Bar */}
+                  <div className="flex items-center gap-1.5 mb-2.5 flex-wrap">
+                    {lead.websiteUrl ? (
+                      <>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                          <RefreshCw className="w-2.5 h-2.5" />
+                          <span>Needs Redesign</span>
+                        </span>
+                        <a
+                          href={lead.websiteUrl.startsWith('http') ? lead.websiteUrl : `http://${lead.websiteUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-blue-400 hover:text-blue-300 hover:underline bg-blue-500/10 px-2 py-0.5 rounded-lg border border-blue-500/20"
+                          title="Open website"
+                        >
+                          <Globe className="w-3 h-3 text-cyan-400" />
+                          <span>{lead.websiteUrl.replace(/^https?:\/\/(www\.)?/, '')}</span>
+                          <ExternalLink className="w-2.5 h-2.5 opacity-70" />
+                        </a>
+                      </>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                        <Globe className="w-2.5 h-2.5" />
+                        <span>Zero Website (Build First Portal)</span>
+                      </span>
+                    )}
+                  </div>
 
                   {/* Client Notes Preview if available */}
                   {lead.notes && (

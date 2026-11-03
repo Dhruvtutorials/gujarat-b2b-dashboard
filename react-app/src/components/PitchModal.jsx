@@ -14,12 +14,17 @@ import {
   Loader2,
   CheckCircle2,
   User,
-  Phone
+  Phone,
+  Globe,
+  RefreshCw
 } from 'lucide-react';
 import { apiService } from '../services/apiService';
 
 export default function PitchModal({ lead, onClose }) {
   if (!lead) return null;
+
+  const hasExistingSite = Boolean(lead.websiteUrl && lead.websiteUrl.trim()) || (lead.website && !lead.website.toLowerCase().includes('no'));
+  const [pitchType, setPitchType] = useState(() => (hasExistingSite ? 'redesign' : 'fresh'));
 
   const [senderName, setSenderName] = useState(() => {
     return localStorage.getItem('corridor_sender_name') || 'Dhruv Rana';
@@ -44,12 +49,34 @@ export default function PitchModal({ lead, onClose }) {
 
   // Generate personalized WhatsApp pitch with physical meeting address
   const generatePitchText = () => {
+    if (pitchType === 'redesign') {
+      const siteDisplay = lead.websiteUrl || 'your company website';
+      return `Namaste ${lead.dm} ji,
+
+I am ${senderName} from Gujarat B2B Web Solutions. We specialize in Modern B2B Web Redesign, Digital Catalogues & Google Lead Acceleration for leading manufacturers across Gujarat (${lead.city} corridor).
+
+We audited your company's existing website:
+🌐 *${siteDisplay}*
+
+While your manufacturing facility at ${lead.city} is top-tier, your current website is outdated, slow on mobile smartphones, and lacks an interactive digital product catalogue. In your sector of *${lead.category}*, over 70% of high-ticket B2B & export buyers verify suppliers online before placing bulk orders.
+
+We are traveling through the ${lead.city} corridor this week and would love to visit your facility at:
+📍 *${lead.address}*
+
+Could we schedule a quick 15-minute in-person meeting on Wednesday or Thursday to showcase a live interactive Redesign Mockup specifically modernized for ${lead.name}?
+
+Best Regards,
+${senderName}
+Corridor B2B Digital Architect
+Phone: ${senderPhone}`;
+    }
+
     return `Namaste ${lead.dm} ji,
 
 I am ${senderName} from Gujarat B2B Web Solutions. We specialize in B2B Web Portals, Online Digital Catalogues & Google Lead Acceleration for leading manufacturers across Gujarat (${lead.city} corridor).
 
 We reviewed *${lead.name}* in ${lead.city} (${lead.zone || 'GIDC'}).
-Currently, your digital footprint shows: ${lead.website && lead.website.toLowerCase().includes('no') ? 'No dedicated digital portal / website' : 'Outdated catalogue'}. 
+Currently, your digital footprint shows: No dedicated digital portal / website. 
 In your domain of *${lead.category}*, over 70% of high-ticket B2B buyers search and verify suppliers online before placing orders.
 
 We are traveling through the corridor this week and would love to visit your facility at:
@@ -159,6 +186,54 @@ Phone: ${senderPhone}`;
               className="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-emerald-300 font-mono font-bold text-xs focus:outline-none focus:border-emerald-500"
             />
           </div>
+        </div>
+
+        {/* Pitch Mode Toggle & Website Inspector */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] font-bold text-slate-400">Pitch Angle:</span>
+            <div className="inline-flex rounded-lg bg-slate-800 p-0.5 border border-slate-700">
+              <button
+                type="button"
+                onClick={() => setPitchType('redesign')}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${
+                  pitchType === 'redesign'
+                    ? 'bg-amber-500 text-slate-950 shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <RefreshCw className="w-3 h-3" />
+                <span>Website Redesign</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setPitchType('fresh')}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-bold transition-all ${
+                  pitchType === 'fresh'
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>New Portal Pitch</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Inspect Old Website Link */}
+          {lead.websiteUrl && (
+            <a
+              href={lead.websiteUrl.startsWith('http') ? lead.websiteUrl : `http://${lead.websiteUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-500/15 hover:bg-blue-500/25 text-blue-400 border border-blue-500/30 text-[11px] font-bold transition-all self-start sm:self-auto"
+              title="Open current website in a new window"
+            >
+              <Globe className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Inspect Old Site ({lead.websiteUrl.replace(/^https?:\/\/(www\.)?/, '')})</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
         </div>
 
         {/* Lead Context Quick Snapshot */}

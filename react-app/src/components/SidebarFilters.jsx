@@ -338,9 +338,21 @@ export default function SidebarFilters({
           </span>
           <div className="flex flex-col gap-1.5">
             {[
-              { id: 'all', label: 'All Digital Footprints' },
-              { id: 'No Website', label: '❌ Zero Website (Urgent Pitch)' },
-              { id: 'Outdated Site', label: '⚠️ Outdated Catalogue (Redesign)' },
+              { 
+                id: 'all', 
+                label: 'All Digital Footprints',
+                count: (allLeads.length > 0 ? allLeads : leads).length
+              },
+              { 
+                id: 'Needs Redesign', 
+                label: '🔄 Needs Redesign (Has Old Site)',
+                count: (allLeads.length > 0 ? allLeads : leads).filter(l => Boolean(l.websiteUrl && l.websiteUrl.trim()) || (l.website || '').toLowerCase().includes('redesign') || (l.website || '').toLowerCase().includes('outdated')).length
+              },
+              { 
+                id: 'No Website', 
+                label: '❌ Zero Website (Build New)',
+                count: (allLeads.length > 0 ? allLeads : leads).filter(l => !l.websiteUrl && (l.website || '').toLowerCase().includes('no')).length
+              },
             ].map((ws) => (
               <button
                 key={ws.id}
@@ -349,14 +361,27 @@ export default function SidebarFilters({
                   selectedWebStatus === ws.id
                     ? ws.id === 'No Website'
                       ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 border-rose-500'
-                      : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
+                      : ws.id === 'Needs Redesign'
+                        ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30 border-amber-500'
+                        : 'bg-blue-600 text-white shadow-md shadow-blue-600/30 border-blue-500'
                     : isDark
                       ? 'bg-slate-900/80 hover:bg-slate-800 text-slate-400 border-slate-800'
                       : 'bg-slate-50 hover:bg-slate-100 text-slate-600 border-slate-200'
                 }`}
               >
-                <span>{ws.label}</span>
-                {selectedWebStatus === ws.id && <Check className="w-3.5 h-3.5" />}
+                <div className="flex items-center gap-1.5 truncate">
+                  <span className="truncate">{ws.label}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md ${
+                    selectedWebStatus === ws.id
+                      ? 'bg-white/20 text-white'
+                      : isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-200 text-slate-700'
+                  }`}>
+                    {ws.count}
+                  </span>
+                  {selectedWebStatus === ws.id && <Check className="w-3.5 h-3.5 shrink-0" />}
+                </div>
               </button>
             ))}
           </div>

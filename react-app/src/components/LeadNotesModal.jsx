@@ -11,7 +11,10 @@ import {
   User, 
   Building2,
   Calendar,
-  Sparkles
+  Sparkles,
+  Globe,
+  ExternalLink,
+  RefreshCw
 } from 'lucide-react';
 
 export const LEAD_STATUS_OPTIONS = [
@@ -27,6 +30,10 @@ export default function LeadNotesModal({ lead, onClose, onSaveLead, theme = 'dar
   const isDark = theme === 'dark';
   const [currentStatus, setCurrentStatus] = useState(lead.status || 'New Lead');
   const [notes, setNotes] = useState(lead.notes || '');
+  const [websiteUrl, setWebsiteUrl] = useState(lead.websiteUrl || '');
+  const [websiteStatus, setWebsiteStatus] = useState(
+    lead.website || (lead.websiteUrl ? 'Needs Redesign' : 'No Website')
+  );
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const quickNoteTemplates = [
@@ -42,6 +49,8 @@ export default function LeadNotesModal({ lead, onClose, onSaveLead, theme = 'dar
       ...lead,
       status: currentStatus,
       notes: notes.trim(),
+      website: websiteStatus,
+      websiteUrl: websiteUrl.trim(),
       lastNoteUpdated: new Date().toLocaleString('en-IN', {
         day: '2-digit',
         month: 'short',
@@ -116,6 +125,76 @@ export default function LeadNotesModal({ lead, onClose, onSaveLead, theme = 'dar
               >
                 <span className={`w-2 h-2 rounded-full ${opt.badge}`} />
                 <span className="truncate">{opt.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Website & Digital Footprint Section */}
+        <div className={`mb-4 p-3 rounded-2xl border transition-all ${
+          isDark ? 'bg-slate-900/80 border-slate-700/80' : 'bg-slate-50 border-slate-200'
+        }`}>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <Globe className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Company Website URL & Redesign Status</span>
+            </label>
+            {websiteUrl && (
+              <a
+                href={websiteUrl.startsWith('http') ? websiteUrl : `http://${websiteUrl}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-bold text-blue-400 hover:text-blue-300 hover:underline flex items-center gap-1"
+                title="Open website in new tab"
+              >
+                <span>Visit URL</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            )}
+          </div>
+
+          <div className="mb-2">
+            <input
+              type="text"
+              value={websiteUrl}
+              onChange={(e) => {
+                const val = e.target.value;
+                setWebsiteUrl(val);
+                if (val && websiteStatus === 'No Website') {
+                  setWebsiteStatus('Needs Redesign');
+                }
+              }}
+              placeholder="e.g. http://www.company.com or company.in"
+              className={`w-full px-3 py-2 rounded-xl text-xs font-mono border focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                isDark 
+                  ? 'bg-slate-950 border-slate-700 text-white placeholder-slate-500' 
+                  : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'
+              }`}
+            />
+          </div>
+
+          {/* Quick Opportunity Badges */}
+          <div className="grid grid-cols-3 gap-1.5">
+            {[
+              { id: 'Needs Redesign', label: '🔄 Needs Redesign' },
+              { id: 'No Website', label: '❌ No Website' },
+              { id: 'Active Website', label: '✅ Active Site' },
+            ].map((st) => (
+              <button
+                type="button"
+                key={st.id}
+                onClick={() => setWebsiteStatus(st.id)}
+                className={`py-1.5 px-2 rounded-xl text-[11px] font-bold border transition-all text-center ${
+                  websiteStatus === st.id
+                    ? st.id === 'Needs Redesign'
+                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/60 ring-1 ring-amber-500/40'
+                      : st.id === 'No Website'
+                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/60 ring-1 ring-rose-500/40'
+                        : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/60 ring-1 ring-emerald-500/40'
+                    : isDark ? 'bg-slate-950/60 border-slate-800 text-slate-400 hover:text-slate-200' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                {st.label}
               </button>
             ))}
           </div>

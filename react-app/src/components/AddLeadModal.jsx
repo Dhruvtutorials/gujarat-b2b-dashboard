@@ -28,6 +28,7 @@ export default function AddLeadModal({ onClose, onLeadCreated, theme = 'dark' })
     dm: '',
     phone: '',
     website: 'No Website',
+    websiteUrl: '',
     priority: 'Hot',
     stage: 'Audit Sent',
     webCost: '65000',
@@ -257,21 +258,52 @@ export default function AddLeadModal({ onClose, onLeadCreated, theme = 'dark' })
             </div>
           </div>
 
-          {/* Row 5: Web Status, Dev Fee, MRR */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {/* Row 5: Web Status & Website URL */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold mb-1">Digital Presence</label>
               <select
                 value={formData.website}
-                onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setFormData({ 
+                    ...formData, 
+                    website: val,
+                    websiteUrl: val === 'No Website' ? '' : formData.websiteUrl
+                  });
+                }}
                 className={`w-full text-xs px-3 py-2 rounded-xl border focus:outline-none focus:border-blue-500 ${
                   isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                 }`}
               >
                 <option value="No Website">No Website (Zero-Web Target)</option>
-                <option value="Outdated">Outdated / Broken Site</option>
+                <option value="Needs Redesign">Needs Redesign (Old / Outdated Site)</option>
+                <option value="Active Website">Active Website</option>
               </select>
             </div>
+            <div>
+              <label className="block text-xs font-bold mb-1">Website URL (If exists)</label>
+              <input
+                type="text"
+                placeholder="e.g. www.company.com"
+                value={formData.websiteUrl}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setFormData({ 
+                    ...formData, 
+                    websiteUrl: val,
+                    website: val ? 'Needs Redesign' : formData.website
+                  });
+                }}
+                className={`w-full text-xs px-3 py-2 rounded-xl border focus:outline-none focus:border-blue-500 font-mono ${
+                  isDark ? 'bg-slate-900 border-slate-700 text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                }`}
+              />
+            </div>
+          </div>
+
+          {/* Row 6: Dev Fee & Retainer */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold mb-1">Est. Web Dev (₹)</label>
               <input

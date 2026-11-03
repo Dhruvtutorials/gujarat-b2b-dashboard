@@ -77,10 +77,15 @@ export function generateQuotationPdf(lead) {
   doc.line(14, y + 2, 70, y + 2);
 
   y += 9;
+  const isRedesign = Boolean(lead.websiteUrl && lead.websiteUrl.trim());
   const deliverables = [
     {
-      title: 'Modern High-Conversion B2B Corporate Website',
-      desc: 'Mobile-first, lightning-fast responsive architecture designed for industrial buyers and exporters.'
+      title: isRedesign 
+        ? 'Complete B2B Website Redesign & Modernization' 
+        : 'Modern High-Conversion B2B Corporate Website',
+      desc: isRedesign
+        ? `Comprehensive redesign of legacy digital presence (${lead.websiteUrl}) into a lightning-fast, mobile-first industrial portal.`
+        : 'Mobile-first, lightning-fast responsive architecture designed for industrial buyers and exporters.'
     },
     {
       title: 'Digital B2B Product & Machinery Catalog',

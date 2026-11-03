@@ -42,6 +42,13 @@ export default function ShareLeadModal({ lead, onClose, theme = 'dark' }) {
     const notesText = lead.notes ? `\n📝 *Notes:* ${lead.notes}` : '';
     const feeText = lead.webCost ? `₹${(lead.webCost / 1000).toFixed(0)}k Web Dev + ₹${((lead.mrr || 3500) / 1000).toFixed(0)}k/mo AMC` : '₹28k Web Dev + ₹3.5k/mo AMC';
 
+    let webDisplay = 'No Dedicated Website (Fresh Build ❌)';
+    if (lead.websiteUrl) {
+      webDisplay = `${lead.websiteUrl} (Needs Modern Redesign 🔄)`;
+    } else if (lead.website && !lead.website.toLowerCase().includes('no')) {
+      webDisplay = `${lead.website} (Needs Modern Redesign 🔄)`;
+    }
+
     return `🏭 *B2B LEAD DOSSIER: ${lead.name}*
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🏢 *Category:* ${lead.category || 'Industrial Manufacturing'} (${lead.type || 'GIDC Unit'})
@@ -51,7 +58,7 @@ export default function ShareLeadModal({ lead, onClose, theme = 'dark' }) {
 
 👤 *Decision Maker:* ${lead.dm || 'Managing Director / Owner'}
 📞 *Contact Phone:* ${lead.phone || 'To be verified'}
-🌐 *Web Presence:* ${lead.website || 'No Dedicated Website'}
+🌐 *Web Presence:* ${webDisplay}
 
 💼 *Opportunity Value:* ${feeText}
 📊 *CRM Pipeline Stage:* ${stage}${notesText}

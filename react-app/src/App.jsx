@@ -53,13 +53,27 @@ export default function App() {
   // Persistent Leads Database State loaded from apiService / localStorage
   const [allLeads, setAllLeads] = useState(() => {
     try {
-      const raw = localStorage.getItem('corridor_leads_database_v4_gujarat');
+      const raw = localStorage.getItem('corridor_leads_database_v5_redesign') || localStorage.getItem('corridor_leads_database_v4_gujarat');
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length >= CORRIDOR_LEADS.length) return parsed;
+        if (Array.isArray(parsed) && parsed.length >= CORRIDOR_LEADS.length) {
+          // Merge latest websiteUrl and website field from CORRIDOR_LEADS while preserving notes/status
+          const seedMap = new Map(CORRIDOR_LEADS.map((l) => [l.id, l]));
+          const upgraded = parsed.map((lead) => {
+            const seed = seedMap.get(lead.id);
+            if (!seed) return lead;
+            return {
+              ...lead,
+              website: lead.website && lead.website !== 'Outdated' ? lead.website : seed.website,
+              websiteUrl: lead.websiteUrl !== undefined && lead.websiteUrl !== '' ? lead.websiteUrl : (seed.websiteUrl || '')
+            };
+          });
+          localStorage.setItem('corridor_leads_database_v5_redesign', JSON.stringify(upgraded));
+          return upgraded;
+        }
       }
     } catch {}
-    localStorage.setItem('corridor_leads_database_v4_gujarat', JSON.stringify(CORRIDOR_LEADS));
+    localStorage.setItem('corridor_leads_database_v5_redesign', JSON.stringify(CORRIDOR_LEADS));
     return CORRIDOR_LEADS;
   });
 
@@ -91,7 +105,7 @@ export default function App() {
   const handleSaveLead = (updatedLead) => {
     setAllLeads((prev) => {
       const updated = prev.map((l) => (l.id === updatedLead.id ? updatedLead : l));
-      localStorage.setItem('corridor_leads_database_v4_gujarat', JSON.stringify(updated));
+      localStorage.setItem('corridor_leads_database_v5_redesign', JSON.stringify(updated));
       return updated;
     });
   };
@@ -205,10 +219,15 @@ export default function App() {
     // Website status (tolerant match for Google Places & Seeded data)
     if (selectedWebStatus !== 'all') {
       const web = (lead.website || '').toLowerCase();
+      const hasUrl = Boolean(lead.websiteUrl && lead.websiteUrl.trim());
       if (selectedWebStatus === 'No Website' || selectedWebStatus === 'No Web Presence') {
-        if (!web.includes('no') && !web.includes('zero')) return false;
-      } else if (selectedWebStatus === 'Outdated' || selectedWebStatus === 'Outdated Site') {
-        if (!web.includes('outdated')) return false;
+        if (hasUrl || (!web.includes('no') && !web.includes('zero'))) return false;
+      } else if (
+        selectedWebStatus === 'Outdated' || 
+        selectedWebStatus === 'Outdated Site' || 
+        selectedWebStatus === 'Needs Redesign'
+      ) {
+        if (!hasUrl && !web.includes('outdated') && !web.includes('redesign')) return false;
       } else if (selectedWebStatus === 'Active Website') {
         if (!web.includes('active')) return false;
       }

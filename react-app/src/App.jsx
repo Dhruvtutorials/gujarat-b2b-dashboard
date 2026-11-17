@@ -16,14 +16,15 @@ import GooglePlacesSetup from './components/GooglePlacesSetup';
 import LeadNotesModal from './components/LeadNotesModal';
 import BulkHarvesterModal from './components/BulkHarvesterModal';
 import ShareLeadModal from './components/ShareLeadModal';
+import DigitalMarketingPackagesModal from './components/DigitalMarketingPackagesModal';
 import WebsiteIntelligenceSection from './components/WebsiteIntelligenceSection';
 import { apiService } from './services/apiService';
 import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3, Plus, Activity } from 'lucide-react';
 
 export default function App() {
-  // Authentication State (Passcode: 1935)
+  // Authentication State (Passcode: 2002)
   const [isUnlocked, setIsUnlocked] = useState(() => {
-    return sessionStorage.getItem('gujarat_corridor_auth') === 'unlocked_1935';
+    return sessionStorage.getItem('gujarat_corridor_auth') === 'unlocked_2002';
   });
 
   // White / Dark Mode Theme State
@@ -88,6 +89,8 @@ export default function App() {
   const [activeShareLead, setActiveShareLead] = useState(null);
   const [isBulkHarvesterOpen, setIsBulkHarvesterOpen] = useState(false);
   const [harvesterCity, setHarvesterCity] = useState('all');
+  const [isPackagesModalOpen, setIsPackagesModalOpen] = useState(false);
+  const [activePackageLead, setActivePackageLead] = useState(null);
 
   // API Action Handlers
   const handleCreateLead = async (leadData) => {
@@ -336,6 +339,10 @@ export default function App() {
         theme={theme}
         setTheme={handleSetTheme}
         onScrollToTable={scrollToTable}
+        onOpenPackages={(lead) => {
+          setActivePackageLead(lead || null);
+          setIsPackagesModalOpen(true);
+        }}
       />
 
       {/* 2. Interactive Corridor Hubs Highway Ribbon (Gujarat + Rajasthan) */}
@@ -542,6 +549,10 @@ export default function App() {
                 onOpenNotes={(lead) => setActiveNotesLead(lead)}
                 onOpenShare={(lead) => setActiveShareLead(lead)}
                 onOpenBulkHarvester={() => setIsBulkHarvesterOpen(true)}
+                onOpenPackages={(lead) => {
+                  setActivePackageLead(lead || null);
+                  setIsPackagesModalOpen(true);
+                }}
                 theme={theme}
               />
               <VisualAnalytics leads={filteredLeads} theme={theme} />
@@ -564,6 +575,10 @@ export default function App() {
                 onOpenNotes={(lead) => setActiveNotesLead(lead)}
                 onOpenShare={(lead) => setActiveShareLead(lead)}
                 onOpenBulkHarvester={() => setIsBulkHarvesterOpen(true)}
+                onOpenPackages={(lead) => {
+                  setActivePackageLead(lead || null);
+                  setIsPackagesModalOpen(true);
+                }}
                 theme={theme}
               />
             </>
@@ -578,7 +593,7 @@ export default function App() {
       }`}>
         <div className="flex flex-col sm:flex-row items-center justify-between max-w-full px-4 gap-2 text-[11px]">
           <span>Gujarat Golden Industrial Corridor B2B Prospecting Engine (Vapi to Morbi) • Live API & Overpass Harvester</span>
-          <span>Vapi ➔ Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar ➔ Rajkot ➔ Morbi (550 KM) • Passcode Protected (1935)</span>
+          <span>Vapi ➔ Surat ➔ Vadodara ➔ Ahmedabad ➔ Gandhinagar ➔ Rajkot ➔ Morbi (550 KM) • Passcode Protected (2002)</span>
         </div>
       </footer>
 
@@ -653,6 +668,19 @@ export default function App() {
           lead={activeShareLead}
           onClose={() => setActiveShareLead(null)}
           theme={theme}
+        />
+      )}
+
+      {/* 360° Digital Marketing & Meta Ads Packages Modal */}
+      {isPackagesModalOpen && (
+        <DigitalMarketingPackagesModal
+          lead={activePackageLead}
+          leads={filteredLeads}
+          onClose={() => {
+            setIsPackagesModalOpen(false);
+            setActivePackageLead(null);
+          }}
+          isDark={theme === 'dark'}
         />
       )}
 

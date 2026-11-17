@@ -43,7 +43,8 @@ export default function Navbar({
   setIsSidebarOpen,
   theme,
   setTheme,
-  onScrollToTable
+  onScrollToTable,
+  onOpenPackages
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -180,6 +181,19 @@ export default function Navbar({
             <span>10-Hub Harvest</span>
           </button>
 
+          {/* 360 Marketing Packages Button */}
+          {onOpenPackages && (
+            <button
+              onClick={onOpenPackages}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:opacity-95 text-white shadow-md shadow-indigo-600/30"
+              title="360° Digital Marketing & Meta Ads Packages"
+            >
+              <Zap className="w-3.5 h-3.5 text-amber-300" />
+              <span className="hidden sm:inline">Marketing Packages</span>
+              <span className="sm:hidden">Packages</span>
+            </button>
+          )}
+
           {/* Add Lead Quick Button (Desktop / Tablet) */}
           <button
             onClick={onOpenAddLead}
@@ -277,7 +291,7 @@ export default function Navbar({
           <button
             onClick={onLock}
             className="p-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 text-xs transition-all shrink-0"
-            title="Lock Portal (Passcode: 1935)"
+            title="Lock Portal (Passcode: 2002)"
           >
             <Lock className="w-3.5 h-3.5" />
           </button>
@@ -373,6 +387,19 @@ export default function Navbar({
         <div className={`mt-2 p-3 rounded-2xl border md:hidden grid grid-cols-2 gap-2 shadow-2xl animate-in slide-in-from-top-2 duration-150 ${
           isDark ? 'bg-[#0f172a] border-slate-700 text-slate-200' : 'bg-white border-slate-300 text-slate-800'
         }`}>
+          {onOpenPackages && (
+            <button
+              onClick={() => {
+                onOpenPackages();
+                setIsMobileMenuOpen(false);
+              }}
+              className="flex items-center gap-2 p-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white text-xs font-bold justify-center shadow-md shadow-indigo-600/30 col-span-2"
+            >
+              <Zap className="w-3.5 h-3.5 text-amber-300" />
+              <span>💼 360° Digital Marketing Packages</span>
+            </button>
+          )}
+
           <button
             onClick={() => {
               onOpenGoogleSetup();

@@ -54,6 +54,7 @@ export default function LeadsMatrixTable({
   onOpenNotes,
   onOpenShare,
   onOpenBulkHarvester,
+  onOpenPackages,
   theme = 'dark'
 }) {
   const [viewMode, setViewMode] = useState(() => {
@@ -248,6 +249,18 @@ export default function LeadsMatrixTable({
             >
               <Zap className="w-3.5 h-3.5" />
               <span>10-City Harvest</span>
+            </button>
+          )}
+
+          {/* 360° Digital Marketing Packages Trigger */}
+          {onOpenPackages && (
+            <button
+              onClick={() => onOpenPackages(null)}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-bold transition-all bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md shadow-purple-600/20 hover:opacity-90"
+              title="360° Digital Marketing & Meta Ads Packages"
+            >
+              <Zap className="w-3.5 h-3.5 text-amber-300" />
+              <span>360° Packages</span>
             </button>
           )}
         </div>
@@ -618,6 +631,21 @@ export default function LeadsMatrixTable({
                           <span>Quote</span>
                         </button>
 
+                        {/* 3. 360° Marketing Packages Button */}
+                        {onOpenPackages && (
+                          <button
+                            onClick={() => onOpenPackages(lead)}
+                            className={`p-2 rounded-xl transition-all border shadow-sm shrink-0 ${
+                              isDark 
+                                ? 'bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border-purple-500/40' 
+                                : 'bg-purple-50 hover:bg-purple-100 text-purple-700 border-purple-200'
+                            }`}
+                            title="Open 360° Marketing Packages (Meta Ads, SEO, Web) for this Lead"
+                          >
+                            <Zap className="w-3.5 h-3.5 text-amber-400" />
+                          </button>
+                        )}
+
                         {/* 3. Share Lead Dossier Button */}
                         <button
                           onClick={() => onOpenShare && onOpenShare(lead)}
@@ -872,7 +900,21 @@ export default function LeadsMatrixTable({
                     <span>Call</span>
                   </a>
 
-                  {/* 5. WhatsApp Pitch */}
+                  {/* 5. 360 Packages */}
+                  {onOpenPackages && (
+                    <button
+                      onClick={() => onOpenPackages(lead)}
+                      className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
+                        isDark ? 'bg-purple-600/20 text-purple-300 border-purple-500/40' : 'bg-purple-50 text-purple-700 border-purple-200'
+                      }`}
+                      title="360° Marketing Packages"
+                    >
+                      <Zap className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Pkg</span>
+                    </button>
+                  )}
+
+                  {/* 6. WhatsApp Pitch */}
                   <button
                     onClick={() => onOpenPitch(lead)}
                     className="flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-[10px] sm:text-xs font-bold transition-all shadow-md shadow-emerald-600/30"

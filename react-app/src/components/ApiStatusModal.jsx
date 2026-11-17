@@ -132,7 +132,7 @@ export default function ApiStatusModal({ onClose, totalLeadsCount, onResetDataba
             }`}>
               <ShieldCheck className="w-4 h-4 mx-auto mb-1 text-indigo-400" />
               <span className="text-[10px] text-slate-400 block">Gate Passcode</span>
-              <span className="font-mono font-bold text-xs text-indigo-400">1935</span>
+              <span className="font-mono font-bold text-xs text-indigo-400">2002</span>
             </div>
           </div>
 

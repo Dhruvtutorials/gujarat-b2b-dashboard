@@ -26,7 +26,9 @@ import {
   FileText,
   Share2,
   Globe,
-  RefreshCw
+  RefreshCw,
+  ShieldAlert,
+  Calculator
 } from 'lucide-react';
 import { generateQuotationPdf } from '../services/quotationGenerator';
 
@@ -55,6 +57,10 @@ export default function LeadsMatrixTable({
   onOpenShare,
   onOpenBulkHarvester,
   onOpenPackages,
+  onOpenAudit,
+  onOpenDrip,
+  onOpenContract,
+  onOpenRoi,
   theme = 'dark'
 }) {
   const [viewMode, setViewMode] = useState(() => {
@@ -615,6 +621,36 @@ export default function LeadsMatrixTable({
                           <span>Pitch</span>
                         </button>
 
+                        {/* Digital Gap Audit Button */}
+                        {onOpenAudit && (
+                          <button
+                            onClick={() => onOpenAudit(lead)}
+                            className={`p-2 rounded-xl transition-all border shadow-sm shrink-0 ${
+                              isDark 
+                                ? 'bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border-rose-500/40' 
+                                : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200'
+                            }`}
+                            title="Generate 1-Page Digital Health & Competitor Audit"
+                          >
+                            <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                          </button>
+                        )}
+
+                        {/* WhatsApp Follow-up Drip Button */}
+                        {onOpenDrip && (
+                          <button
+                            onClick={() => onOpenDrip(lead)}
+                            className={`p-2 rounded-xl transition-all border shadow-sm shrink-0 ${
+                              isDark 
+                                ? 'bg-teal-600/20 hover:bg-teal-600/30 text-teal-300 border-teal-500/40' 
+                                : 'bg-teal-50 hover:bg-teal-100 text-teal-700 border-teal-200'
+                            }`}
+                            title="3-Step WhatsApp Follow-up Drip Cadence"
+                          >
+                            <Clock className="w-3.5 h-3.5 text-teal-400" />
+                          </button>
+                        )}
+
                         {/* 2. Quotation PDF Download Button */}
                         <button
                           onClick={() => handleDownloadPdf(lead)}
@@ -630,6 +666,21 @@ export default function LeadsMatrixTable({
                           <FileDown className="w-3.5 h-3.5" />
                           <span>Quote</span>
                         </button>
+
+                        {/* Contract Agreement Button */}
+                        {onOpenContract && (
+                          <button
+                            onClick={() => onOpenContract(lead)}
+                            className={`p-2 rounded-xl transition-all border shadow-sm shrink-0 ${
+                              isDark 
+                                ? 'bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border-indigo-500/40' 
+                                : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200'
+                            }`}
+                            title="Generate 2-Page Legal Service Contract"
+                          >
+                            <FileText className="w-3.5 h-3.5 text-indigo-400" />
+                          </button>
+                        )}
 
                         {/* 3. 360° Marketing Packages Button */}
                         {onOpenPackages && (
@@ -838,6 +889,46 @@ export default function LeadsMatrixTable({
                       </span>
                     </div>
                   </div>
+                </div>
+
+                {/* High-Impact Closing Tools: Audit | Drip | Contract */}
+                <div className="pt-2 border-t border-dashed border-slate-800/80 grid grid-cols-3 gap-1.5 mb-2">
+                  {onOpenAudit && (
+                    <button
+                      onClick={() => onOpenAudit(lead)}
+                      className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold border transition-all ${
+                        isDark ? 'bg-rose-950/30 hover:bg-rose-900/40 text-rose-300 border-rose-900/50' : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200'
+                      }`}
+                      title="1-Page Digital Health & Competitor Audit PDF"
+                    >
+                      <ShieldAlert className="w-3 h-3 text-rose-400" />
+                      <span>Audit</span>
+                    </button>
+                  )}
+                  {onOpenDrip && (
+                    <button
+                      onClick={() => onOpenDrip(lead)}
+                      className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold border transition-all ${
+                        isDark ? 'bg-teal-950/30 hover:bg-teal-900/40 text-teal-300 border-teal-900/50' : 'bg-teal-50 hover:bg-teal-100 text-teal-700 border-teal-200'
+                      }`}
+                      title="3-Step WhatsApp Drip Cadence"
+                    >
+                      <Clock className="w-3 h-3 text-teal-400" />
+                      <span>Drip</span>
+                    </button>
+                  )}
+                  {onOpenContract && (
+                    <button
+                      onClick={() => onOpenContract(lead)}
+                      className={`flex items-center justify-center gap-1 py-1.5 px-1.5 rounded-xl text-[10px] sm:text-[11px] font-bold border transition-all ${
+                        isDark ? 'bg-indigo-950/30 hover:bg-indigo-900/40 text-indigo-300 border-indigo-900/50' : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border-indigo-200'
+                      }`}
+                      title="2-Page Legal Service Agreement PDF"
+                    >
+                      <FileText className="w-3 h-3 text-indigo-400" />
+                      <span>Contract</span>
+                    </button>
+                  )}
                 </div>
 
                 {/* Action Buttons: 5 Touch-Friendly Targets for Mobile / Cards */}

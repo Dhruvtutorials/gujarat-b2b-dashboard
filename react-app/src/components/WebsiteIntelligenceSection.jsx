@@ -60,7 +60,7 @@ export default function WebsiteIntelligenceSection({
               <h3 className="text-sm sm:text-base font-black tracking-tight flex items-center gap-2">
                 <span>Website Intelligence & Redesign Split</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 font-bold">
-                  76 Verified Accounts
+                  {totalLeads} Accounts Verified
                 </span>
               </h3>
               <p className={`text-xs mt-0.5 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>

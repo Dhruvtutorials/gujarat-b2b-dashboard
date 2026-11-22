@@ -19,6 +19,11 @@ import ShareLeadModal from './components/ShareLeadModal';
 import DigitalMarketingPackagesModal from './components/DigitalMarketingPackagesModal';
 import ImportLeadsModal from './components/ImportLeadsModal';
 import WebsiteIntelligenceSection from './components/WebsiteIntelligenceSection';
+import DigitalAuditModal from './components/DigitalAuditModal';
+import RoiCalculatorModal from './components/RoiCalculatorModal';
+import FollowUpDripModal from './components/FollowUpDripModal';
+import ObjectionHandlerModal from './components/ObjectionHandlerModal';
+import ClientContractModal from './components/ClientContractModal';
 import { apiService } from './services/apiService';
 import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3, Plus, Activity } from 'lucide-react';
 
@@ -93,6 +98,14 @@ export default function App() {
   const [isPackagesModalOpen, setIsPackagesModalOpen] = useState(false);
   const [activePackageLead, setActivePackageLead] = useState(null);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+
+  // High-Impact Closing Tools States (Option D)
+  const [activeAuditLead, setActiveAuditLead] = useState(null);
+  const [activeRoiLead, setActiveRoiLead] = useState(null);
+  const [isRoiModalOpen, setIsRoiModalOpen] = useState(false);
+  const [activeDripLead, setActiveDripLead] = useState(null);
+  const [isObjectionModalOpen, setIsObjectionModalOpen] = useState(false);
+  const [activeContractLead, setActiveContractLead] = useState(null);
 
   // API Action Handlers
   const handleCreateLead = async (leadData) => {
@@ -355,6 +368,11 @@ export default function App() {
           setIsPackagesModalOpen(true);
         }}
         onOpenImport={() => setIsImportModalOpen(true)}
+        onOpenRoi={() => {
+          setActiveRoiLead(null);
+          setIsRoiModalOpen(true);
+        }}
+        onOpenObjections={() => setIsObjectionModalOpen(true)}
       />
 
       {/* 2. Interactive Corridor Hubs Highway Ribbon (Gujarat + Rajasthan) */}
@@ -565,6 +583,13 @@ export default function App() {
                   setActivePackageLead(lead || null);
                   setIsPackagesModalOpen(true);
                 }}
+                onOpenAudit={(lead) => setActiveAuditLead(lead)}
+                onOpenDrip={(lead) => setActiveDripLead(lead)}
+                onOpenContract={(lead) => setActiveContractLead(lead)}
+                onOpenRoi={(lead) => {
+                  setActiveRoiLead(lead);
+                  setIsRoiModalOpen(true);
+                }}
                 theme={theme}
               />
               <VisualAnalytics leads={filteredLeads} theme={theme} />
@@ -590,6 +615,13 @@ export default function App() {
                 onOpenPackages={(lead) => {
                   setActivePackageLead(lead || null);
                   setIsPackagesModalOpen(true);
+                }}
+                onOpenAudit={(lead) => setActiveAuditLead(lead)}
+                onOpenDrip={(lead) => setActiveDripLead(lead)}
+                onOpenContract={(lead) => setActiveContractLead(lead)}
+                onOpenRoi={(lead) => {
+                  setActiveRoiLead(lead);
+                  setIsRoiModalOpen(true);
                 }}
                 theme={theme}
               />
@@ -706,6 +738,53 @@ export default function App() {
           }}
           onClearDemoLeads={handleClearDemoLeads}
           currentCount={allLeads.length}
+          theme={theme}
+        />
+      )}
+
+      {/* 1. Digital Health & Competitor Audit Modal (1-Page PDF Generator) */}
+      {activeAuditLead && (
+        <DigitalAuditModal
+          lead={activeAuditLead}
+          onClose={() => setActiveAuditLead(null)}
+          theme={theme}
+        />
+      )}
+
+      {/* 2. Client ROI & Revenue Calculator Modal */}
+      {isRoiModalOpen && (
+        <RoiCalculatorModal
+          lead={activeRoiLead}
+          onClose={() => {
+            setIsRoiModalOpen(false);
+            setActiveRoiLead(null);
+          }}
+          theme={theme}
+        />
+      )}
+
+      {/* 3. WhatsApp Follow-Up Drip Sequences Modal */}
+      {activeDripLead && (
+        <FollowUpDripModal
+          lead={activeDripLead}
+          onClose={() => setActiveDripLead(null)}
+          theme={theme}
+        />
+      )}
+
+      {/* 4. Gujarati & Hindi Tele-Calling Scripts & Objection Handler Modal */}
+      {isObjectionModalOpen && (
+        <ObjectionHandlerModal
+          onClose={() => setIsObjectionModalOpen(false)}
+          theme={theme}
+        />
+      )}
+
+      {/* 5. Client Service Agreement & Contract Modal (2-Page Legal PDF) */}
+      {activeContractLead && (
+        <ClientContractModal
+          lead={activeContractLead}
+          onClose={() => setActiveContractLead(null)}
           theme={theme}
         />
       )}

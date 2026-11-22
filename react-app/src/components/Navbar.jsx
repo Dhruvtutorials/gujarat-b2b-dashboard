@@ -23,7 +23,9 @@ import {
   MoreVertical,
   X,
   Zap,
-  Upload
+  Upload,
+  Calculator,
+  PhoneCall
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -46,7 +48,9 @@ export default function Navbar({
   setTheme,
   onScrollToTable,
   onOpenPackages,
-  onOpenImport
+  onOpenImport,
+  onOpenRoi,
+  onOpenObjections
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -193,6 +197,30 @@ export default function Navbar({
               <Zap className="w-3.5 h-3.5 text-amber-300" />
               <span className="hidden sm:inline">Marketing Packages</span>
               <span className="sm:hidden">Packages</span>
+            </button>
+          )}
+
+          {/* ROI Calculator Quick Button (Desktop) */}
+          {onOpenRoi && (
+            <button
+              onClick={onOpenRoi}
+              className="hidden lg:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 shadow-sm"
+              title="Calculate Client Investment vs Revenue Return"
+            >
+              <Calculator className="w-3.5 h-3.5 text-emerald-400" />
+              <span>ROI Calc</span>
+            </button>
+          )}
+
+          {/* Calling Scripts (Gujarati & Hindi) Button (Desktop) */}
+          {onOpenObjections && (
+            <button
+              onClick={onOpenObjections}
+              className="hidden xl:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 shadow-sm"
+              title="Gujarati & Hindi Tele-Calling Scripts & Objection Handler"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-amber-400" />
+              <span>Calling Scripts</span>
             </button>
           )}
 
@@ -415,6 +443,32 @@ export default function Navbar({
             >
               <Zap className="w-3.5 h-3.5 text-amber-300" />
               <span>💼 360° Digital Marketing Packages</span>
+            </button>
+          )}
+
+          {onOpenRoi && (
+            <button
+              onClick={() => {
+                onOpenRoi();
+                setIsMobileMenuOpen(false);
+              }}
+              className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold justify-center"
+            >
+              <Calculator className="w-3.5 h-3.5 text-emerald-400" />
+              <span>ROI Calculator</span>
+            </button>
+          )}
+
+          {onOpenObjections && (
+            <button
+              onClick={() => {
+                onOpenObjections();
+                setIsMobileMenuOpen(false);
+              }}
+              className="flex items-center gap-2 p-2.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold justify-center"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-amber-400" />
+              <span>Calling Scripts</span>
             </button>
           )}
 

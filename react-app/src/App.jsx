@@ -61,27 +61,27 @@ export default function App() {
   // Persistent Leads Database State loaded from apiService / localStorage
   const [allLeads, setAllLeads] = useState(() => {
     try {
-      const raw = localStorage.getItem('corridor_leads_database_v5_redesign') || localStorage.getItem('corridor_leads_database_v4_gujarat');
+      const raw = localStorage.getItem('corridor_leads_database_v6_clean_web') || localStorage.getItem('corridor_leads_database_v5_redesign') || localStorage.getItem('corridor_leads_database_v4_gujarat');
       if (raw) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length >= CORRIDOR_LEADS.length) {
-          // Merge latest websiteUrl and website field from CORRIDOR_LEADS while preserving notes/status
+          // Merge latest clean websiteUrl and website field from CORRIDOR_LEADS while preserving notes/status
           const seedMap = new Map(CORRIDOR_LEADS.map((l) => [l.id, l]));
           const upgraded = parsed.map((lead) => {
             const seed = seedMap.get(lead.id);
             if (!seed) return lead;
             return {
               ...lead,
-              website: lead.website && lead.website !== 'Outdated' ? lead.website : seed.website,
-              websiteUrl: lead.websiteUrl !== undefined && lead.websiteUrl !== '' ? lead.websiteUrl : (seed.websiteUrl || '')
+              website: seed.website,
+              websiteUrl: seed.websiteUrl || ''
             };
           });
-          localStorage.setItem('corridor_leads_database_v5_redesign', JSON.stringify(upgraded));
+          localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(upgraded));
           return upgraded;
         }
       }
     } catch {}
-    localStorage.setItem('corridor_leads_database_v5_redesign', JSON.stringify(CORRIDOR_LEADS));
+    localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(CORRIDOR_LEADS));
     return CORRIDOR_LEADS;
   });
 
@@ -124,7 +124,7 @@ export default function App() {
   const handleSaveLead = (updatedLead) => {
     setAllLeads((prev) => {
       const updated = prev.map((l) => (l.id === updatedLead.id ? updatedLead : l));
-      localStorage.setItem('corridor_leads_database_v5_redesign', JSON.stringify(updated));
+      localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(updated));
       return updated;
     });
   };
@@ -134,7 +134,9 @@ export default function App() {
       setAllLeads((prev) => {
         const existingIds = new Set(prev.map((l) => l.id));
         const filteredNew = newLeads.filter((l) => !existingIds.has(l.id));
-        return [...filteredNew, ...prev];
+        const combined = [...filteredNew, ...prev];
+        localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(combined));
+        return combined;
       });
       handleSelectCity(newLeads[0].city);
     }
@@ -143,6 +145,7 @@ export default function App() {
   const handleResetDatabase = () => {
     apiService.resetToDefault();
     setAllLeads(CORRIDOR_LEADS);
+    localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(CORRIDOR_LEADS));
     setIsApiStatusOpen(false);
   };
 
@@ -150,8 +153,9 @@ export default function App() {
     // Keep only real imported or google verified leads
     const realLeads = allLeads.filter(l => l.googleVerified || l.isRealImported);
     setAllLeads(realLeads);
-    localStorage.setItem('corridor_leads_database_v5_redesign', JSON.stringify(realLeads));
-    localStorage.setItem('corridor_leads_database_v4_gujarat', JSON.stringify(realLeads));
+    localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(realLeads));
+    localStorage.removeItem('corridor_leads_database_v5_redesign');
+    localStorage.removeItem('corridor_leads_database_v4_gujarat');
     setIsImportModalOpen(false);
   };
 

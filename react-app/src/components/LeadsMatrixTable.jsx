@@ -579,16 +579,22 @@ export default function LeadsMatrixTable({
                             </a>
                           </div>
                         ) : (
-                          <div className="flex flex-col gap-0.5 items-start">
+                          <div className="flex flex-col gap-1 items-start">
                             <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold w-fit bg-rose-500/20 text-rose-400 border border-rose-500/30">
                               <Globe className="w-2.5 h-2.5" />
                               <span>No Website</span>
                             </span>
-                            <span className={`text-[10px] truncate max-w-[140px] ${
-                              isDark ? 'text-slate-500' : 'text-slate-400'
-                            }`}>
-                              Needs Fresh Portal
-                            </span>
+                            <a
+                              href={`https://www.google.com/search?q=${encodeURIComponent((lead.name || '') + ' ' + (lead.city || 'Gujarat'))}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-[10px] font-medium text-slate-400 hover:text-blue-400 hover:underline"
+                              title="Search verified factory on Google"
+                            >
+                              <Search className="w-2.5 h-2.5 text-cyan-400" />
+                              <span>Verify on Google</span>
+                              <ExternalLink className="w-2 h-2 opacity-70" />
+                            </a>
                           </div>
                         )}
                       </div>
@@ -815,10 +821,23 @@ export default function LeadsMatrixTable({
                         </a>
                       </>
                     ) : (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
-                        <Globe className="w-2.5 h-2.5" />
-                        <span>Zero Website (Build First Portal)</span>
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">
+                          <Globe className="w-2.5 h-2.5" />
+                          <span>Zero Website (Build First Portal)</span>
+                        </span>
+                        <a
+                          href={`https://www.google.com/search?q=${encodeURIComponent((lead.name || '') + ' ' + (lead.city || 'Gujarat'))}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-300 hover:text-blue-400 bg-slate-800/80 hover:bg-slate-700 px-2 py-0.5 rounded-lg border border-slate-700"
+                          title="Verify factory on Google Search / Google Maps"
+                        >
+                          <Search className="w-2.5 h-2.5 text-cyan-400" />
+                          <span>Verify on Google</span>
+                          <ExternalLink className="w-2 h-2 opacity-70" />
+                        </a>
+                      </div>
                     )}
                   </div>
 

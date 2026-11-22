@@ -23,7 +23,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Katargam",
     address: "Shop No. 14-16, 2nd Floor, Ratnakar Diamond Hub, Near Sumul Dairy Road, Katargam, Surat, Gujarat - 395004",
-    rating: 4.8, reviews: 180, website: "Needs Redesign", websiteUrl: "http://www.laxmidiamondtools.com", dm: "Gordhanbhai Patel", phone: "9824067816",
+    rating: 4.8, reviews: 180, website: "No Website", websiteUrl: "", dm: "Gordhanbhai Patel", phone: "9824067816",
     stage: "Audit Sent", priority: "Hot",
     webCost: 60000, mrr: 30000,
     dateAdded: "2026-09-28 08:30 AM", batchDate: "2026-09-28", isNewToday: false
@@ -51,7 +51,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Millennium Textile Market",
     address: "Shop No. 2045-2048, 2nd Floor, Millennium Textile Market 2, Ring Road, Surat, Gujarat - 395002",
-    rating: 4.6, reviews: 290, website: "Needs Redesign", websiteUrl: "http://www.varabridal.in", dm: "Pooja Singhania", phone: "9979189018",
+    rating: 4.6, reviews: 290, website: "No Website", websiteUrl: "", dm: "Pooja Singhania", phone: "9979189018",
     stage: "Proposal Sent", priority: "Hot",
     webCost: 55000, mrr: 32000,
     dateAdded: "2026-09-26 08:30 AM", batchDate: "2026-09-26", isNewToday: false
@@ -93,7 +93,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Hazira Industrial Belt",
     address: "Survey No. 78/A, Mora-Hazira Coastal Highway, Near L&T Heavy Engineering, Hazira, Surat, Gujarat - 394510",
-    rating: 4.7, reviews: 195, website: "Needs Redesign", websiteUrl: "http://www.haziramarineboilers.in", dm: "Dharmeshbhai Gohil", phone: "9979855122",
+    rating: 4.7, reviews: 195, website: "No Website", websiteUrl: "", dm: "Dharmeshbhai Gohil", phone: "9979855122",
     stage: "Proposal Sent", priority: "Hot",
     webCost: 110000, mrr: 50000,
     dateAdded: "2026-10-29 08:30 AM", batchDate: "2026-10-29", isNewToday: false
@@ -107,7 +107,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Udhna Udyog Nagar",
     address: "Shed No. 24-26, Road No. 3, Udhna Udyog Nagar Industrial Estate, Surat, Gujarat - 394210",
-    rating: 4.6, reviews: 140, website: "Needs Redesign", websiteUrl: "http://www.apexcncsurat.com", dm: "Kiritbhai Mistry", phone: "9825366719",
+    rating: 4.6, reviews: 140, website: "No Website", websiteUrl: "", dm: "Kiritbhai Mistry", phone: "9825366719",
     stage: "Audit Sent", priority: "Hot",
     webCost: 65000, mrr: 30000,
     dateAdded: "2026-10-30 08:30 AM", batchDate: "2026-10-30", isNewToday: true
@@ -135,7 +135,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Saroli Textile Hub",
     address: "Block C, 102-106, Royal Textile Market, Saroli Cross Road, Surat-Kadodara Road, Surat, Gujarat - 395010",
-    rating: 4.8, reviews: 340, website: "Needs Redesign", websiteUrl: "http://www.tulsitextile.in", dm: "Hemantbhai Agarwal", phone: "9824055612",
+    rating: 4.8, reviews: 340, website: "No Website", websiteUrl: "", dm: "Hemantbhai Agarwal", phone: "9824055612",
     stage: "Proposal Sent", priority: "Hot",
     webCost: 70000, mrr: 35000,
     dateAdded: "2026-10-28 08:30 AM", batchDate: "2026-10-28", isNewToday: false
@@ -191,7 +191,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Bhatpore GIDC",
     address: "Plot No. 410, Near ONGC Nagar, Bhatpore GIDC Industrial Estate, Hazira Road, Surat, Gujarat - 394510",
-    rating: 4.7, reviews: 175, website: "Needs Redesign", websiteUrl: "http://www.bhatporegas.com", dm: "Sanjaybhai Balar", phone: "9979144882",
+    rating: 4.7, reviews: 175, website: "No Website", websiteUrl: "", dm: "Sanjaybhai Balar", phone: "9979144882",
     stage: "Audit Sent", priority: "Hot",
     webCost: 80000, mrr: 36000,
     dateAdded: "2026-10-30 08:30 AM", batchDate: "2026-10-30", isNewToday: true
@@ -249,7 +249,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "NH-48 Kosamba Highway",
     address: "Survey No. 241, NH-48 Highway Service Road, Near Tarsadi Overbridge, Kosamba, Dist. Surat, Gujarat - 394120",
-    rating: 4.6, reviews: 72, website: "Needs Redesign", websiteUrl: "http://www.kosambaagropulp.in", dm: "Dineshbhai Chaudhari", phone: "9879122332",
+    rating: 4.6, reviews: 72, website: "No Website", websiteUrl: "", dm: "Dineshbhai Chaudhari", phone: "9879122332",
     stage: "New Lead", priority: "Warm",
     webCost: 45000, mrr: 22000,
     dateAdded: "2026-09-28 08:30 AM", batchDate: "2026-09-28", isNewToday: false
@@ -265,7 +265,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Ankleshwar GIDC",
     address: "Plot No. 2804/A, Chemical Zone, GIDC Industrial Estate, Ankleshwar, Dist. Bharuch, Gujarat - 393002",
-    rating: 4.6, reviews: 105, website: "Needs Redesign", websiteUrl: "http://www.sterlingdyes.com", dm: "Chetanbhai Shah", phone: "9898134513",
+    rating: 4.6, reviews: 105, website: "No Website", websiteUrl: "", dm: "Chetanbhai Shah", phone: "9898134513",
     stage: "Proposal Sent", priority: "Hot",
     webCost: 70000, mrr: 35000,
     dateAdded: "2026-09-29 08:30 AM", batchDate: "2026-09-29", isNewToday: true
@@ -309,7 +309,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Narmadanagar Industrial Estate",
     address: "Plot No. 45/B, Narmadanagar Industrial Estate, GNFC Bypass Road, Bharuch, Gujarat - 392015",
-    rating: 4.7, reviews: 115, website: "Needs Redesign", websiteUrl: "http://www.bharuchvalves.in", dm: "Pravinbhai Solanki", phone: "9825167788",
+    rating: 4.7, reviews: 115, website: "No Website", websiteUrl: "", dm: "Pravinbhai Solanki", phone: "9825167788",
     stage: "Audit Sent", priority: "Hot",
     webCost: 55000, mrr: 28000,
     dateAdded: "2026-09-28 08:30 AM", batchDate: "2026-09-28", isNewToday: false
@@ -339,7 +339,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Dahej PCPIR SEZ",
     address: "Plot No. D-2/E-41, Dahej PCPIR Special Economic Zone (SEZ), Taluka Vagra, Dahej, Gujarat - 392130",
-    rating: 4.8, reviews: 130, website: "Needs Redesign", websiteUrl: "http://www.dahejpetrochem.com", dm: "Siddharth Joshi (GM)", phone: "9824156677",
+    rating: 4.8, reviews: 130, website: "No Website", websiteUrl: "", dm: "Siddharth Joshi (GM)", phone: "9824156677",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 75000, mrr: 38000,
     dateAdded: "2026-09-29 08:30 AM", batchDate: "2026-09-29", isNewToday: true
@@ -399,7 +399,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Makarpura GIDC",
     address: "Plot No. 718/2, GIDC Industrial Estate, Makarpura Road, Vadodara, Gujarat - 390010",
-    rating: 4.8, reviews: 160, website: "Needs Redesign", websiteUrl: "http://www.powervoltswitchgears.com", dm: "Ajay Sharma", phone: "9825001210",
+    rating: 4.8, reviews: 160, website: "No Website", websiteUrl: "", dm: "Ajay Sharma", phone: "9825001210",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 75000, mrr: 35000,
     dateAdded: "2026-09-29 08:30 AM", batchDate: "2026-09-29", isNewToday: true
@@ -427,7 +427,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Alkapuri",
     address: "Shreeji Arcade, 1st Floor, Opp. Concorde Building, R.C. Dutt Road, Alkapuri, Vadodara, Gujarat - 390007",
-    rating: 4.9, reviews: 390, website: "Needs Redesign", websiteUrl: "http://www.avenueayurveda.in", dm: "Dr. Ananya Trivedi", phone: "9824323412",
+    rating: 4.9, reviews: 390, website: "No Website", websiteUrl: "", dm: "Dr. Ananya Trivedi", phone: "9824323412",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 50000, mrr: 30000,
     dateAdded: "2026-09-26 08:30 AM", batchDate: "2026-09-26", isNewToday: false
@@ -457,7 +457,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Vitthal Udyognagar GIDC",
     address: "Plot No. 204/C, Phase 1, Vitthal Udyognagar GIDC Industrial Estate, Anand, Gujarat - 388121",
-    rating: 4.7, reviews: 110, website: "Needs Redesign", websiteUrl: "http://www.amulyadairyequipment.com", dm: "Hasmukhbhai Patel", phone: "9879389008",
+    rating: 4.7, reviews: 110, website: "Needs Redesign", websiteUrl: "https://www.amuldairy.com", dm: "Hasmukhbhai Patel", phone: "9879389008",
     stage: "Closed-Won", priority: "Hot",
     webCost: 65000, mrr: 30000,
     dateAdded: "2026-09-28 08:30 AM", batchDate: "2026-09-28", isNewToday: false
@@ -501,7 +501,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Kamla GIDC",
     address: "Plot No. 84, Kamla GIDC Industrial Area, Uttarsanda Road, Nadiad, Gujarat - 387003",
-    rating: 4.6, reviews: 88, website: "Needs Redesign", websiteUrl: "http://www.charotaragro.in", dm: "Bipinbhai Patel", phone: "9426367806",
+    rating: 4.6, reviews: 88, website: "No Website", websiteUrl: "", dm: "Bipinbhai Patel", phone: "9426367806",
     stage: "Contacted", priority: "Warm",
     webCost: 40000, mrr: 18000,
     dateAdded: "2026-09-27 08:30 AM", batchDate: "2026-09-27", isNewToday: false
@@ -561,7 +561,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Kathwada GIDC",
     address: "Plot No. 55-57, Road No. 4, Kathwada GIDC Industrial Estate, Ahmedabad, Gujarat - 382430",
-    rating: 4.6, reviews: 135, website: "Needs Redesign", websiteUrl: "http://www.matrixhydraulic.com", dm: "Rakesh Panchal", phone: "9824034503",
+    rating: 4.6, reviews: 135, website: "No Website", websiteUrl: "", dm: "Rakesh Panchal", phone: "9824034503",
     stage: "Proposal Sent", priority: "Hot",
     webCost: 55000, mrr: 28000,
     dateAdded: "2026-09-29 08:30 AM", batchDate: "2026-09-29", isNewToday: true
@@ -575,7 +575,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Changodar GIDC",
     address: "Survey No. 320/2, Moraiya, Near Sanand Circle, Changodar GIDC, Ahmedabad, Gujarat - 382213",
-    rating: 4.7, reviews: 112, website: "Needs Redesign", websiteUrl: "http://www.kaveripackaging.in", dm: "Nilesh Doshi", phone: "9898045604",
+    rating: 4.7, reviews: 112, website: "No Website", websiteUrl: "", dm: "Nilesh Doshi", phone: "9898045604",
     stage: "Audit Sent", priority: "Hot",
     webCost: 45000, mrr: 20000,
     dateAdded: "2026-09-28 08:30 AM", batchDate: "2026-09-28", isNewToday: false
@@ -603,7 +603,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Naroda GIDC",
     address: "Phase 1, Plot No. 814, GIDC Industrial Estate, Naroda, Ahmedabad, Gujarat - 382330",
-    rating: 4.8, reviews: 150, website: "Needs Redesign", websiteUrl: "http://www.narodalasertech.com", dm: "Sureshbhai Mistry", phone: "9825312345",
+    rating: 4.8, reviews: 150, website: "No Website", websiteUrl: "", dm: "Sureshbhai Mistry", phone: "9825312345",
     stage: "Closed-Won", priority: "Hot",
     webCost: 52000, mrr: 26000,
     dateAdded: "2026-09-26 08:30 AM", batchDate: "2026-09-26", isNewToday: false
@@ -617,7 +617,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Vatva GIDC Phase 3",
     address: "Plot No. 418/1-2, Phase 3, GIDC Industrial Estate, Vatva, Ahmedabad, Gujarat - 382445",
-    rating: 4.8, reviews: 320, website: "Needs Redesign", websiteUrl: "http://www.vatvareactivedyes.com", dm: "Bhupendrabhai Patel", phone: "9825166205",
+    rating: 4.8, reviews: 320, website: "No Website", websiteUrl: "", dm: "Bhupendrabhai Patel", phone: "9825166205",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 85000, mrr: 42000,
     dateAdded: "2026-10-30 08:30 AM", batchDate: "2026-10-30", isNewToday: true
@@ -659,7 +659,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Sanand GIDC Phase 2",
     address: "Plot No. E-45, Bol GIDC Industrial Estate, Sanand-Viramgam Highway, Sanand, Ahmedabad, Gujarat - 382170",
-    rating: 4.9, reviews: 380, website: "Needs Redesign", websiteUrl: "http://www.sanandautopress.in", dm: "Manishbhai Rathod", phone: "9925044118",
+    rating: 4.9, reviews: 380, website: "No Website", websiteUrl: "", dm: "Manishbhai Rathod", phone: "9925044118",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 95000, mrr: 45000,
     dateAdded: "2026-10-30 08:30 AM", batchDate: "2026-10-30", isNewToday: true
@@ -701,7 +701,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Aslali Logistics Hub",
     address: "Survey No. 182, NH-48 Highway Service Road, Near Aslali Octroi Naka, Ahmedabad, Gujarat - 382427",
-    rating: 4.8, reviews: 215, website: "Needs Redesign", websiteUrl: "http://www.gujaratcranes.com", dm: "Rajendrasinh Vaghela", phone: "9979033221",
+    rating: 4.8, reviews: 215, website: "No Website", websiteUrl: "", dm: "Rajendrasinh Vaghela", phone: "9979033221",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 75000, mrr: 36000,
     dateAdded: "2026-10-30 08:30 AM", batchDate: "2026-10-30", isNewToday: true
@@ -743,7 +743,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Prahlad Nagar Corporate Road",
     address: "804-806, Venus Atlantis, Corporate Road, Opposite Shell Petrol Pump, Prahlad Nagar, Ahmedabad, Gujarat - 380015",
-    rating: 4.9, reviews: 450, website: "Needs Redesign", websiteUrl: "http://www.sunmaxsolar.in", dm: "Kunalbhai Shah", phone: "9824011984",
+    rating: 4.9, reviews: 450, website: "Needs Redesign", websiteUrl: "https://www.adani.com", dm: "Kunalbhai Shah", phone: "9824011984",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 100000, mrr: 50000,
     dateAdded: "2026-10-30 08:30 AM", batchDate: "2026-10-30", isNewToday: true
@@ -787,7 +787,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Chhatral GIDC Phase 1",
     address: "Plot No. 120/A, Phase 1, GIDC Industrial Estate, Chhatral, Dist. Gandhinagar, Gujarat - 382729",
-    rating: 4.7, reviews: 128, website: "Needs Redesign", websiteUrl: "http://www.chhatralpumps.com", dm: "Pravinbhai Patel", phone: "9825045566",
+    rating: 4.7, reviews: 128, website: "No Website", websiteUrl: "", dm: "Pravinbhai Patel", phone: "9825045566",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 55000, mrr: 28000,
     dateAdded: "2026-09-25 08:30 AM", batchDate: "2026-09-25", isNewToday: false
@@ -831,7 +831,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Electronic Estate, Sec 25",
     address: "Plot No. 14/15, Electronic Estate, Sector 25, Gandhinagar, Gujarat - 382024",
-    rating: 4.7, reviews: 94, website: "Needs Redesign", websiteUrl: "http://www.optimainstruments.in", dm: "Dr. Jayesh Mehta", phone: "9825123401",
+    rating: 4.7, reviews: 94, website: "No Website", websiteUrl: "", dm: "Dr. Jayesh Mehta", phone: "9825123401",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 60000, mrr: 30000,
     dateAdded: "2026-09-24 08:30 AM", batchDate: "2026-09-24", isNewToday: false
@@ -905,7 +905,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Metoda GIDC Lodhika",
     address: "Plot No. G-1822, Lodhika GIDC Industrial Estate, Metoda, Rajkot, Gujarat - 360021",
-    rating: 4.9, reviews: 410, website: "Needs Redesign", websiteUrl: "http://www.falconpumpsrajkot.in", dm: "Bhavinbhai Bhalani", phone: "9879512303",
+    rating: 4.9, reviews: 410, website: "Needs Redesign", websiteUrl: "https://www.falconpumps.in", dm: "Bhavinbhai Bhalani", phone: "9879512303",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 85000, mrr: 45000,
     dateAdded: "2026-09-27 08:30 AM", batchDate: "2026-09-27", isNewToday: false
@@ -935,7 +935,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Old Ghuntu Road Industrial",
     address: "Survey No. 85/1, Lakhdhirpur Road, National Highway 8-A, Morbi, Gujarat - 363642",
-    rating: 4.9, reviews: 620, website: "Needs Redesign", websiteUrl: "http://www.simpolotilesmorbi.com", dm: "Jitendrabhai Aghara", phone: "9825178905",
+    rating: 4.9, reviews: 620, website: "Needs Redesign", websiteUrl: "https://www.simpolo.net", dm: "Jitendrabhai Aghara", phone: "9825178905",
     stage: "Prospect Identified", priority: "Ultra Hot",
     webCost: 95000, mrr: 50000,
     dateAdded: "2026-09-29 08:30 AM", batchDate: "2026-09-29", isNewToday: true
@@ -949,7 +949,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Pipali-Jetpar Road GIDC",
     address: "Plot No. 14, Pipali Village Industrial Belt, Jetpar Road, Morbi, Gujarat - 363642",
-    rating: 4.7, reviews: 230, website: "Needs Redesign", websiteUrl: "http://www.claystonesanitary.in", dm: "Hiteshbhai Dalsaniya", phone: "9824367806",
+    rating: 4.7, reviews: 230, website: "No Website", websiteUrl: "", dm: "Hiteshbhai Dalsaniya", phone: "9824367806",
     stage: "Pitch Scheduled", priority: "Hot",
     webCost: 70000, mrr: 35000,
     dateAdded: "2026-09-28 08:30 AM", batchDate: "2026-09-28", isNewToday: false
@@ -993,7 +993,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Dared GIDC Phase II",
     address: "Plot No. 3418, Road No. I, GIDC Phase III, Dared, Jamnagar, Gujarat - 361004",
-    rating: 4.8, reviews: 275, website: "Needs Redesign", websiteUrl: "http://www.shreejibrasscomponents.com", dm: "Harilalbhai Shah", phone: "9825412909",
+    rating: 4.8, reviews: 275, website: "No Website", websiteUrl: "", dm: "Harilalbhai Shah", phone: "9825412909",
     stage: "Prospect Identified", priority: "Hot",
     webCost: 75000, mrr: 40000,
     dateAdded: "2026-09-29 08:30 AM", batchDate: "2026-09-29", isNewToday: true
@@ -1037,7 +1037,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "GIDC Industrial Estate Phase I",
     address: "Plot No. 2801, Phase IV, GIDC Industrial Estate, Vapi, Gujarat - 396195",
-    rating: 4.8, reviews: 310, website: "Needs Redesign", websiteUrl: "http://www.vapikraftmills.in", dm: "Sureshbhai Agarwal", phone: "9825123612",
+    rating: 4.8, reviews: 310, website: "No Website", websiteUrl: "", dm: "Sureshbhai Agarwal", phone: "9825123612",
     stage: "Prospect Identified", priority: "Ultra Hot",
     webCost: 85000, mrr: 45000,
     dateAdded: "2026-09-29 08:30 AM", batchDate: "2026-09-29", isNewToday: true
@@ -1065,7 +1065,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Gundlav GIDC",
     address: "Plot No. 72-74, Gundlav Industrial Estate, NH-48 Junction, Valsad, Gujarat - 396035",
-    rating: 4.9, reviews: 480, website: "Needs Redesign", websiteUrl: "http://www.valsadagroexporters.com", dm: "Pradipbhai Desai", phone: "9879456714",
+    rating: 4.9, reviews: 480, website: "No Website", websiteUrl: "", dm: "Pradipbhai Desai", phone: "9879456714",
     stage: "Closed-Won", priority: "Hot",
     webCost: 65000, mrr: 35000,
     dateAdded: "2026-09-27 08:30 AM", batchDate: "2026-09-27", isNewToday: false
@@ -1081,7 +1081,7 @@ export const CORRIDOR_LEADS = [
     state: "Gujarat",
     zone: "Vijalpor Industrial Belt",
     address: "Survey No. 118, Opp. Railway Station Road, Vijalpor, Navsari, Gujarat - 396445",
-    rating: 4.7, reviews: 155, website: "Needs Redesign", websiteUrl: "http://www.navsaridiamondtools.in", dm: "Bharatbhai Kansara", phone: "9825678915",
+    rating: 4.7, reviews: 155, website: "No Website", websiteUrl: "", dm: "Bharatbhai Kansara", phone: "9825678915",
     stage: "Prospect Identified", priority: "Hot",
     webCost: 60000, mrr: 32000,
     dateAdded: "2026-09-29 08:30 AM", batchDate: "2026-09-29", isNewToday: true

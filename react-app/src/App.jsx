@@ -687,6 +687,10 @@ export default function App() {
         <GooglePlacesSetup
           onLeadsHarvested={handleLeadsHarvested}
           onClose={() => setIsGoogleSetupOpen(false)}
+          onOpenImport={() => {
+            setIsGoogleSetupOpen(false);
+            setIsImportModalOpen(true);
+          }}
           theme={theme}
         />
       )}

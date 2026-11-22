@@ -20,7 +20,8 @@ import {
   getGoogleApiKey, 
   saveGoogleApiKey, 
   clearGoogleApiKey, 
-  fetchRealLeadsFromGooglePlaces 
+  fetchRealLeadsFromGooglePlaces,
+  apiService
 } from '../services/apiService';
 import { CORRIDOR_CITIES, GUJARAT_CITIES, RAJASTHAN_CITIES } from '../data/leadsData';
 
@@ -41,7 +42,7 @@ const CITY_KEYWORDS = {
   'Kalol & Chhatral': 'plastic textile machinery manufacturer',
 };
 
-export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = 'dark' }) {
+export default function GooglePlacesSetup({ onLeadsHarvested, onClose, onOpenImport, theme = 'dark' }) {
   const isDark = theme === 'dark';
 
   const [apiKey, setApiKey] = useState('');
@@ -57,6 +58,7 @@ export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = '
   const [fetchResult, setFetchResult] = useState(null);
   const [fetchedLeads, setFetchedLeads] = useState([]);
   const [fetchProgress, setFetchProgress] = useState('');
+  const [isFreeScanning, setIsFreeScanning] = useState(false);
 
   useEffect(() => {
     const existing = getGoogleApiKey();
@@ -113,7 +115,12 @@ export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = '
 
   const handleFetchRealLeads = async () => {
     if (!savedKey) {
-      setTestResult({ success: false, message: 'Please save and verify your API key first.' });
+      setTestResult({ 
+        success: false, 
+        message: '⚠️ Pehle Step 1 me apni Google Cloud API Key dalo aur "Verify & Save Key" par click karo! Bina key ke Google data nahi deta.' 
+      });
+      const el = document.getElementById('google-api-key-input');
+      if (el) el.focus();
       return;
     }
 
@@ -146,6 +153,38 @@ export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = '
         success: false,
         message: `❌ ${result.error}`
       });
+    }
+  };
+
+  const handleFreeLiveScan = async () => {
+    setIsFreeScanning(true);
+    setFetchResult(null);
+    setFetchProgress(`🌍 Running free open-source scan for industrial units in ${selectedCity}...`);
+    try {
+      const res = await apiService.scanCityOverpassLive(selectedCity);
+      if (res.success && res.leads && res.leads.length > 0) {
+        setFetchedLeads(res.leads);
+        setFetchResult({
+          success: true,
+          message: `✅ Found ${res.leads.length} real industrial units in ${selectedCity}! Leads added to your dashboard.`
+        });
+        if (onLeadsHarvested) {
+          onLeadsHarvested(res.leads);
+        }
+      } else {
+        setFetchResult({
+          success: false,
+          message: `❌ ${res.error || 'No units found. Try another city or use Google Maps search below.'}`
+        });
+      }
+    } catch (err) {
+      setFetchResult({
+        success: false,
+        message: `❌ Scan error: ${err.message}`
+      });
+    } finally {
+      setIsFreeScanning(false);
+      setFetchProgress('');
     }
   };
 
@@ -217,6 +256,7 @@ export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = '
 
           <div className="relative mb-3">
             <input
+              id="google-api-key-input"
               type={showKey ? 'text' : 'password'}
               value={apiKey}
               onChange={e => setApiKey(e.target.value)}
@@ -234,6 +274,15 @@ export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = '
               {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
+
+          {!savedKey && (
+            <div className={`mt-2 mb-3 p-2.5 rounded-xl text-xs flex items-center gap-2 border ${
+              isDark ? 'bg-amber-500/10 text-amber-300 border-amber-500/30' : 'bg-amber-50 text-amber-800 border-amber-200'
+            }`}>
+              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>Step 1 Pending: Apni Google Cloud API Key yaha paste karein aur <strong>"Verify & Save Key"</strong> par click karein.</span>
+            </div>
+          )}
 
           <div className="flex items-center gap-2 flex-wrap">
             <button
@@ -339,18 +388,27 @@ export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = '
           {/* Fetch Button */}
           <button
             onClick={handleFetchRealLeads}
-            disabled={!savedKey || isFetching}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm transition-all shadow-lg shadow-emerald-600/30 disabled:opacity-50"
+            disabled={isFetching}
+            className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-black text-sm transition-all shadow-lg ${
+              savedKey
+                ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/30 cursor-pointer animate-pulse'
+                : 'bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 shadow-slate-900/50 cursor-pointer'
+            }`}
           >
             {isFetching ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Fetching Real Leads...</span>
+                <span>Fetching Real Leads from Google...</span>
+              </>
+            ) : savedKey ? (
+              <>
+                <Sparkles className="w-4 h-4 text-amber-300" />
+                <span>⚡ Fetch 100% Real Google Leads — {selectedCity}</span>
               </>
             ) : (
               <>
-                <Sparkles className="w-4 h-4" />
-                <span>🔴 Fetch 100% Real Leads from Google — {selectedCity}</span>
+                <AlertTriangle className="w-4 h-4 text-amber-400" />
+                <span>🔒 API Key Missing — Pehle Step 1 Complete Karein</span>
               </>
             )}
           </button>
@@ -370,6 +428,57 @@ export default function GooglePlacesSetup({ onLeadsHarvested, onClose, theme = '
                 : 'bg-rose-500/15 border-rose-500/30 text-rose-300'
             }`}>
               {fetchResult.message}
+            </div>
+          )}
+        </div>
+
+        {/* FREE ALTERNATIVE SECTION: No Google API Key Required */}
+        <div className={`rounded-2xl p-4 mb-4 border ${
+          isDark ? 'bg-slate-900/40 border-slate-800' : 'bg-blue-50/50 border-blue-200'
+        }`}>
+          <div className="flex items-center gap-2 mb-1.5">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <h4 className="text-xs font-bold uppercase tracking-wider text-amber-400">
+              Free Option: Bina Google API Key Ke Real Leads Dekhein
+            </h4>
+          </div>
+          <p className="text-xs text-slate-400 mb-3 leading-relaxed">
+            Agar aapke paas Google Cloud account nahi hai, to aap direct <strong>Google Maps</strong> open karke live factories dekh sakte hain ya <strong>Free Industrial Scan</strong> chala sakte hain:
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {/* Free Google Maps Direct Open */}
+            <a
+              href={`https://www.google.com/maps/search/${encodeURIComponent((customKeyword.trim() || CITY_KEYWORDS[selectedCity] || 'manufacturer factory') + ' in ' + selectedCity + ' GIDC Gujarat')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/30 transition-all text-center"
+            >
+              <Globe2 className="w-3.5 h-3.5" />
+              <span>Open Google Maps for {selectedCity}</span>
+              <ExternalLink className="w-3 h-3 opacity-70" />
+            </a>
+
+            {/* Free Live Industrial Scan */}
+            <button
+              onClick={handleFreeLiveScan}
+              disabled={isFreeScanning}
+              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/30 transition-all"
+            >
+              {isFreeScanning ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Building2 className="w-3.5 h-3.5" />}
+              <span>{isFreeScanning ? 'Scanning...' : `Free Industrial Scan (${selectedCity})`}</span>
+            </button>
+          </div>
+
+          {onOpenImport && (
+            <div className="mt-2.5 pt-2.5 border-t border-slate-800/60 flex items-center justify-between">
+              <span className="text-[11px] text-slate-400">Excel / Directory file hai?</span>
+              <button
+                onClick={onOpenImport}
+                className="text-xs text-emerald-400 hover:underline font-bold flex items-center gap-1"
+              >
+                <span>📥 Direct Excel / CSV File Import Karein ➔</span>
+              </button>
             </div>
           )}
         </div>

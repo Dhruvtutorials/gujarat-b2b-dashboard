@@ -1,0 +1,98 @@
+import os
+import json
+import re
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+INDEX_FILE = os.path.join(BASE_DIR, "index.html")
+DASHBOARD_FILE = os.path.join(BASE_DIR, "dashboard.html")
+CSV_FILE = os.path.join(BASE_DIR, "gandhinagar_to_valsad_corridor_leads.csv")
+JSON_FILE = os.path.join(BASE_DIR, "live_leads_feed.json")
+ARTIFACT_FILE = r"C:\Users\Dhruv_Rana\.gemini\antigravity\brain\012456e5-38a8-4b44-819d-04b9eb1e74f8\powerbi_dashboard.html"
+
+# 36 Qualified Leads along the Surat -> Gandhinagar Corridor with explicit arrival dates/8:30 AM batches
+ALL_LEADS = [
+    # Surat (4)
+    {"id": "STG-101", "name": "Surat Silk & Jacquard Weaving Mills", "type": "B2B", "category": "Silk & Jacquard Wholesale", "city": "Surat", "zone": "Pandesara GIDC", "rating": 4.7, "reviews": 240, "website": "No Website", "dm": "Rameshbhai Agarwal", "phone": "9825156715", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 80000, "mrr": 40000, "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True},
+    {"id": "STG-102", "name": "Laxmi Diamond Polishing Tools & Blades", "type": "B2B", "category": "Laser Cutting Blades & Scaife", "city": "Surat", "zone": "Katargam", "rating": 4.8, "reviews": 180, "website": "No Website", "dm": "Gordhanbhai Patel", "phone": "9824067816", "stage": "Audit Sent", "priority": "Hot", "webCost": 60000, "mrr": 30000, "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False},
+    {"id": "STG-103", "name": "Surat Royal Ghari & Traditional Sweets", "type": "D2C", "category": "Heritage Sweets & Mawa", "city": "Surat", "zone": "Bhagal & Athwalines", "rating": 4.9, "reviews": 750, "website": "No Website", "dm": "Mukeshbhai Shah", "phone": "9879578917", "stage": "Closed-Won", "priority": "Hot", "webCost": 60000, "mrr": 35000, "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False},
+    {"id": "STG-104", "name": "Vara Bridal Designer Kurtis & Lehengas", "type": "D2C", "category": "Designer Ethnic Wear", "city": "Surat", "zone": "Millennium Textile Market", "rating": 4.6, "reviews": 290, "website": "Outdated", "dm": "Pooja Singhania", "phone": "9979189018", "stage": "Proposal Sent", "priority": "Hot", "webCost": 55000, "mrr": 32000, "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False},
+
+    # Kim & Kosamba (2)
+    {"id": "STG-105", "name": "Shree Ambica Textile Sizing & Warping", "type": "B2B", "category": "Yarn Sizing & Warping", "city": "Kim & Kosamba", "zone": "Kim GIDC Industrial Area", "rating": 4.5, "reviews": 84, "website": "No Website", "dm": "Vinodbhai Patel", "phone": "9825311221", "stage": "Contacted", "priority": "Warm", "webCost": 42000, "mrr": 20000, "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True},
+    {"id": "STG-106", "name": "Kosamba Agro Pulp & Cold Storage", "type": "B2B", "category": "Agro Cold Storage & Pulping", "city": "Kim & Kosamba", "zone": "NH-48 Kosamba Highway", "rating": 4.6, "reviews": 72, "website": "No Website", "dm": "Dineshbhai Chaudhari", "phone": "9879122332", "stage": "New Lead", "priority": "Warm", "webCost": 45000, "mrr": 22000, "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False},
+
+    # Ankleshwar (3)
+    {"id": "STG-107", "name": "Sterling Dyes & Reactive Intermediates", "type": "B2B", "category": "Textile Dyes & Reactive Pigments", "city": "Ankleshwar", "zone": "Ankleshwar GIDC", "rating": 4.6, "reviews": 105, "website": "No Website", "dm": "Chetanbhai Shah", "phone": "9898134513", "stage": "Proposal Sent", "priority": "Hot", "webCost": 70000, "mrr": 35000, "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True},
+    {"id": "STG-108", "name": "Ankleshwar Bulk Pharma Synthetics", "type": "B2B", "category": "Active Pharma Ingredients (API)", "city": "Ankleshwar", "zone": "GIDC Chemical Zone", "rating": 4.7, "reviews": 98, "website": "No Website", "dm": "Dr. Haresh Vaghani", "phone": "9824045566", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 65000, "mrr": 32000, "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False},
+    {"id": "STG-109", "name": "Narmada Plastic Bottles & Moulding", "type": "B2B", "category": "Pharma Bottles & HDPE Drums", "city": "Ankleshwar", "zone": "Panoli GIDC", "rating": 4.4, "reviews": 72, "website": "No Website", "dm": "Dharmendrasinh Vaghela", "phone": "9428145614", "stage": "Contacted", "priority": "Warm", "webCost": 45000, "mrr": 22000, "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False},
+
+    # Bharuch (2)
+    {"id": "STG-110", "name": "Bharuch Heavy Valves & Flanges", "type": "B2B", "category": "Forged Valves & Industrial Piping", "city": "Bharuch", "zone": "Narmadanagar Industrial Estate", "rating": 4.7, "reviews": 115, "website": "No Website", "dm": "Pravinbhai Solanki", "phone": "9825167788", "stage": "Audit Sent", "priority": "Hot", "webCost": 55000, "mrr": 28000, "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False},
+    {"id": "STG-111", "name": "Gujarat Salt & Marine Mineral Refineries", "type": "B2B", "category": "Industrial Salt & Soda Compounds", "city": "Bharuch", "zone": "Dahej Bypass Road", "rating": 4.5, "reviews": 88, "website": "No Website", "dm": "Kamleshbhai Desai", "phone": "9879345566", "stage": "New Lead", "priority": "Warm", "webCost": 48000, "mrr": 24000, "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False},
+
+    # Dahej (2)
+    {"id": "STG-112", "name": "Dahej Petrochem Piping & Pressure Vessels", "type": "B2B", "category": "Pressure Vessels & Heavy Boilers", "city": "Dahej", "zone": "Dahej PCPIR SEZ", "rating": 4.8, "reviews": 130, "website": "No Website", "dm": "Siddharth Joshi (GM)", "phone": "9824156677", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 75000, "mrr": 38000, "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True},
+    {"id": "STG-113", "name": "Oceanic Marine Fabrication & Barges", "type": "B2B", "category": "Marine Equipment & Dock Skids", "city": "Dahej", "zone": "Dahej Port Zone", "rating": 4.6, "reviews": 68, "website": "No Website", "dm": "Capt. Ashok Mehta", "phone": "9898067788", "stage": "Contacted", "priority": "Warm", "webCost": 60000, "mrr": 30000, "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False},
+
+    # Karjan (2)
+    {"id": "STG-114", "name": "Karjan Cotton Ginning & Pressing Mills", "type": "B2B", "category": "Cotton Bales & Ginning Machinery", "city": "Karjan", "zone": "Miyagam Karjan GIDC", "rating": 4.6, "reviews": 92, "website": "No Website", "dm": "Natubhai Patel", "phone": "9426388990", "stage": "Audit Sent", "priority": "Hot", "webCost": 45000, "mrr": 22000, "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False},
+    {"id": "STG-115", "name": "Charotar Agro Seeds & Cold Warehouse", "type": "B2B", "category": "Agro Seeds & Crop Storage", "city": "Karjan", "zone": "Karjan Highway Crossing", "rating": 4.5, "reviews": 64, "website": "No Website", "dm": "Ramanbhai Chaudhari", "phone": "9825278899", "stage": "New Lead", "priority": "Warm", "webCost": 40000, "mrr": 20000, "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False},
+
+    # Vadodara (4)
+    {"id": "STG-116", "name": "PowerVolt Switchgears & HT Panels", "type": "B2B", "category": "Transformers & Switchgear", "city": "Vadodara", "zone": "Makarpura GIDC", "rating": 4.8, "reviews": 160, "website": "Outdated", "dm": "Ajay Sharma", "phone": "9825001210", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 75000, "mrr": 35000, "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True},
+    {"id": "STG-117", "name": "Baroda Fine Chemicals & Solvents", "type": "B2B", "category": "Specialty Chemicals & Polymers", "city": "Vadodara", "zone": "Nandesari GIDC", "rating": 4.5, "reviews": 85, "website": "No Website", "dm": "Vikram Desai", "phone": "9879412311", "stage": "Audit Sent", "priority": "Hot", "webCost": 60000, "mrr": 30000, "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False},
+    {"id": "STG-118", "name": "Avenue Ayurvedic Wellness Products", "type": "D2C", "category": "Herbal Skincare & Oils", "city": "Vadodara", "zone": "Alkapuri", "rating": 4.9, "reviews": 390, "website": "No Website", "dm": "Dr. Ananya Trivedi", "phone": "9824323412", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 50000, "mrr": 30000, "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False},
+    {"id": "STG-119", "name": "Savli CNC Heavy Forgings & Tooling", "type": "B2B", "category": "Heavy Forged Auto Components", "city": "Vadodara", "zone": "Savli GIDC Industrial Estate", "rating": 4.7, "reviews": 142, "website": "No Website", "dm": "Rajendrabhai Shah", "phone": "9898023344", "stage": "Proposal Sent", "priority": "Hot", "webCost": 65000, "mrr": 32000, "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False},
+
+    # Anand (3)
+    {"id": "STG-120", "name": "Amulya Dairy Equipment & Stainless Silos", "type": "B2B", "category": "Dairy Machinery & Storage Silos", "city": "Anand", "zone": "Vitthal Udyognagar GIDC", "rating": 4.7, "reviews": 110, "website": "No Website", "dm": "Hasmukhbhai Patel", "phone": "9879389008", "stage": "Closed-Won", "priority": "Hot", "webCost": 65000, "mrr": 30000, "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False},
+    {"id": "STG-121", "name": "Shree Gayatri Namkeen & Food Products", "type": "D2C", "category": "Packaged Snacks & Khakhra", "city": "Anand", "zone": "GIDC Mogar", "rating": 4.6, "reviews": 215, "website": "No Website", "dm": "Sanjay Shah", "phone": "9825290109", "stage": "Proposal Sent", "priority": "Hot", "webCost": 45000, "mrr": 25000, "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False},
+    {"id": "STG-122", "name": "Anand Stainless Pipes & Fluid Valves", "type": "B2B", "category": "SS Dairy Grade Pipes & Fittings", "city": "Anand", "zone": "Vitthal Udyognagar Phase 2", "rating": 4.8, "reviews": 95, "website": "No Website", "dm": "Bipinbhai Suthar", "phone": "9426390112", "stage": "Contacted", "priority": "Warm", "webCost": 50000, "mrr": 24000, "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False},
+
+    # Nadiad (2)
+    {"id": "STG-123", "name": "Charotar Agro Seeds & Bio-Tech Solutions", "type": "B2B", "category": "Hybrid Seeds & Agro Inputs", "city": "Nadiad", "zone": "Kamla GIDC", "rating": 4.6, "reviews": 88, "website": "No Website", "dm": "Bipinbhai Patel", "phone": "9426367806", "stage": "Contacted", "priority": "Warm", "webCost": 40000, "mrr": 18000, "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False},
+    {"id": "STG-124", "name": "Santram Wooden Furnishings & Teak Doors", "type": "D2C", "category": "Modular Kitchen & Teak Furniture", "city": "Nadiad", "zone": "College Road", "rating": 4.8, "reviews": 145, "website": "No Website", "dm": "Girish Mistry", "phone": "9824278907", "stage": "New Lead", "priority": "Warm", "webCost": 45000, "mrr": 24000, "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False},
+
+    # Kheda & Bareja (2)
+    {"id": "STG-125", "name": "Kheda Rice & Grain Milling Machinery", "type": "B2B", "category": "Grain Processing & Destoner Machines", "city": "Kheda & Bareja", "zone": "Bareja Industrial Highway", "rating": 4.6, "reviews": 96, "website": "No Website", "dm": "Mahendrabhai Patel", "phone": "9825189900", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 50000, "mrr": 25000, "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False},
+    {"id": "STG-126", "name": "Bareja Highway Precast Concrete & Blocks", "type": "B2B", "category": "Precast Concrete & Pavers", "city": "Kheda & Bareja", "zone": "NH-48 Kheda Bypass", "rating": 4.5, "reviews": 74, "website": "No Website", "dm": "Kiritbhai Dabhi", "phone": "9879456677", "stage": "Contacted", "priority": "Warm", "webCost": 40000, "mrr": 20000, "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False},
+
+    # Ahmedabad (4)
+    {"id": "STG-127", "name": "Matrix Hydraulic Presses & Shearing", "type": "B2B", "category": "Industrial Hydraulic Presses", "city": "Ahmedabad", "zone": "Kathwada GIDC", "rating": 4.6, "reviews": 135, "website": "No Website", "dm": "Rakesh Panchal", "phone": "9824034503", "stage": "Proposal Sent", "priority": "Hot", "webCost": 55000, "mrr": 28000, "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True},
+    {"id": "STG-128", "name": "Kaveri Corrugated Packaging Products", "type": "B2B", "category": "Packaging Boxes & Cartons", "city": "Ahmedabad", "zone": "Changodar GIDC", "rating": 4.7, "reviews": 112, "website": "No Website", "dm": "Nilesh Doshi", "phone": "9898045604", "stage": "Audit Sent", "priority": "Hot", "webCost": 45000, "mrr": 20000, "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False},
+    {"id": "STG-129", "name": "Swagat Premium Sweets & Dryfruits", "type": "D2C", "category": "Gourmet Sweets & Farsan", "city": "Ahmedabad", "zone": "Satellite & Bodakdev", "rating": 4.9, "reviews": 620, "website": "No Website", "dm": "Pranav Kandoi", "phone": "9825156705", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 50000, "mrr": 35000, "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False},
+    {"id": "STG-130", "name": "Naroda Laser Tech & Sheet Metal", "type": "B2B", "category": "Laser Metal Profiling & Bending", "city": "Ahmedabad", "zone": "Naroda GIDC", "rating": 4.8, "reviews": 150, "website": "No Website", "dm": "Sureshbhai Mistry", "phone": "9825312345", "stage": "Closed-Won", "priority": "Hot", "webCost": 52000, "mrr": 26000, "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False},
+
+    # Kalol & Chhatral (3)
+    {"id": "STG-131", "name": "Chhatral Submersible Pumps & Motors", "type": "B2B", "category": "Agricultural Submersible Pumps", "city": "Kalol & Chhatral", "zone": "Chhatral GIDC Phase 1", "rating": 4.7, "reviews": 128, "website": "No Website", "dm": "Pravinbhai Patel", "phone": "9825045566", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 55000, "mrr": 28000, "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False},
+    {"id": "STG-132", "name": "Kalol Precision Plastic Injection Moulds", "type": "B2B", "category": "Plastic Injection Moulds & Dies", "city": "Kalol & Chhatral", "zone": "Kalol GIDC Industrial Area", "rating": 4.6, "reviews": 94, "website": "No Website", "dm": "Nitinbhai Panchal", "phone": "9879234567", "stage": "Audit Sent", "priority": "Hot", "webCost": 50000, "mrr": 25000, "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False},
+    {"id": "STG-133", "name": "Gujarat Steel Barrels & Containers", "type": "B2B", "category": "MS Barrels & Chemical Drums", "city": "Kalol & Chhatral", "zone": "Chhatral Highway Estate", "rating": 4.5, "reviews": 82, "website": "No Website", "dm": "Harshad Mehta", "phone": "9824156789", "stage": "Contacted", "priority": "Warm", "webCost": 45000, "mrr": 22000, "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False},
+
+    # Gandhinagar (3)
+    {"id": "STG-134", "name": "Optima Instruments & Automation", "type": "B2B", "category": "Industrial Automation & Sensors", "city": "Gandhinagar", "zone": "Electronic Estate, Sec 25", "rating": 4.7, "reviews": 94, "website": "No Website", "dm": "Dr. Jayesh Mehta", "phone": "9825123401", "stage": "Pitch Scheduled", "priority": "Hot", "webCost": 60000, "mrr": 30000, "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False},
+    {"id": "STG-135", "name": "Saffron Biotech & Agro Chemical", "type": "B2B", "category": "Bio-fertilizers & Agro Chemicals", "city": "Gandhinagar", "zone": "Pethapur GIDC", "rating": 4.5, "reviews": 68, "website": "No Website", "dm": "Kamleshbhai Patel", "phone": "9879234502", "stage": "Contacted", "priority": "Warm", "webCost": 40000, "mrr": 22000, "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False},
+    {"id": "STG-136", "name": "Capital Solar Structures & Inverters", "type": "B2B", "category": "Solar Mounting & Off-Grid Systems", "city": "Gandhinagar", "zone": "Sector 28 GIDC", "rating": 4.8, "reviews": 115, "website": "No Website", "dm": "Pratik Sharma", "phone": "9824047733", "stage": "Closed-Won", "priority": "Hot", "webCost": 55000, "mrr": 28000, "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False}
+]
+
+print(f"Total Leads: {len(ALL_LEADS)}")
+today_leads = [x for x in ALL_LEADS if x['isNewToday']]
+print(f"Today 8:30 AM Leads: {len(today_leads)}")
+for l in today_leads:
+    print(f" - {l['name']} ({l['city']}) - {l['dateAdded']}")
+
+# Save JSON feed
+with open(JSON_FILE, "w", encoding="utf-8") as f:
+    json.dump({
+        "last_harvest": "2026-09-29 08:30:00 IST",
+        "batch_time": "08:30 AM",
+        "total_corridor_leads": len(ALL_LEADS),
+        "today_batch_count": len(today_leads),
+        "corridor": "Surat -> Kim & Kosamba -> Ankleshwar -> Bharuch -> Dahej -> Karjan -> Vadodara -> Anand -> Nadiad -> Kheda & Bareja -> Ahmedabad -> Kalol & Chhatral -> Gandhinagar",
+        "leads": ALL_LEADS
+    }, f, indent=2)
+
+# Save CSV
+import pandas as pd
+df = pd.DataFrame(ALL_LEADS)
+df.to_csv(CSV_FILE, index=False)
+print("Saved JSON and CSV.")

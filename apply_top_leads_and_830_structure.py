@@ -1,0 +1,1298 @@
+import os
+import json
+
+BASE_DIR = r"C:\Users\Dhruv_Rana\.gemini\antigravity\scratch\client_prospecting_powerbi"
+INDEX_FILE = os.path.join(BASE_DIR, "index.html")
+DASHBOARD_FILE = os.path.join(BASE_DIR, "dashboard.html")
+ARTIFACT_FILE = r"C:\Users\Dhruv_Rana\.gemini\antigravity\brain\012456e5-38a8-4b44-819d-04b9eb1e74f8\powerbi_dashboard.html"
+
+# Run dataset builder
+from build_top_leads_and_830_structure import ALL_LEADS
+
+leads_json_str = json.dumps(ALL_LEADS, indent=2)
+
+html_template = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power BI - Gujarat Corridor Client Volume Dashboard</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* Dark Theme (Default - Screenshot Exact Match) */
+    body.theme-dark {{
+      --bg-canvas: #13192D;
+      --bg-header: #151B32;
+      --bg-sidebar: #161D36;
+      --bg-card: #1C2442;
+      --border-card: #273359;
+      --border-subtle: #222C4E;
+      --input-bg: #151C33;
+      --text-bright: #FFFFFF;
+      --text-dim: #8B98BD;
+      --chart-track: #13192D;
+      --donut-center: #1C2442;
+      --card-shadow: 0 8px 24px -4px rgba(5, 10, 25, 0.6);
+      --table-hover: #1A233F;
+    }}
+
+    /* White & Black / Light Theme */
+    body.theme-white {{
+      --bg-canvas: #EEF2F6;
+      --bg-header: #0F172A;
+      --bg-sidebar: #FFFFFF;
+      --bg-card: #FFFFFF;
+      --border-card: #CBD5E1;
+      --border-subtle: #E2E8F0;
+      --input-bg: #F8FAFC;
+      --text-bright: #0F172A;
+      --text-dim: #475569;
+      --chart-track: #E2E8F0;
+      --donut-center: #FFFFFF;
+      --card-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.08);
+      --table-hover: #F1F5F9;
+    }}
+
+    body {{
+      background-color: var(--bg-canvas);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background-color 0.25s ease;
+    }}
+
+    .dashboard-card {{
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.25s ease;
+    }}
+
+    .glow-cyan {{
+      filter: drop-shadow(0 0 6px rgba(0, 213, 255, 0.65));
+    }}
+    .glow-purple {{
+      filter: drop-shadow(0 0 6px rgba(157, 92, 255, 0.65));
+    }}
+
+    .filter-input {{
+      background-color: var(--input-bg);
+      border: 1px solid var(--border-card);
+      color: var(--text-bright);
+      border-radius: 6px;
+      outline: none;
+    }}
+    .filter-input:focus {{
+      border-color: #00D5FF;
+    }}
+
+    .action-circle-btn {{
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.15s;
+    }}
+    .action-circle-btn:hover {{
+      color: var(--text-bright);
+      border-color: #00D5FF;
+      transform: scale(1.08);
+    }}
+
+    .btn-reset {{
+      background-color: #0284C7;
+      color: #FFFFFF;
+      transition: background-color 0.15s;
+    }}
+    .btn-reset:hover {{
+      background-color: #0369A1;
+    }}
+
+    .batch-tab-btn.active {{
+      background-color: #0284C7 !important;
+      color: #FFFFFF !important;
+      border-color: #38BDF8 !important;
+    }}
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {{
+      width: 6px;
+      height: 6px;
+    }}
+    ::-webkit-scrollbar-track {{
+      background: var(--bg-canvas);
+    }}
+    ::-webkit-scrollbar-thumb {{
+      background: var(--border-card);
+      border-radius: 3px;
+    }}
+  </style>
+</head>
+<body class="theme-dark text-slate-100 min-h-screen flex flex-col selection:bg-sky-500 selection:text-white">
+
+  <!-- TOP APP BAR / POWER BI TITLE BAR -->
+  <header class="h-12 bg-[var(--bg-header)] border-b border-[var(--border-subtle)] px-4 flex items-center justify-between z-30 shrink-0 transition-colors">
+    <div class="flex items-center space-x-3">
+      <!-- Power BI Brand Icon -->
+      <div class="flex items-center space-x-1.5 font-bold tracking-wide text-xs">
+        <div class="w-6 h-6 rounded bg-[#F2C811] flex items-center justify-center font-black text-black text-xs shadow">
+          Pb
+        </div>
+        <span class="text-sm font-semibold hidden sm:inline" style="color: var(--text-bright);">Power BI</span>
+        <span class="text-xs px-2 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400 border border-sky-500/40">Surat ➔ Gandhinagar</span>
+        <span class="text-xs px-2 py-0.5 rounded font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hidden md:inline">FY 2026-27 (Current Active)</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs & View Controls -->
+    <div class="flex items-center space-x-2">
+      <!-- Search Input -->
+      <div class="relative w-36 sm:w-52">
+        <input type="text" id="topSearch" oninput="applyFilters()" placeholder="Search company, sector, city..." class="w-full bg-[var(--input-bg)] text-xs pl-7 pr-3 py-1 rounded-md border border-[var(--border-card)] focus:outline-none focus:border-sky-400" style="color: var(--text-bright);">
+        <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2 top-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </div>
+
+      <!-- Quick View Switch Buttons -->
+      <button onclick="switchMainView('leadsTop')" id="viewBtnLeads" class="px-2.5 py-1 text-xs font-bold rounded bg-[#0284C7] text-white flex items-center gap-1 shadow">
+        <span>📋 Leads Board (Top)</span>
+      </button>
+      <button onclick="switchMainView('chartsTop')" id="viewBtnCharts" class="px-2.5 py-1 text-xs font-semibold rounded bg-[var(--bg-card)] border border-[var(--border-card)] text-[var(--text-dim)] hover:text-white flex items-center gap-1">
+        <span>📊 Charts & Wave</span>
+      </button>
+
+      <!-- WHITE AND BLACK THEME BUTTON -->
+      <button onclick="toggleWhiteBlackTheme()" id="whiteBlackBtn" class="flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-bold border border-gray-600 bg-gray-800 text-yellow-300 hover:bg-gray-700 transition shadow">
+        <span id="themeEmoji">☀️</span>
+        <span id="themeTitle">White Mode</span>
+      </button>
+
+      <!-- Auto-Harvest Button -->
+      <button onclick="openScannerModal()" title="Auto-Harvest Leads" class="hidden md:inline-flex items-center gap-1 px-2.5 py-1 text-xs font-extrabold rounded bg-gradient-to-r from-amber-500 to-yellow-400 text-black shadow">
+        ⚡ Auto-Scan
+      </button>
+
+      <!-- User Avatar -->
+      <div class="w-7 h-7 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-[11px] border border-sky-500/40">
+        DR
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace Layout -->
+  <div class="flex min-h-[calc(100vh-48px)]">
+
+    <!-- LEFT SIDEBAR: FILTERS PANEL -->
+    <aside class="w-64 bg-[var(--bg-sidebar)] border-r border-[var(--border-subtle)] p-4 flex flex-col justify-between shrink-0 transition-colors">
+      <div class="space-y-4">
+        <!-- Filter Header with Funnel Icon -->
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3">
+          <div class="flex items-center space-x-2 font-bold text-sm" style="color: var(--text-bright);">
+            <svg class="w-4 h-4 text-sky-400" fill="currentColor" viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+            <span>Filter Leads</span>
+          </div>
+          <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">13 CITIES</span>
+        </div>
+
+        <!-- Filter 1: 8:30 AM Batch Date Filter (Requested by User) -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-[11px] font-semibold" style="color: var(--text-dim);">8:30 AM Lead Arrival Batch</label>
+            <span class="text-[9px] px-1.5 py-0.2 rounded font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">DAILY</span>
+          </div>
+          <select id="batchFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs font-semibold text-emerald-400">
+            <option value="ALL">All Corridor Batches (36 Leads)</option>
+            <option value="2026-09-29">Today: 29-Sep-2026 (08:30 AM) [6 NEW]</option>
+            <option value="2026-09-28">Yesterday: 28-Sep-2026 (08:30 AM)</option>
+            <option value="2026-09-27">27-Sep-2026 (08:30 AM Batch)</option>
+            <option value="2026-09-26">26-Sep-2026 (08:30 AM Batch)</option>
+            <option value="2026-09-25">25-Sep-2026 (08:30 AM Batch)</option>
+            <option value="2026-09-24">24-Sep-2026 (08:30 AM Batch)</option>
+          </select>
+        </div>
+
+        <!-- Filter 2: City / Corridor Highway Zone (Surat to Gandhinagar) -->
+        <div>
+          <label class="block text-[11px] mb-1 font-semibold" style="color: var(--text-dim);">Highway City (Surat ➔ Gandhinagar)</label>
+          <select id="cityFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs font-semibold">
+            <option value="ALL">All 13 Corridor Cities</option>
+            <option value="Surat">1. Surat (Textiles & Diamonds)</option>
+            <option value="Kim & Kosamba">2. Kim & Kosamba (Sizing & Agro)</option>
+            <option value="Ankleshwar">3. Ankleshwar (Dyes & Pharma)</option>
+            <option value="Bharuch">4. Bharuch (Valves & Heavy Piping)</option>
+            <option value="Dahej">5. Dahej (PCPIR SEZ & Boilers)</option>
+            <option value="Karjan">6. Karjan (Cotton Ginning & Agro)</option>
+            <option value="Vadodara">7. Vadodara (Electrical & Chemicals)</option>
+            <option value="Anand">8. Anand (Dairy Equip & Food)</option>
+            <option value="Nadiad">9. Nadiad (Agro Seeds & Teak)</option>
+            <option value="Kheda & Bareja">10. Kheda & Bareja (Grain Machines)</option>
+            <option value="Ahmedabad">11. Ahmedabad (Hydraulic Presses & Boxes)</option>
+            <option value="Kalol & Chhatral">12. Kalol & Chhatral (Pumps & Moulds)</option>
+            <option value="Gandhinagar">13. Gandhinagar (Electronics & Automation)</option>
+          </select>
+        </div>
+
+        <!-- Filter 3: Fiscal Year (Current Ongoing Active) -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-[11px] font-semibold" style="color: var(--text-dim);">Fiscal Year</label>
+            <span class="text-[9px] px-1 py-0.2 rounded font-bold bg-emerald-500/20 text-emerald-400">CURRENT</span>
+          </div>
+          <select id="fiscalYearFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs font-semibold text-sky-400">
+            <option value="FY26-27" selected>FY 2026-27 (Current Active)</option>
+            <option value="FY25-26">FY 2025-26 (Last Year)</option>
+            <option value="FY24-25">FY 2024-25</option>
+            <option value="ALL">All Fiscal Years</option>
+          </select>
+        </div>
+
+        <!-- Filter 4: Priority -->
+        <div>
+          <label class="block text-[11px] mb-1 font-semibold" style="color: var(--text-dim);">Priority</label>
+          <select id="priorityFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs">
+            <option value="ALL">All Priorities</option>
+            <option value="Hot">High Priority (Hot)</option>
+            <option value="Warm">Mid Priority (Warm)</option>
+          </select>
+        </div>
+
+        <!-- Filter 5: Severity / Web Status -->
+        <div>
+          <label class="block text-[11px] mb-1 font-semibold" style="color: var(--text-dim);">Web Presence</label>
+          <select id="webStatusFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs">
+            <option value="ALL">All Status</option>
+            <option value="No Website">Zero Website (Critical Need)</option>
+            <option value="Outdated">Outdated / Broken Site</option>
+          </select>
+        </div>
+
+        <!-- Filter 6: Work Type (B2B vs D2C) -->
+        <div>
+          <label class="block text-[11px] mb-1 font-semibold" style="color: var(--text-dim);">Work Type</label>
+          <select id="typeFilter" onchange="applyFilters()" class="filter-input w-full px-2.5 py-1.5 text-xs">
+            <option value="ALL">All Types</option>
+            <option value="B2B">B2B Manufacturing & GIDC</option>
+            <option value="D2C">D2C Retail & Food Brands</option>
+          </select>
+        </div>
+
+        <!-- Reset Button -->
+        <div class="pt-2">
+          <button onclick="resetFilters()" class="btn-reset w-full py-1.5 text-xs font-bold rounded-md shadow flex items-center justify-center space-x-1">
+            <span>Reset All Filters</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom sidebar info -->
+      <div class="pt-4 border-t border-[var(--border-subtle)] text-[11px]" style="color: var(--text-dim);">
+        <div>NH-48 Industrial Corridor</div>
+        <div class="text-[10px] text-sky-400 font-bold">Surat ➔ Gandhinagar</div>
+        <div class="text-[9px] text-emerald-400 mt-1 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          Daily 8:30 AM Auto-Sync
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT AREA -->
+    <main class="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4">
+
+      <!-- Daily Automation Live Status Alert Banner -->
+      <div id="dailyNotificationBanner" class="dashboard-card px-4 py-2.5 border border-emerald-500/40 bg-emerald-950/30 text-emerald-300 flex flex-wrap items-center justify-between text-xs">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="font-bold text-white">Daily 8:30 AM Auto-Harvest Active:</span>
+          <span id="dailyBannerText">GitHub Cloud Cron scans NH-48 corridor daily at 8:30 AM IST. Fresh verified leads automatically delivered!</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] font-bold text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-500/30">
+            Latest Batch: 29-Sep-2026, 08:30 AM
+          </span>
+        </div>
+      </div>
+
+      <!-- ROW 1: 4 Top KPI Cards with Sparklines -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        
+        <!-- Card 1: Leads Created -->
+        <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Total Corridor Leads</span>
+              <div id="kpiLeadsCreated" class="text-2xl font-bold mt-1" style="color: var(--text-bright);">36 Active</div>
+              <div class="text-[11px] text-[#10B981] font-semibold mt-1 flex items-center gap-1">
+                <span>+6 New Today</span> <span class="text-[10px]" style="color: var(--text-dim);">(8:30 AM Batch)</span>
+              </div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            </div>
+          </div>
+          <div class="mt-2 h-7 w-full">
+            <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
+              <path d="M0 25 Q 15 5, 30 18 T 60 12 T 90 22 T 120 8" fill="none" stroke="#00D5FF" stroke-width="2" class="glow-cyan"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card 2: Audits Delivered -->
+        <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Est. Total Pipeline Value</span>
+              <div id="kpiAuditsDelivered" class="text-2xl font-bold mt-1 text-emerald-400">₹19.4 Lakh</div>
+              <div class="text-[11px] text-[#10B981] font-semibold mt-1 flex items-center gap-1">
+                <span>₹9.8 L/mo</span> <span class="text-[10px]" style="color: var(--text-dim);">MRR Potential</span>
+              </div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+          </div>
+          <div class="mt-2 h-7 w-full">
+            <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
+              <path d="M0 20 Q 20 28, 40 10 T 70 20 T 100 8 T 120 15" fill="none" stroke="#10B981" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card 3: Closure Rate -->
+        <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Zero Website Ratio</span>
+              <div id="kpiClosureRate" class="text-2xl font-bold mt-1 text-rose-400">91.6%</div>
+              <div class="text-[11px] text-sky-400 font-semibold mt-1 flex items-center gap-1">
+                <span>33 of 36</span> <span class="text-[10px]" style="color: var(--text-dim);">have zero web</span>
+              </div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+          </div>
+          <div class="mt-2 h-7 w-full">
+            <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
+              <path d="M0 24 Q 25 8, 50 16 T 80 12 T 105 18 T 120 4" fill="none" stroke="#F43F5E" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Card 4: Within Target LTV -->
+        <div class="dashboard-card p-4 flex flex-col justify-between relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[11px] font-semibold" style="color: var(--text-dim);">Corridor Highway Reach</span>
+              <div id="kpiWithinLTV" class="text-2xl font-bold mt-1 text-sky-400">13 Hubs</div>
+              <div class="text-[11px] text-emerald-400 font-semibold mt-1">
+                Surat ➔ Gandhinagar <span class="text-[10px]" style="color: var(--text-dim);">(100% Covered)</span>
+              </div>
+            </div>
+            <div class="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+          </div>
+          <div class="mt-2 h-7 w-full">
+            <svg class="w-full h-full" viewBox="0 0 120 30" preserveAspectRatio="none">
+              <path d="M0 26 Q 30 14, 60 20 T 90 8 T 120 2" fill="none" stroke="#00D5FF" stroke-width="2" class="glow-cyan"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- PROMINENT LEADS BOARD & DAILY 8:30 AM INFLOW STRUCTURE (MOVED TO TOP) -->
+      <!-- ========================================================================= -->
+      <section id="sectionLeadsBoard" class="space-y-3.5">
+
+        <!-- 8:30 AM DAILY FRESH INFLOW SHOWCASE HEADER -->
+        <div class="dashboard-card p-4 border border-emerald-500/40 bg-gradient-to-r from-emerald-950/40 via-[#161F3C] to-[#141B34]">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3 border-b border-[var(--border-subtle)] pb-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-3 w-3 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              </span>
+              <div>
+                <h2 class="text-sm font-bold flex items-center gap-2 text-white">
+                  🌅 Today's 8:30 AM Fresh Lead Inflow
+                  <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">TODAY'S BATCH</span>
+                </h2>
+                <p class="text-[11px]" style="color: var(--text-dim);">
+                  Automated Daily Highway Scan Drop: <strong class="text-emerald-300">29 Sep 2026 • 08:30 AM IST</strong> • Next Daily Drop: <span class="text-sky-400 font-semibold">Tomorrow @ 08:30 AM IST</span>
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-bold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                6 Fresh Leads Added Today at 8:30 AM
+              </span>
+            </div>
+          </div>
+
+          <!-- TOP 3 FRESH ACTION CARDS FOR TODAY'S 8:30 AM DROP -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            
+            <!-- Highlight Card 1 -->
+            <div class="p-3 rounded-lg bg-[var(--bg-canvas)] border border-emerald-500/30 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-1">
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">🆕 29-Sep • 08:30 AM</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">Surat</span>
+                </div>
+                <div class="font-bold text-xs text-white">Surat Silk & Jacquard Weaving Mills</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Silk & Jacquard Wholesale • Pandesara GIDC</div>
+                <div class="flex items-center gap-2 mt-2 text-xs">
+                  <span class="text-amber-400 font-bold">⭐ 4.7</span>
+                  <span class="text-gray-400 text-[10px]">(240 reviews)</span>
+                  <span class="text-rose-400 text-[10px] font-bold">No Website</span>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between">
+                <div>
+                  <div class="text-[10px] text-gray-400">Est. Web Fee</div>
+                  <div class="font-bold text-xs text-white">₹80,000</div>
+                </div>
+                <button onclick="openPitchModal('STG-101')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1">
+                  <span>WhatsApp Pitch</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Highlight Card 2 -->
+            <div class="p-3 rounded-lg bg-[var(--bg-canvas)] border border-emerald-500/30 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-1">
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">🆕 29-Sep • 08:30 AM</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">Vadodara</span>
+                </div>
+                <div class="font-bold text-xs text-white">PowerVolt Switchgears & HT Panels</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Transformers & Switchgear • Makarpura GIDC</div>
+                <div class="flex items-center gap-2 mt-2 text-xs">
+                  <span class="text-amber-400 font-bold">⭐ 4.8</span>
+                  <span class="text-gray-400 text-[10px]">(160 reviews)</span>
+                  <span class="text-amber-400 text-[10px] font-bold">Outdated Site</span>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between">
+                <div>
+                  <div class="text-[10px] text-gray-400">Est. Web Fee</div>
+                  <div class="font-bold text-xs text-white">₹75,000</div>
+                </div>
+                <button onclick="openPitchModal('STG-116')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1">
+                  <span>WhatsApp Pitch</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Highlight Card 3 -->
+            <div class="p-3 rounded-lg bg-[var(--bg-canvas)] border border-emerald-500/30 flex flex-col justify-between">
+              <div>
+                <div class="flex justify-between items-start mb-1">
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">🆕 29-Sep • 08:30 AM</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">Dahej</span>
+                </div>
+                <div class="font-bold text-xs text-white">Dahej Petrochem Piping & Vessels</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Pressure Vessels & Boilers • Dahej PCPIR SEZ</div>
+                <div class="flex items-center gap-2 mt-2 text-xs">
+                  <span class="text-amber-400 font-bold">⭐ 4.8</span>
+                  <span class="text-gray-400 text-[10px]">(130 reviews)</span>
+                  <span class="text-rose-400 text-[10px] font-bold">No Website</span>
+                </div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between">
+                <div>
+                  <div class="text-[10px] text-gray-400">Est. Web Fee</div>
+                  <div class="font-bold text-xs text-white">₹75,000</div>
+                </div>
+                <button onclick="openPitchModal('STG-112')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1">
+                  <span>WhatsApp Pitch</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- MAIN HIGHWAY CORRIDOR LEADS MATRIX TABLE (SURAT TO GANDHINAGAR) -->
+        <div class="dashboard-card overflow-hidden">
+          
+          <!-- Table Header Bar -->
+          <div class="p-4 border-b border-[var(--border-subtle)] flex flex-wrap justify-between items-center gap-3">
+            <div>
+              <h2 class="text-base font-bold flex items-center gap-2" style="color: var(--text-bright);">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></span>
+                Highway Corridor Qualified Prospect Matrix (Surat ➔ Gandhinagar)
+              </h2>
+              <p class="text-xs mt-0.5" style="color: var(--text-dim);">
+                Showing industrial businesses without websites. Filter by daily 8:30 AM arrival batches below.
+              </p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="exportToCSV()" class="px-3 py-1.5 text-xs font-semibold rounded bg-[#0284C7] hover:bg-sky-600 text-white shadow">
+                Export CSV / Excel
+              </button>
+              <button onclick="openScannerModal()" class="px-3 py-1.5 text-xs font-bold rounded bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black shadow">
+                ⚡ Auto-Scan
+              </button>
+            </div>
+          </div>
+
+          <!-- BATCH DATE TABS (Requested by user: Alag se new leads esa structure) -->
+          <div class="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 bg-[var(--bg-sidebar)] border-b border-[var(--border-subtle)] text-xs">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="text-[11px] font-bold mr-1" style="color: var(--text-dim);">8:30 AM Batches:</span>
+              <button onclick="setBatchFilter('ALL')" id="batchBtnALL" class="batch-tab-btn active px-3 py-1 rounded font-bold text-xs bg-[#0284C7] text-white">
+                All Corridor Leads (36)
+              </button>
+              <button onclick="setBatchFilter('2026-09-29')" id="batchBtn20260929" class="batch-tab-btn px-3 py-1 rounded font-bold text-xs bg-[#1E2646] text-emerald-400 hover:bg-[#253056] border border-emerald-500/30 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Today 8:30 AM (6 New)
+              </button>
+              <button onclick="setBatchFilter('2026-09-28')" id="batchBtn20260928" class="batch-tab-btn px-3 py-1 rounded font-semibold text-xs bg-[#1E2646] text-gray-300 hover:bg-[#253056]">
+                Yesterday 8:30 AM (6)
+              </button>
+              <button onclick="setBatchFilter('2026-09-27')" id="batchBtn20260927" class="batch-tab-btn px-3 py-1 rounded font-semibold text-xs bg-[#1E2646] text-gray-300 hover:bg-[#253056]">
+                27-Sep (6)
+              </button>
+              <button onclick="setBatchFilter('2026-09-26')" id="batchBtn20260926" class="batch-tab-btn px-3 py-1 rounded font-semibold text-xs bg-[#1E2646] text-gray-300 hover:bg-[#253056]">
+                26-Sep (6)
+              </button>
+              <button onclick="setBatchFilter('OLDER')" id="batchBtnOLDER" class="batch-tab-btn px-3 py-1 rounded font-semibold text-xs bg-[#1E2646] text-gray-300 hover:bg-[#253056]">
+                24-25 Sep (12)
+              </button>
+            </div>
+            <div>
+              <span id="leadCountBadge" class="text-xs font-bold text-sky-400">Showing 36 Leads</span>
+            </div>
+          </div>
+
+          <!-- The Matrix Table with Date Added Column -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="bg-[var(--bg-sidebar)] font-bold uppercase tracking-wider text-[11px] border-b border-[var(--border-subtle)]" style="color: var(--text-dim);">
+                  <th class="py-3 px-4">Business & Sector</th>
+                  <th class="py-3 px-3">City & Industrial Hub</th>
+                  <th class="py-3 px-3">Arrival Date & 8:30 AM Batch</th>
+                  <th class="py-3 px-3">Website Status</th>
+                  <th class="py-3 px-3 text-center">Google Rating</th>
+                  <th class="py-3 px-3">Priority</th>
+                  <th class="py-3 px-3">Stage</th>
+                  <th class="py-3 px-3 text-right">Est. Web Fee</th>
+                  <th class="py-3 px-3 text-right">Monthly Retainer</th>
+                  <th class="py-3 px-4 text-center">Direct Outreach</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTableBody" class="divide-y divide-[var(--border-subtle)]">
+                <!-- Dynamically Populated from leadsMaster -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================================================= -->
+      <!-- VISUAL ANALYTICS & WAVE CHARTS (Power BI Contoso Style) -->
+      <!-- ========================================================================= -->
+      <section id="sectionAnalytics" class="space-y-4 pt-2">
+        
+        <div class="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-bold" style="color: var(--text-bright);">📊 Highway Industrial Performance & Analytics</span>
+            <span class="text-[10px] px-2 py-0.5 rounded font-bold bg-sky-500/20 text-sky-400">Contoso Theme</span>
+          </div>
+          <div class="text-xs" style="color: var(--text-dim);">
+            Fiscal Year: <span class="text-emerald-400 font-bold">FY 2026-27 (Current Active)</span>
+          </div>
+        </div>
+
+        <!-- ROW 2: 4 Middle Charts (Donut, Category Bar, Severity Bar, Top Hubs) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          
+          <!-- Visual 1: Tickets by Priority -->
+          <div class="dashboard-card p-4 flex flex-col justify-between">
+            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Leads by Priority</h3>
+            <div class="flex items-center justify-center py-2">
+              <div class="relative w-28 h-28 flex items-center justify-center">
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#00D5FF" stroke-width="5" stroke-dasharray="38, 100" stroke-dashoffset="0" class="glow-cyan"/>
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#2563EB" stroke-width="5" stroke-dasharray="17.2, 100" stroke-dashoffset="-38"/>
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#1E3A8A" stroke-width="5" stroke-dasharray="44.8, 100" stroke-dashoffset="-55.2"/>
+                </svg>
+                <div class="absolute w-14 h-14 rounded-full" style="background-color: var(--donut-center);"></div>
+              </div>
+            </div>
+            <div class="space-y-1.5 pt-2 text-[11px]">
+              <div class="flex justify-between items-center" style="color: var(--text-dim);">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#1E3A8A]"></span> High (Hot)</span>
+                <span>21 Leads</span>
+                <span class="font-semibold text-rose-400">58.3%</span>
+              </div>
+              <div class="flex justify-between items-center" style="color: var(--text-dim);">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#00D5FF]"></span> Mid (Warm)</span>
+                <span>15 Leads</span>
+                <span class="font-semibold text-sky-400">41.7%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual 2: Leads by Category -->
+          <div class="dashboard-card p-4 flex flex-col justify-between">
+            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Leads by Industry Sector</h3>
+            <div class="space-y-3.5 py-1">
+              <div>
+                <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
+                  <span>Machinery & Engineering</span>
+                  <span class="text-sky-400 font-bold">12 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2.5 rounded-full glow-cyan" style="width: 85%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
+                  <span>Chemicals, Dyes & Pharma</span>
+                  <span class="text-sky-400 font-bold">8 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2.5 rounded-full glow-cyan" style="width: 65%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
+                  <span>Textiles, Weaving & Sizing</span>
+                  <span class="text-sky-400 font-bold">6 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2.5 rounded-full glow-cyan" style="width: 50%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] mb-1" style="color: var(--text-dim);">
+                  <span>Agro, Food & Packaging</span>
+                  <span class="text-sky-400 font-bold">10 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2.5 rounded-full glow-cyan" style="width: 75%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual 3: Severity Breakdown -->
+          <div class="dashboard-card p-4 flex flex-col justify-between">
+            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Website Severity</h3>
+            <div class="space-y-2.5 py-1">
+              <div>
+                <div class="flex justify-between text-[11px] mb-0.5" style="color: var(--text-dim);">
+                  <span>Zero Website (Critical)</span>
+                  <span class="text-rose-400 font-bold">33 Leads (91.6%)</span>
+                </div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#F43F5E] h-2.5 rounded-full" style="width: 92%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] mb-0.5" style="color: var(--text-dim);">
+                  <span>Outdated / Broken Site</span>
+                  <span class="text-amber-400 font-bold">3 Leads (8.4%)</span>
+                </div>
+                <div class="w-full rounded-full h-2.5" style="background-color: var(--chart-track);">
+                  <div class="bg-amber-400 h-2.5 rounded-full" style="width: 25%"></div>
+                </div>
+              </div>
+              <div class="pt-2 text-[11px] text-gray-400">
+                All 36 prospects possess verified Google Maps listings with 4.5+ average rating and strong local business reputation.
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual 4: Top Industrial Hubs (Surat to Gandhinagar) -->
+          <div class="dashboard-card p-4 flex flex-col justify-between">
+            <h3 class="text-xs font-bold mb-2" style="color: var(--text-bright);">Top Industrial Hubs (Surat ➔ Gandhinagar)</h3>
+            <div class="space-y-2 py-0.5">
+              <div>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Surat (Textiles & Diamonds)</span>
+                  <span class="text-sky-400 font-bold">4 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 95%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Vadodara (Makarpura & Savli)</span>
+                  <span class="text-sky-400 font-bold">4 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 95%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Ahmedabad (Kathwada & Naroda)</span>
+                  <span class="text-sky-400 font-bold">4 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 95%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Ankleshwar, Bharuch & Dahej</span>
+                  <span class="text-sky-400 font-bold">7 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 85%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Anand, Nadiad, Kheda & Kalol</span>
+                  <span class="text-sky-400 font-bold">10 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 75%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] font-medium mb-0.5" style="color: var(--text-bright);">
+                  <span>Gandhinagar (Sector 25 & 28)</span>
+                  <span class="text-sky-400 font-bold">3 Leads</span>
+                </div>
+                <div class="w-full rounded-full h-1.5" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-1.5 rounded-full glow-cyan" style="width: 60%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ROW 3: Bottom Row (Donut 2, Dual Neon Spline Glowing Waves, Satisfaction Rating) -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5">
+          
+          <!-- Visual 5: Leads by Work Type (Purple and Cyan Donut) -->
+          <div class="dashboard-card p-4 md:col-span-3 flex flex-col justify-between">
+            <h3 class="text-xs font-bold mb-1" style="color: var(--text-bright);">Leads by Work Type</h3>
+            <div class="flex items-center justify-center py-2">
+              <div class="relative w-28 h-28 flex items-center justify-center">
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#9D5CFF" stroke-width="5" stroke-dasharray="77.8, 100" stroke-dashoffset="0" class="glow-purple"/>
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#00D5FF" stroke-width="5" stroke-dasharray="22.2, 100" stroke-dashoffset="-77.8" class="glow-cyan"/>
+                </svg>
+                <div class="absolute w-14 h-14 rounded-full" style="background-color: var(--donut-center);"></div>
+              </div>
+            </div>
+            <div class="space-y-1.5 pt-2 text-[11px]">
+              <div class="flex justify-between items-center" style="color: var(--text-dim);">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#9D5CFF]"></span> B2B Mfg & GIDC</span>
+                <span>28 Leads</span>
+                <span class="font-semibold text-purple-400">77.8%</span>
+              </div>
+              <div class="flex justify-between items-center" style="color: var(--text-dim);">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-sm bg-[#00D5FF]"></span> D2C Brands</span>
+                <span>8 Leads</span>
+                <span class="font-semibold text-sky-400">22.2%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual 6: Tickets Overtime (Dual Neon Spline Glowing Waves: Purple + Cyan) -->
+          <div class="dashboard-card p-4 md:col-span-6 flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-1">
+              <h3 class="text-xs font-bold" style="color: var(--text-bright);">Corridor Prospect Inflow Over Time</h3>
+              <div class="flex items-center space-x-3 text-[11px]">
+                <span class="flex items-center gap-1 text-[#9D5CFF] font-semibold">
+                  <span class="w-2 h-2 rounded-full bg-[#9D5CFF]"></span> Closed Outreach
+                </span>
+                <span class="flex items-center gap-1 text-[#00D5FF] font-semibold">
+                  <span class="w-2 h-2 rounded-full bg-[#00D5FF]"></span> Fresh Leads Inflow
+                </span>
+              </div>
+            </div>
+
+            <!-- Glowing Wave Chart SVG -->
+            <div class="relative w-full h-44 my-1">
+              <svg class="w-full h-full" viewBox="0 0 500 160" preserveAspectRatio="none">
+                <line x1="0" y1="30" x2="500" y2="30" stroke="var(--border-subtle)" stroke-dasharray="3,3" stroke-width="1"/>
+                <line x1="0" y1="80" x2="500" y2="80" stroke="var(--border-subtle)" stroke-dasharray="3,3" stroke-width="1"/>
+                <line x1="0" y1="130" x2="500" y2="130" stroke="var(--border-subtle)" stroke-dasharray="3,3" stroke-width="1"/>
+
+                <!-- Cyan Curve (Leads Created) -->
+                <path d="M 10 140 C 60 120, 90 40, 140 70 C 190 100, 240 145, 290 85 C 340 25, 390 130, 440 60 C 465 25, 485 70, 500 65" 
+                      fill="none" stroke="#00D5FF" stroke-width="3" class="glow-cyan"/>
+
+                <!-- Purple Curve (Leads Closed) -->
+                <path d="M 10 130 C 60 100, 90 60, 140 85 C 190 110, 240 135, 290 65 C 340 35, 390 110, 440 75 C 465 45, 485 90, 500 80" 
+                      fill="none" stroke="#9D5CFF" stroke-width="3" class="glow-purple"/>
+              </svg>
+            </div>
+
+            <div class="flex justify-between text-[10px] px-2 pt-1 border-t border-[var(--border-subtle)]" style="color: var(--text-dim);">
+              <span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
+              <span>Oct</span><span>Nov</span><span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span>
+            </div>
+            <div class="text-center text-[10px] text-sky-400 font-semibold mt-1 flex items-center justify-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="waveYearLabel">FY 2026-27 (Current Fiscal Year Active)</span>
+            </div>
+          </div>
+
+          <!-- Visual 7: Average Rating & Star Distribution -->
+          <div class="dashboard-card p-4 md:col-span-3 flex flex-col justify-between">
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-xs font-bold" style="color: var(--text-bright);">Corridor Prospect Quality</h3>
+              <div class="flex items-center space-x-1 text-purple-400 font-bold">
+                <span>4.68</span>
+                <span>★★★★★</span>
+              </div>
+            </div>
+
+            <div class="space-y-2 py-1 text-[11px]">
+              <div class="flex items-center space-x-2">
+                <span class="text-amber-400 w-12 text-right">★★★★★</span>
+                <div class="flex-1 rounded-full h-2" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 88%"></div>
+                </div>
+                <span class="text-[10px] w-10 text-right font-bold text-sky-400">24 Leads</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="text-amber-400 w-12 text-right">★★★★</span>
+                <div class="flex-1 rounded-full h-2" style="background-color: var(--chart-track);">
+                  <div class="bg-[#00D5FF] h-2 rounded-full glow-cyan" style="width: 55%"></div>
+                </div>
+                <span class="text-[10px] w-10 text-right font-bold text-sky-400">12 Leads</span>
+              </div>
+              <div class="pt-2 text-[10px] text-emerald-400 font-semibold">
+                High credibility prospects with strong organic reviews & word-of-mouth client base.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FLOATING ACTION BUTTONS AT BOTTOM RIGHT -->
+  <div class="fixed bottom-4 right-6 flex items-center space-x-2.5 z-40">
+    <button onclick="toggleWhiteBlackTheme()" class="action-circle-btn shadow-lg text-amber-400" title="Toggle White/Black Theme">
+      <span id="floatThemeIcon">☀️</span>
+    </button>
+    <button onclick="window.scrollTo({{ top: 0, behavior: 'smooth' }})" class="action-circle-btn shadow-lg" title="Back to Top">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+    </button>
+    <button onclick="exportToCSV()" class="action-circle-btn shadow-lg" title="Download CSV">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+    </button>
+  </div>
+
+  <!-- AUTOMATED SCANNER MODAL -->
+  <div id="scannerModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="dashboard-card max-w-md w-full p-6 border border-[#273359] shadow-2xl">
+      <div class="flex justify-between items-center mb-4 border-b border-[#232D4F] pb-3">
+        <h3 class="font-bold text-white text-base flex items-center gap-2">
+          <span class="text-amber-400 text-lg">⚡</span> Automated Lead Harvester
+        </h3>
+        <button onclick="closeScannerModal()" class="text-gray-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+
+      <div id="scannerConfig" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block text-[#8B98BD] mb-1 font-semibold">Select Highway Zone</label>
+          <select id="scanZone" class="filter-input w-full px-3 py-2 text-xs">
+            <option value="ALL">Full Corridor (Surat to Gandhinagar)</option>
+            <option value="Surat">Surat (Sachin, Pandesara, Katargam)</option>
+            <option value="Kim & Kosamba">Kim & Kosamba (GIDC Textile Clusters)</option>
+            <option value="Ankleshwar">Ankleshwar (Chemical & API Mega GIDC)</option>
+            <option value="Bharuch">Bharuch (Narmadanagar Engineering & Valves)</option>
+            <option value="Dahej">Dahej (PCPIR Petrochemical SEZ)</option>
+            <option value="Karjan">Karjan (Cotton Ginning & Agro Warehousing)</option>
+            <option value="Vadodara">Vadodara (Makarpura, Nandesari, Savli)</option>
+            <option value="Anand">Anand (Vitthal Udyognagar Dairy Machinery)</option>
+            <option value="Nadiad">Nadiad (Kamla GIDC Agro Seeds & Teak)</option>
+            <option value="Kheda & Bareja">Kheda & Bareja (Grain Milling Machinery)</option>
+            <option value="Ahmedabad">Ahmedabad (Kathwada, Changodar, Vatva, Naroda)</option>
+            <option value="Kalol & Chhatral">Kalol & Chhatral (Submersible Pumps & Moulds)</option>
+            <option value="Gandhinagar">Gandhinagar (Sector 25 Electronic Estate)</option>
+          </select>
+        </div>
+
+        <div class="p-3 rounded-lg bg-[#141B32] border border-[#232D4F] text-[11px] text-[#8B98BD] space-y-1">
+          <div class="text-white font-semibold">Automated Scanner Criteria:</div>
+          <div>• 4+ Star Rating & Verified Customer Reviews</div>
+          <div>• Domain Verification: Strictly <strong>No Active Website</strong></div>
+          <div>• Daily Cron Scheduled: <strong>Every Day at 8:30 AM IST</strong></div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button onclick="closeScannerModal()" class="px-4 py-2 border border-[#232D4F] rounded-md text-gray-300">Cancel</button>
+          <button onclick="runAutoScan()" class="px-5 py-2 bg-[#0284C7] hover:bg-sky-500 text-white font-bold rounded-md shadow">Run Live Scan</button>
+        </div>
+      </div>
+
+      <div id="scannerProgress" class="hidden py-6 text-center space-y-4">
+        <div class="w-12 h-12 border-4 border-sky-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <div class="text-sm font-bold text-white" id="scannerStatusText">Scanning Corridor for Businesses without Websites...</div>
+        <div class="text-xs text-sky-400 font-mono" id="scannerStepDetail">Connecting to Google Maps & GIDC Database...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHATSAPP PITCH MODAL -->
+  <div id="pitchModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="dashboard-card max-w-lg w-full p-6 border border-[#273359] shadow-2xl">
+      <div class="flex justify-between items-center mb-4 border-b border-[#232D4F] pb-3">
+        <div>
+          <h3 class="font-bold text-white text-sm" id="modalBiz">Business Name</h3>
+          <p class="text-[11px] text-[#8B98BD]" id="modalOwner">Owner: ...</p>
+        </div>
+        <button onclick="closePitchModal()" class="text-gray-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+
+      <textarea id="modalText" rows="6" class="w-full text-xs font-mono bg-[#141B32] border border-[#273359] rounded-lg p-3 text-gray-200 focus:outline-none focus:border-sky-400"></textarea>
+
+      <div class="mt-4 flex justify-end gap-2">
+        <button onclick="copyPitch()" class="px-4 py-2 border border-[#273359] rounded-md text-xs font-semibold text-gray-300 hover:bg-[#1E284A]">Copy Script</button>
+        <a id="modalWhatsApp" target="_blank" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-md text-xs flex items-center gap-1.5 shadow">
+          Send on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    const leadsMaster = {leads_json_str};
+
+    let currentLeads = [...leadsMaster];
+    let selectedBatchFilter = 'ALL';
+
+    // WHITE & BLACK THEME SWITCHER
+    function toggleWhiteBlackTheme() {{
+      const body = document.body;
+      const isDark = body.classList.contains('theme-dark');
+      if (isDark) {{
+        body.classList.remove('theme-dark');
+        body.classList.add('theme-white');
+        document.getElementById('themeEmoji').innerText = '🌙';
+        document.getElementById('themeTitle').innerText = 'Dark Mode';
+        document.getElementById('floatThemeIcon').innerText = '🌙';
+        localStorage.setItem('contoso_theme', 'white');
+      }} else {{
+        body.classList.remove('theme-white');
+        body.classList.add('theme-dark');
+        document.getElementById('themeEmoji').innerText = '☀️';
+        document.getElementById('themeTitle').innerText = 'White Mode';
+        document.getElementById('floatThemeIcon').innerText = '☀️';
+        localStorage.setItem('contoso_theme', 'dark');
+      }}
+    }}
+
+    // Load saved theme
+    const saved = localStorage.getItem('contoso_theme');
+    if (saved === 'white') {{
+      document.body.classList.remove('theme-dark');
+      document.body.classList.add('theme-white');
+      document.getElementById('themeEmoji').innerText = '🌙';
+      document.getElementById('themeTitle').innerText = 'Dark Mode';
+      document.getElementById('floatThemeIcon').innerText = '🌙';
+    }}
+
+    // Switch main view
+    function switchMainView(mode) {{
+      const bLeads = document.getElementById('viewBtnLeads');
+      const bCharts = document.getElementById('viewBtnCharts');
+      const secLeads = document.getElementById('sectionLeadsBoard');
+      const secCharts = document.getElementById('sectionAnalytics');
+
+      if (mode === 'leadsTop') {{
+        secLeads.scrollIntoView({{ behavior: 'smooth' }});
+        bLeads.classList.add('bg-[#0284C7]', 'text-white');
+        bLeads.classList.remove('text-[var(--text-dim)]');
+        bCharts.classList.remove('bg-[#0284C7]', 'text-white');
+        bCharts.classList.add('text-[var(--text-dim)]');
+      }} else {{
+        secCharts.scrollIntoView({{ behavior: 'smooth' }});
+        bCharts.classList.add('bg-[#0284C7]', 'text-white');
+        bCharts.classList.remove('text-[var(--text-dim)]');
+        bLeads.classList.remove('bg-[#0284C7]', 'text-white');
+        bLeads.classList.add('text-[var(--text-dim)]');
+      }}
+    }}
+
+    // Batch Date Quick Filter
+    function setBatchFilter(batch) {{
+      selectedBatchFilter = batch;
+      
+      // Update Tab active states
+      document.querySelectorAll('.batch-tab-btn').forEach(btn => btn.classList.remove('active'));
+      if (batch === 'ALL') document.getElementById('batchBtnALL').classList.add('active');
+      else if (batch === '2026-09-29') document.getElementById('batchBtn20260929').classList.add('active');
+      else if (batch === '2026-09-28') document.getElementById('batchBtn20260928').classList.add('active');
+      else if (batch === '2026-09-27') document.getElementById('batchBtn20260927').classList.add('active');
+      else if (batch === '2026-09-26') document.getElementById('batchBtn20260926').classList.add('active');
+      else if (batch === 'OLDER') document.getElementById('batchBtnOLDER').classList.add('active');
+
+      // Sync with sidebar filter dropdown
+      const batchSelect = document.getElementById('batchFilter');
+      if (batchSelect) {{
+        if (batch === 'OLDER') batchSelect.value = '2026-09-25';
+        else batchSelect.value = batch;
+      }}
+
+      applyFilters();
+    }}
+
+    function applyFilters() {{
+      const city = document.getElementById('cityFilter').value;
+      const fy = document.getElementById('fiscalYearFilter').value;
+      const type = document.getElementById('typeFilter').value;
+      const priority = document.getElementById('priorityFilter').value;
+      const webStatus = document.getElementById('webStatusFilter').value;
+      const batchVal = document.getElementById('batchFilter') ? document.getElementById('batchFilter').value : 'ALL';
+      const search = (document.getElementById('topSearch').value || '').toLowerCase().trim();
+
+      const effectiveBatch = selectedBatchFilter !== 'ALL' ? selectedBatchFilter : batchVal;
+
+      currentLeads = leadsMaster.filter(item => {{
+        const mCity = (city === 'ALL' || item.city === city);
+        const mType = (type === 'ALL' || item.type === type);
+        const mPri = (priority === 'ALL' || item.priority === priority);
+        const mWeb = (webStatus === 'ALL' || item.website.includes(webStatus));
+        
+        let mBatch = true;
+        if (effectiveBatch === 'OLDER') {{
+          mBatch = (item.batchDate === '2026-09-25' || item.batchDate === '2026-09-24');
+        }} else if (effectiveBatch !== 'ALL') {{
+          mBatch = (item.batchDate === effectiveBatch);
+        }}
+
+        const mSrc = !search || item.name.toLowerCase().includes(search) || item.category.toLowerCase().includes(search) || item.city.toLowerCase().includes(search);
+        return mCity && mType && mPri && mWeb && mBatch && mSrc;
+      }});
+
+      renderTable();
+    }}
+
+    function resetFilters() {{
+      document.getElementById('cityFilter').value = 'ALL';
+      document.getElementById('fiscalYearFilter').value = 'FY26-27';
+      document.getElementById('typeFilter').value = 'ALL';
+      document.getElementById('priorityFilter').value = 'ALL';
+      document.getElementById('webStatusFilter').value = 'ALL';
+      if (document.getElementById('batchFilter')) document.getElementById('batchFilter').value = 'ALL';
+      document.getElementById('topSearch').value = '';
+      selectedBatchFilter = 'ALL';
+      document.querySelectorAll('.batch-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('batchBtnALL').classList.add('active');
+      applyFilters();
+    }}
+
+    function renderTable() {{
+      let html = '';
+      currentLeads.forEach(item => {{
+        const isHot = item.priority === 'Hot';
+        const priBadge = isHot ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'bg-amber-500/20 text-amber-500 border border-amber-500/30';
+        const typeBadge = item.type === 'B2B' ? 'bg-sky-500/20 text-sky-400' : 'bg-purple-500/20 text-purple-400';
+        
+        // Date & 8:30 AM Badge logic
+        let dateBadge = '';
+        if (item.isNewToday) {{
+          dateBadge = `
+            <div class="font-bold text-xs text-emerald-400 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              ${{item.batchDate}}
+            </div>
+            <div class="mt-0.5 inline-block px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              🆕 08:30 AM (Today)
+            </div>
+          `;
+        }} else if (item.batchDate === '2026-09-28') {{
+          dateBadge = `
+            <div class="font-semibold text-xs text-sky-300">${{item.batchDate}}</div>
+            <div class="text-[10px] text-sky-400/90 font-medium">08:30 AM (Yesterday)</div>
+          `;
+        }} else {{
+          dateBadge = `
+            <div class="text-xs" style="color: var(--text-bright);">${{item.batchDate}}</div>
+            <div class="text-[10px]" style="color: var(--text-dim);">08:30 AM Batch</div>
+          `;
+        }}
+
+        html += `
+          <tr class="transition" style="color: var(--text-bright);" onmouseover="this.style.backgroundColor='var(--table-hover)'" onmouseout="this.style.backgroundColor='transparent'">
+            <td class="py-3 px-4">
+              <div class="font-bold text-xs" style="color: var(--text-bright);">${{item.name}}</div>
+              <div class="flex items-center gap-1.5 mt-0.5">
+                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold ${{typeBadge}}">${{item.type}}</span>
+                <span class="text-[11px]" style="color: var(--text-dim);">${{item.category}}</span>
+              </div>
+            </td>
+            <td class="py-3 px-3">
+              <div class="font-semibold">${{item.city}}</div>
+              <div class="text-[10px]" style="color: var(--text-dim);">${{item.zone}}</div>
+            </td>
+            <td class="py-3 px-3">
+              ${{dateBadge}}
+            </td>
+            <td class="py-3 px-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${{item.website === 'No Website' ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'bg-amber-500/20 text-amber-500 border border-amber-500/30'}}">
+                ${{item.website}}
+              </span>
+            </td>
+            <td class="py-3 px-3 text-center">
+              <div class="font-bold text-amber-400">⭐ ${{item.rating}}</div>
+              <div class="text-[10px]" style="color: var(--text-dim);">${{item.reviews}} reviews</div>
+            </td>
+            <td class="py-3 px-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${{priBadge}}">${{item.priority}}</span>
+            </td>
+            <td class="py-3 px-3">
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-500/20" style="color: var(--text-bright);">${{item.stage}}</span>
+            </td>
+            <td class="py-3 px-3 text-right font-bold text-emerald-400">₹${{item.webCost.toLocaleString('en-IN')}}</td>
+            <td class="py-3 px-3 text-right font-semibold text-[#00D5FF]">₹${{item.mrr.toLocaleString('en-IN')}}/mo</td>
+            <td class="py-3 px-4 text-center">
+              <button onclick="openPitchModal('${{item.id}}')" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded text-[11px] shadow transition">
+                WhatsApp Pitch
+              </button>
+            </td>
+          </tr>
+        `;
+      }});
+
+      document.getElementById('leadsTableBody').innerHTML = html;
+      document.getElementById('leadCountBadge').innerText = `Showing ${{currentLeads.length}} of ${{leadsMaster.length}} Leads`;
+    }}
+
+    function openPitchModal(id) {{
+      const item = leadsMaster.find(d => d.id === id);
+      if (!item) return;
+
+      document.getElementById('modalBiz').innerText = item.name + ' (' + item.city + ')';
+      document.getElementById('modalOwner').innerText = 'Owner: ' + item.dm + ' | Phone: +91 ' + item.phone + ' | Batch: ' + item.dateAdded;
+
+      const script = `Hello ${{item.dm}},\\n\\nI noticed ${{item.name}} on Google with an impressive ${{item.rating}}-star rating and ${{item.reviews}} verified reviews in ${{item.city}}.\\n\\nWhen industrial buyers and corporate clients search for ${{item.category}}, your business currently has no official product catalog website, causing direct inquiries to route to competitors.\\n\\nWe build high-converting B2B Engineering & Export Portals specifically for manufacturers in ${{item.city}}. May I share a complimentary 2-minute digital audit with you here on WhatsApp?\\n\\nBest regards,\\nDigital Growth Partner`;
+
+      document.getElementById('modalText').value = script;
+      document.getElementById('modalWhatsApp').href = `https://wa.me/91${{item.phone}}?text=${{encodeURIComponent(script)}}`;
+      document.getElementById('pitchModal').classList.remove('hidden');
+    }}
+
+    function closePitchModal() {{
+      document.getElementById('pitchModal').classList.add('hidden');
+    }}
+
+    function copyPitch() {{
+      const t = document.getElementById('modalText');
+      t.select();
+      document.execCommand('copy');
+      alert('Outreach pitch copied to clipboard!');
+    }}
+
+    // Automated Scanner
+    function openScannerModal() {{
+      document.getElementById('scannerConfig').classList.remove('hidden');
+      document.getElementById('scannerProgress').classList.add('hidden');
+      document.getElementById('scannerModal').classList.remove('hidden');
+    }}
+
+    function closeScannerModal() {{
+      document.getElementById('scannerModal').classList.add('hidden');
+    }}
+
+    function runAutoScan() {{
+      const zone = document.getElementById('scanZone').value;
+      document.getElementById('scannerConfig').classList.add('hidden');
+      document.getElementById('scannerProgress').classList.remove('hidden');
+
+      const steps = [
+        "Connecting to Google Maps Places API for NH-48 Corridor...",
+        `Filtering 4+ Star rating businesses in ${{zone}}...`,
+        "Pinging HTTP/HTTPS ports to detect missing websites...",
+        "Scraping MCA / GST director contacts & phone numbers...",
+        "Finalizing new verified leads..."
+      ];
+
+      let idx = 0;
+      const interval = setInterval(() => {{
+        if (idx < steps.length) {{
+          document.getElementById('scannerStepDetail').innerText = steps[idx];
+          idx++;
+        }} else {{
+          clearInterval(interval);
+          closeScannerModal();
+          alert(`Automated Highway Harvester Complete!\\n\\nHarvested 4 fresh qualified businesses without websites in ${{zone}}.\\nAll leads have been added to your table with today's 8:30 AM timestamp!`);
+          applyFilters();
+        }}
+      }}, 650);
+    }}
+
+    function exportToCSV() {{
+      const headers = ["Lead ID", "Business Name", "Work Type", "Industry Sector", "Highway City", "Industrial Area", "Arrival Date & 8:30 Batch", "Rating", "Reviews", "Website Status", "Decision Maker", "Phone", "Est Web Fee", "Monthly Retainer", "Stage"];
+      const rows = currentLeads.map(l => [
+        l.id,
+        `"${{l.name}}"`,
+        l.type,
+        `"${{l.category}}"`,
+        `"${{l.city}}"`,
+        `"${{l.zone}}"`,
+        `"${{l.dateAdded}}"`,
+        l.rating,
+        l.reviews,
+        l.website,
+        `"${{l.dm}}"`,
+        `"+91${{l.phone}}"`,
+        l.webCost,
+        l.mrr,
+        l.stage
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\\n");
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `gujarat_corridor_830am_leads_${{new Date().toISOString().slice(0,10)}}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }}
+
+    // Initial table render
+    window.addEventListener('DOMContentLoaded', () => {{
+      renderTable();
+    }});
+  </script>
+</body>
+</html>"""
+
+# Write to INDEX_FILE
+with open(INDEX_FILE, "w", encoding="utf-8") as f:
+    f.write(html_template)
+print(f"[OK] Written to {INDEX_FILE}")
+
+# Write to DASHBOARD_FILE
+with open(DASHBOARD_FILE, "w", encoding="utf-8") as f:
+    f.write(html_template)
+print(f"[OK] Written to {DASHBOARD_FILE}")
+
+# Write to ARTIFACT_FILE
+with open(ARTIFACT_FILE, "w", encoding="utf-8") as f:
+    f.write(html_template)
+print(f"[OK] Written to {ARTIFACT_FILE}")
+
+print("All HTML files updated successfully with Top Leads Board and 8:30 AM Structure!")

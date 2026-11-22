@@ -4,7 +4,7 @@ import { CORRIDOR_LEADS } from '../data/leadsData';
 // Google Places API Key Storage
 // ============================================================
 const GOOGLE_PLACES_API_KEY_STORAGE = 'corridor_google_places_api_key';
-const DEFAULT_GOOGLE_KEY = 'AIzaSyCfWUC9yV9aT7mvWSar6-o456Tfd9I5epw';
+const DEFAULT_GOOGLE_KEY = '';
 const STORAGE_KEY = 'corridor_leads_database_v4_gujarat';
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -467,58 +467,34 @@ export const apiService = {
       };
     }
 
-    // Synthesized harvester fallback
-    return this.synthesizeHarvesterLeads(cityName);
-  },
-
-  synthesizeHarvesterLeads(cityName) {
-    const cityCode = cityName.slice(0, 3).toUpperCase();
-    const dateStr = new Date().toISOString().slice(0, 10);
-    const isRaj = false;
-
-    const templates = [
-      { name: `${cityName} Precision Engineering & Tools`, category: 'CNC & Precision Machine Tooling', type: 'Engineering Hub', zone: `${cityName} GIDC Phase II`, cost: 32000, mrr: 4500, prio: 'Hot' },
-      { name: `Shree ${cityName} Polymers & Extrusions`, category: 'Plastics & Polymers Manufacturing', type: 'Extrusion Plant', zone: `${cityName} Industrial Estate`, cost: 24000, mrr: 3000, prio: 'Warm' },
-      { name: `Apex ${cityName} Agro-Processing & Exports`, category: 'Agro Foods & Cold Chain Logistics', type: 'Processing Unit', zone: `${cityName} Highway Junction`, cost: 38000, mrr: 5000, prio: 'Ultra Hot' },
-    ];
-
-    const currentLeads = getStoredLeads();
-    const harvested = templates.map((t, idx) => ({
-      id: `SCAN-${cityCode}-${Math.floor(1000 + Math.random() * 9000)}`,
-      name: t.name,
-      type: t.type,
-      category: t.category,
-      city: cityName,
-      state: 'Gujarat',
-      zone: t.zone,
-      address: `Plot ${100 + idx * 45}, GIDC Industrial Area, ${cityName}`,
-      dm: 'Partner / Managing Director',
-      phone: `+91 ${Math.floor(9000000000 + Math.random() * 999999999)}`,
-      website: idx === 1 ? 'Active Website' : 'No Web Presence (High Opportunity)',
-      stage: 'Prospect Identified',
-      priority: t.prio,
-      webCost: t.cost,
-      mrr: t.mrr,
-      dateAdded: `${dateStr} 08:30 AM`,
-      batchDate: dateStr,
-      isNewToday: true,
-    }));
-
-    const updated = [...harvested, ...currentLeads];
-    saveStoredLeads(updated);
-
+    // No fake synthesized leads. Return transparent message to user.
     return {
-      success: true,
-      data: harvested,
-      count: harvested.length,
-      newCount: harvested.length,
-      source: 'Corridor Highway Scanner (Realtime Pipeline)',
+      success: false,
+      error: `Live scan found 0 listings for ${cityName}. Please enter a valid Google Places API Key with Billing enabled in '⚡ Real Google Leads' or import verified leads via CSV.`,
+      data: [],
+      count: 0,
+      newCount: 0,
     };
   },
 
   resetToDefault() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(CORRIDOR_LEADS));
     return CORRIDOR_LEADS;
+  },
+
+  clearAllLeads() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+    return [];
+  },
+
+  importLeads(newLeads = []) {
+    if (!Array.isArray(newLeads) || newLeads.length === 0) return [];
+    const currentLeads = getStoredLeads();
+    const existingIds = new Set(currentLeads.map(l => l.id));
+    const trulyNew = newLeads.filter(l => !existingIds.has(l.id));
+    const updated = [...trulyNew, ...currentLeads];
+    saveStoredLeads(updated);
+    return updated;
   },
 
   async checkHealth() {

@@ -17,6 +17,7 @@ import LeadNotesModal from './components/LeadNotesModal';
 import BulkHarvesterModal from './components/BulkHarvesterModal';
 import ShareLeadModal from './components/ShareLeadModal';
 import DigitalMarketingPackagesModal from './components/DigitalMarketingPackagesModal';
+import ImportLeadsModal from './components/ImportLeadsModal';
 import WebsiteIntelligenceSection from './components/WebsiteIntelligenceSection';
 import { apiService } from './services/apiService';
 import { Sparkles, Flame, Globe2, Building2, Clock, Table as TableIcon, BarChart3, Plus, Activity } from 'lucide-react';
@@ -91,6 +92,7 @@ export default function App() {
   const [harvesterCity, setHarvesterCity] = useState('all');
   const [isPackagesModalOpen, setIsPackagesModalOpen] = useState(false);
   const [activePackageLead, setActivePackageLead] = useState(null);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
   // API Action Handlers
   const handleCreateLead = async (leadData) => {
@@ -129,6 +131,15 @@ export default function App() {
     apiService.resetToDefault();
     setAllLeads(CORRIDOR_LEADS);
     setIsApiStatusOpen(false);
+  };
+
+  const handleClearDemoLeads = () => {
+    // Keep only real imported or google verified leads
+    const realLeads = allLeads.filter(l => l.googleVerified || l.isRealImported);
+    setAllLeads(realLeads);
+    localStorage.setItem('corridor_leads_database_v5_redesign', JSON.stringify(realLeads));
+    localStorage.setItem('corridor_leads_database_v4_gujarat', JSON.stringify(realLeads));
+    setIsImportModalOpen(false);
   };
 
   const handleTriggerCityScan = (cityName) => {
@@ -343,6 +354,7 @@ export default function App() {
           setActivePackageLead(lead || null);
           setIsPackagesModalOpen(true);
         }}
+        onOpenImport={() => setIsImportModalOpen(true)}
       />
 
       {/* 2. Interactive Corridor Hubs Highway Ribbon (Gujarat + Rajasthan) */}
@@ -681,6 +693,20 @@ export default function App() {
             setActivePackageLead(null);
           }}
           isDark={theme === 'dark'}
+        />
+      )}
+
+      {/* Import Real Verified Leads (CSV / Excel) Modal */}
+      {isImportModalOpen && (
+        <ImportLeadsModal
+          onClose={() => setIsImportModalOpen(false)}
+          onLeadsImported={(newLeads) => {
+            handleLeadsHarvested(newLeads);
+            setIsImportModalOpen(false);
+          }}
+          onClearDemoLeads={handleClearDemoLeads}
+          currentCount={allLeads.length}
+          theme={theme}
         />
       )}
 

@@ -22,7 +22,8 @@ import {
   Filter,
   MoreVertical,
   X,
-  Zap
+  Zap,
+  Upload
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -44,7 +45,8 @@ export default function Navbar({
   theme,
   setTheme,
   onScrollToTable,
-  onOpenPackages
+  onOpenPackages,
+  onOpenImport
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -258,6 +260,22 @@ export default function Navbar({
             </span>
           </button>
 
+          {/* CSV Import (Desktop) */}
+          {onOpenImport && (
+            <button
+              onClick={onOpenImport}
+              className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                isDark 
+                  ? 'bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border-emerald-500/40' 
+                  : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300'
+              }`}
+              title="Import Real Leads via CSV / Excel"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>Import</span>
+            </button>
+          )}
+
           {/* CSV Export (Desktop) */}
           <button
             onClick={onExportCsv}
@@ -465,6 +483,19 @@ export default function Navbar({
             <Radar className="w-3.5 h-3.5" />
             <span>Auto Harvester</span>
           </button>
+
+          {onOpenImport && (
+            <button
+              onClick={() => {
+                onOpenImport();
+                setIsMobileMenuOpen(false);
+              }}
+              className="flex items-center gap-2 p-2 rounded-xl bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold justify-center col-span-2"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              <span>Import Real Leads (CSV / Excel)</span>
+            </button>
+          )}
 
           <button
             onClick={() => {

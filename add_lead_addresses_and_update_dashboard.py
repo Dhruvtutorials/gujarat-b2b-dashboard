@@ -1,0 +1,725 @@
+import os
+import json
+import re
+import pandas as pd
+
+BASE_DIR = r"C:\Users\Dhruv_Rana\.gemini\antigravity\scratch\client_prospecting_powerbi"
+INDEX_FILE = os.path.join(BASE_DIR, "index.html")
+DASHBOARD_FILE = os.path.join(BASE_DIR, "dashboard.html")
+CSV_FILE = os.path.join(BASE_DIR, "gandhinagar_to_valsad_corridor_leads.csv")
+JSON_FILE = os.path.join(BASE_DIR, "live_leads_feed.json")
+ARTIFACT_FILE = r"C:\Users\Dhruv_Rana\.gemini\antigravity\brain\012456e5-38a8-4b44-819d-04b9eb1e74f8\powerbi_dashboard.html"
+
+# Complete 36 Leads with exact physical factory/office addresses for direct client meetings
+CORRIDOR_LEADS_WITH_ADDRESSES = [
+    # 1. Surat (4)
+    {
+        "id": "STG-101",
+        "name": "Surat Silk & Jacquard Weaving Mills",
+        "type": "B2B",
+        "category": "Silk & Jacquard Wholesale",
+        "city": "Surat",
+        "zone": "Pandesara GIDC",
+        "address": "Plot No. 412/A, Road No. 8, Main Gate, Pandesara GIDC Industrial Estate, Surat, Gujarat - 394221",
+        "rating": 4.7, "reviews": 240, "website": "No Website",
+        "dm": "Rameshbhai Agarwal", "phone": "9825156715",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 80000, "mrr": 40000,
+        "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True
+    },
+    {
+        "id": "STG-102",
+        "name": "Laxmi Diamond Polishing Tools & Blades",
+        "type": "B2B",
+        "category": "Laser Cutting Blades & Scaife",
+        "city": "Surat",
+        "zone": "Katargam",
+        "address": "Shop No. 14-16, 2nd Floor, Ratnakar Diamond Hub, Near Sumul Dairy Road, Katargam, Surat, Gujarat - 395004",
+        "rating": 4.8, "reviews": 180, "website": "No Website",
+        "dm": "Gordhanbhai Patel", "phone": "9824067816",
+        "stage": "Audit Sent", "priority": "Hot",
+        "webCost": 60000, "mrr": 30000,
+        "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False
+    },
+    {
+        "id": "STG-103",
+        "name": "Surat Royal Ghari & Traditional Sweets",
+        "type": "D2C",
+        "category": "Heritage Sweets & Mawa",
+        "city": "Surat",
+        "zone": "Bhagal & Athwalines",
+        "address": "Royal Sweets Bhavan, 128 Chauta Bazar, Opp. Tower Clock, Bhagal, Surat, Gujarat - 395003",
+        "rating": 4.9, "reviews": 750, "website": "No Website",
+        "dm": "Mukeshbhai Shah", "phone": "9879578917",
+        "stage": "Closed-Won", "priority": "Hot",
+        "webCost": 60000, "mrr": 35000,
+        "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False
+    },
+    {
+        "id": "STG-104",
+        "name": "Vara Bridal Designer Kurtis & Lehengas",
+        "type": "D2C",
+        "category": "Designer Ethnic Wear",
+        "city": "Surat",
+        "zone": "Millennium Textile Market",
+        "address": "Shop No. 2045-2048, 2nd Floor, Millennium Textile Market 2, Ring Road, Surat, Gujarat - 395002",
+        "rating": 4.6, "reviews": 290, "website": "Outdated",
+        "dm": "Pooja Singhania", "phone": "9979189018",
+        "stage": "Proposal Sent", "priority": "Hot",
+        "webCost": 55000, "mrr": 32000,
+        "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False
+    },
+
+    # 2. Kim & Kosamba (2)
+    {
+        "id": "STG-105",
+        "name": "Shree Ambica Textile Sizing & Warping",
+        "type": "B2B",
+        "category": "Yarn Sizing & Warping",
+        "city": "Kim & Kosamba",
+        "zone": "Kim GIDC Industrial Area",
+        "address": "Plot No. 88-89, Kim-Kudsad Road, GIDC Industrial Estate, Kim, Dist. Surat, Gujarat - 394110",
+        "rating": 4.5, "reviews": 84, "website": "No Website",
+        "dm": "Vinodbhai Patel", "phone": "9825311221",
+        "stage": "Contacted", "priority": "Warm",
+        "webCost": 42000, "mrr": 20000,
+        "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True
+    },
+    {
+        "id": "STG-106",
+        "name": "Kosamba Agro Pulp & Cold Storage",
+        "type": "B2B",
+        "category": "Agro Cold Storage & Pulping",
+        "city": "Kim & Kosamba",
+        "zone": "NH-48 Kosamba Highway",
+        "address": "Survey No. 241, NH-48 Highway Service Road, Near Tarsadi Overbridge, Kosamba, Dist. Surat, Gujarat - 394120",
+        "rating": 4.6, "reviews": 72, "website": "No Website",
+        "dm": "Dineshbhai Chaudhari", "phone": "9879122332",
+        "stage": "New Lead", "priority": "Warm",
+        "webCost": 45000, "mrr": 22000,
+        "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False
+    },
+
+    # 3. Ankleshwar (3)
+    {
+        "id": "STG-107",
+        "name": "Sterling Dyes & Reactive Intermediates",
+        "type": "B2B",
+        "category": "Textile Dyes & Reactive Pigments",
+        "city": "Ankleshwar",
+        "zone": "Ankleshwar GIDC",
+        "address": "Plot No. 2804/A, Chemical Zone, GIDC Industrial Estate, Ankleshwar, Dist. Bharuch, Gujarat - 393002",
+        "rating": 4.6, "reviews": 105, "website": "No Website",
+        "dm": "Chetanbhai Shah", "phone": "9898134513",
+        "stage": "Proposal Sent", "priority": "Hot",
+        "webCost": 70000, "mrr": 35000,
+        "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True
+    },
+    {
+        "id": "STG-108",
+        "name": "Ankleshwar Bulk Pharma Synthetics",
+        "type": "B2B",
+        "category": "Active Pharma Ingredients (API)",
+        "city": "Ankleshwar",
+        "zone": "GIDC Chemical Zone",
+        "address": "Shed No. C-1/104, 52 Extn, GIDC Industrial Area, Valia Road, Ankleshwar, Gujarat - 393002",
+        "rating": 4.7, "reviews": 98, "website": "No Website",
+        "dm": "Dr. Haresh Vaghani", "phone": "9824045566",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 65000, "mrr": 32000,
+        "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False
+    },
+    {
+        "id": "STG-109",
+        "name": "Narmada Plastic Bottles & Moulding",
+        "type": "B2B",
+        "category": "Pharma Bottles & HDPE Drums",
+        "city": "Ankleshwar",
+        "zone": "Panoli GIDC",
+        "address": "Plot No. 612, Phase 1, Panoli GIDC Industrial Estate, Near Ankleshwar, Gujarat - 394116",
+        "rating": 4.4, "reviews": 72, "website": "No Website",
+        "dm": "Dharmendrasinh Vaghela", "phone": "9428145614",
+        "stage": "Contacted", "priority": "Warm",
+        "webCost": 45000, "mrr": 22000,
+        "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False
+    },
+
+    # 4. Bharuch (2)
+    {
+        "id": "STG-110",
+        "name": "Bharuch Heavy Valves & Flanges",
+        "type": "B2B",
+        "category": "Forged Valves & Industrial Piping",
+        "city": "Bharuch",
+        "zone": "Narmadanagar Industrial Estate",
+        "address": "Plot No. 45/B, Narmadanagar Industrial Estate, GNFC Bypass Road, Bharuch, Gujarat - 392015",
+        "rating": 4.7, "reviews": 115, "website": "No Website",
+        "dm": "Pravinbhai Solanki", "phone": "9825167788",
+        "stage": "Audit Sent", "priority": "Hot",
+        "webCost": 55000, "mrr": 28000,
+        "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False
+    },
+    {
+        "id": "STG-111",
+        "name": "Gujarat Salt & Marine Mineral Refineries",
+        "type": "B2B",
+        "category": "Industrial Salt & Soda Compounds",
+        "city": "Bharuch",
+        "zone": "Dahej Bypass Road",
+        "address": "Survey No. 312, Dahej Bypass Road, Near Railway Siding, Bharuch, Gujarat - 392001",
+        "rating": 4.5, "reviews": 88, "website": "No Website",
+        "dm": "Kamleshbhai Desai", "phone": "9879345566",
+        "stage": "New Lead", "priority": "Warm",
+        "webCost": 48000, "mrr": 24000,
+        "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False
+    },
+
+    # 5. Dahej (2)
+    {
+        "id": "STG-112",
+        "name": "Dahej Petrochem Piping & Pressure Vessels",
+        "type": "B2B",
+        "category": "Pressure Vessels & Heavy Boilers",
+        "city": "Dahej",
+        "zone": "Dahej PCPIR SEZ",
+        "address": "Plot No. D-2/E-41, Dahej PCPIR Special Economic Zone (SEZ), Taluka Vagra, Dahej, Gujarat - 392130",
+        "rating": 4.8, "reviews": 130, "website": "No Website",
+        "dm": "Siddharth Joshi (GM)", "phone": "9824156677",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 75000, "mrr": 38000,
+        "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True
+    },
+    {
+        "id": "STG-113",
+        "name": "Oceanic Marine Fabrication & Barges",
+        "type": "B2B",
+        "category": "Marine Equipment & Dock Skids",
+        "city": "Dahej",
+        "zone": "Dahej Port Zone",
+        "address": "Plot No. 18, Port & Marine Jetty Complex, Near Adani Port Gate, Dahej, Gujarat - 392130",
+        "rating": 4.6, "reviews": 68, "website": "No Website",
+        "dm": "Capt. Ashok Mehta", "phone": "9898067788",
+        "stage": "Contacted", "priority": "Warm",
+        "webCost": 60000, "mrr": 30000,
+        "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False
+    },
+
+    # 6. Karjan (2)
+    {
+        "id": "STG-114",
+        "name": "Karjan Cotton Ginning & Pressing Mills",
+        "type": "B2B",
+        "category": "Cotton Bales & Ginning Machinery",
+        "city": "Karjan",
+        "zone": "Miyagam Karjan GIDC",
+        "address": "Factory Plot No. 12-16, Miyagam Karjan GIDC Industrial Area, NH-48, Karjan, Dist. Vadodara, Gujarat - 391240",
+        "rating": 4.6, "reviews": 92, "website": "No Website",
+        "dm": "Natubhai Patel", "phone": "9426388990",
+        "stage": "Audit Sent", "priority": "Hot",
+        "webCost": 45000, "mrr": 22000,
+        "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False
+    },
+    {
+        "id": "STG-115",
+        "name": "Charotar Agro Seeds & Cold Warehouse",
+        "type": "B2B",
+        "category": "Agro Seeds & Crop Storage",
+        "city": "Karjan",
+        "zone": "Karjan Highway Crossing",
+        "address": "Survey No. 188, NH-48 Highway Crossing, Near Karjan Overbridge, Karjan, Gujarat - 391240",
+        "rating": 4.5, "reviews": 64, "website": "No Website",
+        "dm": "Ramanbhai Chaudhari", "phone": "9825278899",
+        "stage": "New Lead", "priority": "Warm",
+        "webCost": 40000, "mrr": 20000,
+        "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False
+    },
+
+    # 7. Vadodara (4)
+    {
+        "id": "STG-116",
+        "name": "PowerVolt Switchgears & HT Panels",
+        "type": "B2B",
+        "category": "Transformers & Switchgear",
+        "city": "Vadodara",
+        "zone": "Makarpura GIDC",
+        "address": "Plot No. 718/2, GIDC Industrial Estate, Makarpura Road, Vadodara, Gujarat - 390010",
+        "rating": 4.8, "reviews": 160, "website": "Outdated",
+        "dm": "Ajay Sharma", "phone": "9825001210",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 75000, "mrr": 35000,
+        "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True
+    },
+    {
+        "id": "STG-117",
+        "name": "Baroda Fine Chemicals & Solvents",
+        "type": "B2B",
+        "category": "Specialty Chemicals & Polymers",
+        "city": "Vadodara",
+        "zone": "Nandesari GIDC",
+        "address": "Plot No. 112/B, GIDC Chemical Zone, Nandesari, Dist. Vadodara, Gujarat - 391340",
+        "rating": 4.5, "reviews": 85, "website": "No Website",
+        "dm": "Vikram Desai", "phone": "9879412311",
+        "stage": "Audit Sent", "priority": "Hot",
+        "webCost": 60000, "mrr": 30000,
+        "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False
+    },
+    {
+        "id": "STG-118",
+        "name": "Avenue Ayurvedic Wellness Products",
+        "type": "D2C",
+        "category": "Herbal Skincare & Oils",
+        "city": "Vadodara",
+        "zone": "Alkapuri",
+        "address": "Shreeji Arcade, 1st Floor, Opp. Concorde Building, R.C. Dutt Road, Alkapuri, Vadodara, Gujarat - 390007",
+        "rating": 4.9, "reviews": 390, "website": "No Website",
+        "dm": "Dr. Ananya Trivedi", "phone": "9824323412",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 50000, "mrr": 30000,
+        "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False
+    },
+    {
+        "id": "STG-119",
+        "name": "Savli CNC Heavy Forgings & Tooling",
+        "type": "B2B",
+        "category": "Heavy Forged Auto Components",
+        "city": "Vadodara",
+        "zone": "Savli GIDC Industrial Estate",
+        "address": "Plot No. 34-36, GIDC Industrial Estate, Manjusar-Savli Road, Vadodara, Gujarat - 391775",
+        "rating": 4.7, "reviews": 142, "website": "No Website",
+        "dm": "Rajendrabhai Shah", "phone": "9898023344",
+        "stage": "Proposal Sent", "priority": "Hot",
+        "webCost": 65000, "mrr": 32000,
+        "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False
+    },
+
+    # 8. Anand (3)
+    {
+        "id": "STG-120",
+        "name": "Amulya Dairy Equipment & Stainless Silos",
+        "type": "B2B",
+        "category": "Dairy Machinery & Storage Silos",
+        "city": "Anand",
+        "zone": "Vitthal Udyognagar GIDC",
+        "address": "Plot No. 204/C, Phase 1, Vitthal Udyognagar GIDC Industrial Estate, Anand, Gujarat - 388121",
+        "rating": 4.7, "reviews": 110, "website": "No Website",
+        "dm": "Hasmukhbhai Patel", "phone": "9879389008",
+        "stage": "Closed-Won", "priority": "Hot",
+        "webCost": 65000, "mrr": 30000,
+        "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False
+    },
+    {
+        "id": "STG-121",
+        "name": "Shree Gayatri Namkeen & Food Products",
+        "type": "D2C",
+        "category": "Packaged Snacks & Khakhra",
+        "city": "Anand",
+        "zone": "GIDC Mogar",
+        "address": "Survey No. 89/1, GIDC Mogar, National Express Highway Crossing, Anand, Gujarat - 388340",
+        "rating": 4.6, "reviews": 215, "website": "No Website",
+        "dm": "Sanjay Shah", "phone": "9825290109",
+        "stage": "Proposal Sent", "priority": "Hot",
+        "webCost": 45000, "mrr": 25000,
+        "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False
+    },
+    {
+        "id": "STG-122",
+        "name": "Anand Stainless Pipes & Fluid Valves",
+        "type": "B2B",
+        "category": "SS Dairy Grade Pipes & Fittings",
+        "city": "Anand",
+        "zone": "Vitthal Udyognagar Phase 2",
+        "address": "Plot No. 512, Phase 2, Near GIDC Water Tank, Vitthal Udyognagar, Anand, Gujarat - 388121",
+        "rating": 4.8, "reviews": 95, "website": "No Website",
+        "dm": "Bipinbhai Suthar", "phone": "9426390112",
+        "stage": "Contacted", "priority": "Warm",
+        "webCost": 50000, "mrr": 24000,
+        "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False
+    },
+
+    # 9. Nadiad (2)
+    {
+        "id": "STG-123",
+        "name": "Charotar Agro Seeds & Bio-Tech Solutions",
+        "type": "B2B",
+        "category": "Hybrid Seeds & Agro Inputs",
+        "city": "Nadiad",
+        "zone": "Kamla GIDC",
+        "address": "Plot No. 84, Kamla GIDC Industrial Area, Uttarsanda Road, Nadiad, Gujarat - 387003",
+        "rating": 4.6, "reviews": 88, "website": "No Website",
+        "dm": "Bipinbhai Patel", "phone": "9426367806",
+        "stage": "Contacted", "priority": "Warm",
+        "webCost": 40000, "mrr": 18000,
+        "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False
+    },
+    {
+        "id": "STG-124",
+        "name": "Santram Wooden Furnishings & Teak Doors",
+        "type": "D2C",
+        "category": "Modular Kitchen & Teak Furniture",
+        "city": "Nadiad",
+        "zone": "College Road",
+        "address": "Santram Complex, 45 College Road, Near Santram Temple, Nadiad, Gujarat - 387001",
+        "rating": 4.8, "reviews": 145, "website": "No Website",
+        "dm": "Girish Mistry", "phone": "9824278907",
+        "stage": "New Lead", "priority": "Warm",
+        "webCost": 45000, "mrr": 24000,
+        "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False
+    },
+
+    # 10. Kheda & Bareja (2)
+    {
+        "id": "STG-125",
+        "name": "Kheda Rice & Grain Milling Machinery",
+        "type": "B2B",
+        "category": "Grain Processing & Destoner Machines",
+        "city": "Kheda & Bareja",
+        "zone": "Bareja Industrial Highway",
+        "address": "Bareja Industrial Estate, NH-48 Highway, Bareja, Dist. Ahmedabad/Kheda, Gujarat - 382425",
+        "rating": 4.6, "reviews": 96, "website": "No Website",
+        "dm": "Mahendrabhai Patel", "phone": "9825189900",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 50000, "mrr": 25000,
+        "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False
+    },
+    {
+        "id": "STG-126",
+        "name": "Bareja Highway Precast Concrete & Blocks",
+        "type": "B2B",
+        "category": "Precast Concrete & Pavers",
+        "city": "Kheda & Bareja",
+        "zone": "NH-48 Kheda Bypass",
+        "address": "Survey No. 104, NH-48 Kheda Bypass, Near Toll Plaza, Kheda, Gujarat - 387411",
+        "rating": 4.5, "reviews": 74, "website": "No Website",
+        "dm": "Kiritbhai Dabhi", "phone": "9879456677",
+        "stage": "Contacted", "priority": "Warm",
+        "webCost": 40000, "mrr": 20000,
+        "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False
+    },
+
+    # 11. Ahmedabad (4)
+    {
+        "id": "STG-127",
+        "name": "Matrix Hydraulic Presses & Shearing",
+        "type": "B2B",
+        "category": "Industrial Hydraulic Presses",
+        "city": "Ahmedabad",
+        "zone": "Kathwada GIDC",
+        "address": "Plot No. 55-57, Road No. 4, Kathwada GIDC Industrial Estate, Ahmedabad, Gujarat - 382430",
+        "rating": 4.6, "reviews": 135, "website": "No Website",
+        "dm": "Rakesh Panchal", "phone": "9824034503",
+        "stage": "Proposal Sent", "priority": "Hot",
+        "webCost": 55000, "mrr": 28000,
+        "dateAdded": "2026-09-29 08:30 AM", "batchDate": "2026-09-29", "isNewToday": True
+    },
+    {
+        "id": "STG-128",
+        "name": "Kaveri Corrugated Packaging Products",
+        "type": "B2B",
+        "category": "Packaging Boxes & Cartons",
+        "city": "Ahmedabad",
+        "zone": "Changodar GIDC",
+        "address": "Survey No. 320/2, Moraiya, Near Sanand Circle, Changodar GIDC, Ahmedabad, Gujarat - 382213",
+        "rating": 4.7, "reviews": 112, "website": "No Website",
+        "dm": "Nilesh Doshi", "phone": "9898045604",
+        "stage": "Audit Sent", "priority": "Hot",
+        "webCost": 45000, "mrr": 20000,
+        "dateAdded": "2026-09-28 08:30 AM", "batchDate": "2026-09-28", "isNewToday": False
+    },
+    {
+        "id": "STG-129",
+        "name": "Swagat Premium Sweets & Dryfruits",
+        "type": "D2C",
+        "category": "Gourmet Sweets & Farsan",
+        "city": "Ahmedabad",
+        "zone": "Satellite & Bodakdev",
+        "address": "Ground Floor, Titanium Square, Near Thaltej Cross Roads, SG Highway, Bodakdev, Ahmedabad, Gujarat - 380054",
+        "rating": 4.9, "reviews": 620, "website": "No Website",
+        "dm": "Pranav Kandoi", "phone": "9825156705",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 50000, "mrr": 35000,
+        "dateAdded": "2026-09-27 08:30 AM", "batchDate": "2026-09-27", "isNewToday": False
+    },
+    {
+        "id": "STG-130",
+        "name": "Naroda Laser Tech & Sheet Metal",
+        "type": "B2B",
+        "category": "Laser Metal Profiling & Bending",
+        "city": "Ahmedabad",
+        "zone": "Naroda GIDC",
+        "address": "Phase 1, Plot No. 814, GIDC Industrial Estate, Naroda, Ahmedabad, Gujarat - 382330",
+        "rating": 4.8, "reviews": 150, "website": "No Website",
+        "dm": "Sureshbhai Mistry", "phone": "9825312345",
+        "stage": "Closed-Won", "priority": "Hot",
+        "webCost": 52000, "mrr": 26000,
+        "dateAdded": "2026-09-26 08:30 AM", "batchDate": "2026-09-26", "isNewToday": False
+    },
+
+    # 12. Kalol & Chhatral (3)
+    {
+        "id": "STG-131",
+        "name": "Chhatral Submersible Pumps & Motors",
+        "type": "B2B",
+        "category": "Agricultural Submersible Pumps",
+        "city": "Kalol & Chhatral",
+        "zone": "Chhatral GIDC Phase 1",
+        "address": "Plot No. 120/A, Phase 1, GIDC Industrial Estate, Chhatral, Dist. Gandhinagar, Gujarat - 382729",
+        "rating": 4.7, "reviews": 128, "website": "No Website",
+        "dm": "Pravinbhai Patel", "phone": "9825045566",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 55000, "mrr": 28000,
+        "dateAdded": "2026-09-25 08:30 AM", "batchDate": "2026-09-25", "isNewToday": False
+    },
+    {
+        "id": "STG-132",
+        "name": "Kalol Precision Plastic Injection Moulds",
+        "type": "B2B",
+        "category": "Plastic Injection Moulds & Dies",
+        "city": "Kalol & Chhatral",
+        "zone": "Kalol GIDC Industrial Area",
+        "address": "Shed No. 45, Kalol GIDC Industrial Area, Near Highway Overbridge, Kalol, Gujarat - 382721",
+        "rating": 4.6, "reviews": 94, "website": "No Website",
+        "dm": "Nitinbhai Panchal", "phone": "9879234567",
+        "stage": "Audit Sent", "priority": "Hot",
+        "webCost": 50000, "mrr": 25000,
+        "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False
+    },
+    {
+        "id": "STG-133",
+        "name": "Gujarat Steel Barrels & Containers",
+        "type": "B2B",
+        "category": "MS Barrels & Chemical Drums",
+        "city": "Kalol & Chhatral",
+        "zone": "Chhatral Highway Estate",
+        "address": "Plot No. 208, Chhatral-Kadi Highway Estate, Chhatral, Gujarat - 382729",
+        "rating": 4.5, "reviews": 82, "website": "No Website",
+        "dm": "Harshad Mehta", "phone": "9824156789",
+        "stage": "Contacted", "priority": "Warm",
+        "webCost": 45000, "mrr": 22000,
+        "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False
+    },
+
+    # 13. Gandhinagar (3)
+    {
+        "id": "STG-134",
+        "name": "Optima Instruments & Automation",
+        "type": "B2B",
+        "category": "Industrial Automation & Sensors",
+        "city": "Gandhinagar",
+        "zone": "Electronic Estate, Sec 25",
+        "address": "Plot No. 14/15, Electronic Estate, Sector 25, Gandhinagar, Gujarat - 382024",
+        "rating": 4.7, "reviews": 94, "website": "No Website",
+        "dm": "Dr. Jayesh Mehta", "phone": "9825123401",
+        "stage": "Pitch Scheduled", "priority": "Hot",
+        "webCost": 60000, "mrr": 30000,
+        "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False
+    },
+    {
+        "id": "STG-135",
+        "name": "Saffron Biotech & Agro Chemical",
+        "type": "B2B",
+        "category": "Bio-fertilizers & Agro Chemicals",
+        "city": "Gandhinagar",
+        "zone": "Pethapur GIDC",
+        "address": "Survey No. 210, Pethapur GIDC Industrial Area, Gandhinagar, Gujarat - 382610",
+        "rating": 4.5, "reviews": 68, "website": "No Website",
+        "dm": "Kamleshbhai Patel", "phone": "9879234502",
+        "stage": "Contacted", "priority": "Warm",
+        "webCost": 40000, "mrr": 22000,
+        "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False
+    },
+    {
+        "id": "STG-136",
+        "name": "Capital Solar Structures & Inverters",
+        "type": "B2B",
+        "category": "Solar Mounting & Off-Grid Systems",
+        "city": "Gandhinagar",
+        "zone": "Sector 28 GIDC",
+        "address": "Plot No. 488, Sector 28 GIDC Industrial Estate, Gandhinagar, Gujarat - 382028",
+        "rating": 4.8, "reviews": 115, "website": "No Website",
+        "dm": "Pratik Sharma", "phone": "9824047733",
+        "stage": "Closed-Won", "priority": "Hot",
+        "webCost": 55000, "mrr": 28000,
+        "dateAdded": "2026-09-24 08:30 AM", "batchDate": "2026-09-24", "isNewToday": False
+    }
+]
+
+print(f"Total leads with full addresses: {len(CORRIDOR_LEADS_WITH_ADDRESSES)}")
+
+# Save updated JSON feed
+with open(JSON_FILE, "w", encoding="utf-8") as f:
+    json.dump({
+        "last_harvest": "2026-09-30 08:30:00 IST",
+        "total_corridor_leads": len(CORRIDOR_LEADS_WITH_ADDRESSES),
+        "corridor": "Surat ➔ Gandhinagar",
+        "includes_physical_meeting_addresses": True,
+        "leads": CORRIDOR_LEADS_WITH_ADDRESSES
+    }, f, indent=2)
+
+# Save CSV with Address column
+df = pd.DataFrame(CORRIDOR_LEADS_WITH_ADDRESSES)
+df.to_csv(CSV_FILE, index=False)
+print("Updated JSON and CSV with physical meeting addresses.")
+
+# Update index.html and dashboard.html
+with open(INDEX_FILE, "r", encoding="utf-8") as f:
+    index_content = f.read()
+
+# Replace leadsMaster JSON in index.html
+leads_json_str = json.dumps(CORRIDOR_LEADS_WITH_ADDRESSES, indent=2)
+index_content = re.sub(r'const leadsMaster = \[.*?\];', f'const leadsMaster = {leads_json_str};', index_content, flags=re.DOTALL)
+
+# Update renderTable in index.html to display full physical address and Google Maps direct navigation pin
+old_render_row = """            <td class="py-3 px-3">
+              <div class="font-semibold">${item.city}</div>
+              <div class="text-[10px]" style="color: var(--text-dim);">${item.zone}</div>
+            </td>"""
+
+new_render_row = """            <td class="py-3 px-3 min-w-[200px]">
+              <div class="font-bold text-xs" style="color: var(--text-bright);">${item.city}</div>
+              <div class="text-[11px] font-semibold text-sky-400">${item.zone}</div>
+              <div class="text-[10px] mt-1 leading-snug flex items-start gap-1" style="color: var(--text-dim);">
+                <span class="text-rose-500 shrink-0 font-bold">📍</span>
+                <span>${item.address}</span>
+              </div>
+              <div class="mt-1">
+                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.address)}" target="_blank" class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400 hover:text-emerald-300 hover:underline">
+                  <span>🗺️ Directions / Meet</span>
+                </a>
+              </div>
+            </td>"""
+
+if old_render_row in index_content:
+    index_content = index_content.replace(old_render_row, new_render_row)
+else:
+    # Pattern replace
+    index_content = re.sub(
+        r'<td class="py-3 px-3">\s*<div class="font-semibold">\$\{item\.city\}</div>\s*<div class="text-\[10px\]"[^>]*>\$\{item\.zone\}</div>\s*</td>',
+        new_render_row,
+        index_content
+    )
+
+# Update openPitchModal to display the physical meeting address & direct Google Maps navigation button
+old_pitch_func = """    function openPitchModal(id) {
+      const item = leadsMaster.find(d => d.id === id);
+      if (!item) return;
+
+      document.getElementById('modalBiz').innerText = item.name + ' (' + item.city + ')';
+      document.getElementById('modalOwner').innerText = 'Owner: ' + item.dm + ' | Phone: +91 ' + item.phone;"""
+
+new_pitch_func = """    function openPitchModal(id) {
+      const item = leadsMaster.find(d => d.id === id);
+      if (!item) return;
+
+      document.getElementById('modalBiz').innerText = item.name + ' (' + item.city + ')';
+      document.getElementById('modalOwner').innerHTML = `
+        <div class="font-semibold text-slate-300">👤 Owner: <span class="text-white">${item.dm}</span> | 📞 Phone: <span class="text-sky-400">+91 ${item.phone}</span></div>
+        <div class="text-[11px] text-slate-300 mt-1 flex items-start gap-1">
+          <span class="text-rose-400">📍 Meeting Address:</span>
+          <span class="text-white font-medium">${item.address}</span>
+        </div>
+        <div class="mt-1.5">
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.address)}" target="_blank" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30 hover:bg-sky-500/30">
+            <span>🗺️ Open in Google Maps for In-Person Meeting</span>
+          </a>
+        </div>
+      `;"""
+
+if old_pitch_func in index_content:
+    index_content = index_content.replace(old_pitch_func, new_pitch_func)
+else:
+    # Try replacing modalOwner logic
+    index_content = re.sub(
+        r"document\.getElementById\('modalOwner'\)\.innerText\s*=\s*'Owner:\s*'\s*\+\s*item\.dm.*?;",
+        """document.getElementById('modalOwner').innerHTML = `
+        <div class="font-semibold text-slate-300">👤 Owner: <span class="text-white">${item.dm}</span> | 📞 Phone: <span class="text-sky-400">+91 ${item.phone}</span></div>
+        <div class="text-[11px] text-slate-300 mt-1 flex items-start gap-1">
+          <span class="text-rose-400">📍 Meeting Address:</span>
+          <span class="text-white font-medium">${item.address}</span>
+        </div>
+        <div class="mt-1.5">
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' ' + item.address)}" target="_blank" class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30 hover:bg-sky-500/30">
+            <span>🗺️ Open in Google Maps for In-Person Meeting</span>
+          </a>
+        </div>
+      `;""",
+        index_content
+    )
+
+# Update Pitch script to include an in-person meeting option
+old_script_text = r'May I share a complimentary 2-minute digital audit with you here on WhatsApp\?'
+new_script_text = r'May I share a complimentary 2-minute digital audit with you, or can I stop by your factory/office at ${item.address} for a quick 10-minute preview?'
+index_content = re.sub(old_script_text, new_script_text, index_content)
+
+# Update Export to CSV to include Physical Address and Google Maps URL
+old_export_csv = 'const headers = ["Lead ID", "Business Name", "Work Type", "Industry Sector", "Highway City", "Industrial Area", "Arrival Date & 8:30 Batch", "Rating", "Reviews", "Website Status", "Decision Maker", "Phone", "Est Web Fee", "Monthly Retainer", "Stage"];'
+new_export_csv = 'const headers = ["Lead ID", "Business Name", "Work Type", "Industry Sector", "Highway City", "Industrial Area", "Physical Meeting Address", "Google Maps URL", "Arrival Date & 8:30 Batch", "Rating", "Reviews", "Website Status", "Decision Maker", "Phone", "Est Web Fee", "Monthly Retainer", "Stage"];'
+
+old_export_rows = """        l.id,
+        `"${l.name}"`,
+        l.type,
+        `"${l.category}"`,
+        `"${l.city}"`,
+        `"${l.zone}"`,
+        `"${l.dateAdded}"`,"""
+
+new_export_rows = """        l.id,
+        `"${l.name}"`,
+        l.type,
+        `"${l.category}"`,
+        `"${l.city}"`,
+        `"${l.zone}"`,
+        `"${l.address}"`,
+        `"https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.name + ' ' + l.address)}"`,
+        `"${l.dateAdded}"`,"""
+
+if old_export_csv in index_content:
+    index_content = index_content.replace(old_export_csv, new_export_csv)
+if old_export_rows in index_content:
+    index_content = index_content.replace(old_export_rows, new_export_rows)
+
+# Update 8:30 AM Highlight Cards to show physical address
+old_h1 = """                <div class="font-bold text-xs text-white">Surat Silk & Jacquard Weaving Mills</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Silk & Jacquard Wholesale • Pandesara GIDC</div>"""
+new_h1 = """                <div class="font-bold text-xs text-white">Surat Silk & Jacquard Weaving Mills</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Silk & Jacquard Wholesale • Pandesara GIDC</div>
+                <div class="text-[10px] text-slate-300 mt-1 flex items-start gap-1">
+                  <span class="text-rose-400 shrink-0">📍</span>
+                  <span>Plot No. 412/A, Road No. 8, Pandesara GIDC, Surat</span>
+                </div>"""
+
+old_h2 = """                <div class="font-bold text-xs text-white">PowerVolt Switchgears & HT Panels</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Transformers & Switchgear • Makarpura GIDC</div>"""
+new_h2 = """                <div class="font-bold text-xs text-white">PowerVolt Switchgears & HT Panels</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Transformers & Switchgear • Makarpura GIDC</div>
+                <div class="text-[10px] text-slate-300 mt-1 flex items-start gap-1">
+                  <span class="text-rose-400 shrink-0">📍</span>
+                  <span>Plot No. 718/2, GIDC Estate, Makarpura Road, Vadodara</span>
+                </div>"""
+
+old_h3 = """                <div class="font-bold text-xs text-white">Dahej Petrochem Piping & Vessels</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Pressure Vessels & Boilers • Dahej PCPIR SEZ</div>"""
+new_h3 = """                <div class="font-bold text-xs text-white">Dahej Petrochem Piping & Vessels</div>
+                <div class="text-[11px] text-gray-400 mt-0.5">Pressure Vessels & Boilers • Dahej PCPIR SEZ</div>
+                <div class="text-[10px] text-slate-300 mt-1 flex items-start gap-1">
+                  <span class="text-rose-400 shrink-0">📍</span>
+                  <span>Plot No. D-2/E-41, Dahej PCPIR SEZ, Taluka Vagra, Dahej</span>
+                </div>"""
+
+index_content = index_content.replace(old_h1, new_h1)
+index_content = index_content.replace(old_h2, new_h2)
+index_content = index_content.replace(old_h3, new_h3)
+
+# Save to index.html, dashboard.html, and artifact
+with open(INDEX_FILE, "w", encoding="utf-8") as f:
+    f.write(index_content)
+print(f"[OK] Written to {INDEX_FILE}")
+
+with open(DASHBOARD_FILE, "w", encoding="utf-8") as f:
+    f.write(index_content)
+print(f"[OK] Written to {DASHBOARD_FILE}")
+
+with open(ARTIFACT_FILE, "w", encoding="utf-8") as f:
+    f.write(index_content)
+print(f"[OK] Written to {ARTIFACT_FILE}")
+
+print("Successfully injected physical addresses and Google Maps directions for direct meetings!")

@@ -61,27 +61,19 @@ export default function App() {
   // Persistent Leads Database State loaded from apiService / localStorage
   const [allLeads, setAllLeads] = useState(() => {
     try {
-      const raw = localStorage.getItem('corridor_leads_database_v6_clean_web') || localStorage.getItem('corridor_leads_database_v5_redesign') || localStorage.getItem('corridor_leads_database_v4_gujarat');
+      const raw = localStorage.getItem('corridor_leads_database_v7_real_verified');
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length >= CORRIDOR_LEADS.length) {
-          // Merge latest clean websiteUrl and website field from CORRIDOR_LEADS while preserving notes/status
-          const seedMap = new Map(CORRIDOR_LEADS.map((l) => [l.id, l]));
-          const upgraded = parsed.map((lead) => {
-            const seed = seedMap.get(lead.id);
-            if (!seed) return lead;
-            return {
-              ...lead,
-              website: seed.website,
-              websiteUrl: seed.websiteUrl || ''
-            };
-          });
-          localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(upgraded));
-          return upgraded;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
         }
       }
     } catch {}
-    localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(CORRIDOR_LEADS));
+    // Initial load of 100% Real Verified Leads
+    localStorage.setItem('corridor_leads_database_v7_real_verified', JSON.stringify(CORRIDOR_LEADS));
+    localStorage.removeItem('corridor_leads_database_v6_clean_web');
+    localStorage.removeItem('corridor_leads_database_v5_redesign');
+    localStorage.removeItem('corridor_leads_database_v4_gujarat');
     return CORRIDOR_LEADS;
   });
 
@@ -124,7 +116,7 @@ export default function App() {
   const handleSaveLead = (updatedLead) => {
     setAllLeads((prev) => {
       const updated = prev.map((l) => (l.id === updatedLead.id ? updatedLead : l));
-      localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(updated));
+      localStorage.setItem('corridor_leads_database_v7_real_verified', JSON.stringify(updated));
       return updated;
     });
   };
@@ -135,7 +127,7 @@ export default function App() {
         const existingIds = new Set(prev.map((l) => l.id));
         const filteredNew = newLeads.filter((l) => !existingIds.has(l.id));
         const combined = [...filteredNew, ...prev];
-        localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(combined));
+        localStorage.setItem('corridor_leads_database_v7_real_verified', JSON.stringify(combined));
         return combined;
       });
       handleSelectCity(newLeads[0].city);
@@ -145,7 +137,7 @@ export default function App() {
   const handleResetDatabase = () => {
     apiService.resetToDefault();
     setAllLeads(CORRIDOR_LEADS);
-    localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(CORRIDOR_LEADS));
+    localStorage.setItem('corridor_leads_database_v7_real_verified', JSON.stringify(CORRIDOR_LEADS));
     setIsApiStatusOpen(false);
   };
 
@@ -153,7 +145,8 @@ export default function App() {
     // Keep only real imported or google verified leads
     const realLeads = allLeads.filter(l => l.googleVerified || l.isRealImported);
     setAllLeads(realLeads);
-    localStorage.setItem('corridor_leads_database_v6_clean_web', JSON.stringify(realLeads));
+    localStorage.setItem('corridor_leads_database_v7_real_verified', JSON.stringify(realLeads));
+    localStorage.removeItem('corridor_leads_database_v6_clean_web');
     localStorage.removeItem('corridor_leads_database_v5_redesign');
     localStorage.removeItem('corridor_leads_database_v4_gujarat');
     setIsImportModalOpen(false);

@@ -470,14 +470,31 @@ export default function LeadsMatrixTable({
                             </span>
                           )}
                         </div>
-                        <div className={`flex items-center gap-2 mt-1 text-[11px] ${
+                        <div className={`flex items-center gap-1.5 mt-1 text-[11px] flex-wrap ${
                           isDark ? 'text-slate-400' : 'text-slate-600'
                         }`}>
                           <span className="font-medium">{lead.dm}</span>
                           <span>•</span>
-                          <a href={`tel:${lead.phone}`} className="font-mono text-blue-500 hover:underline">
-                            {lead.phone}
-                          </a>
+                          {lead.phone ? (
+                            <a href={`tel:${lead.phone}`} className="font-mono font-bold text-emerald-400 hover:underline flex items-center gap-1">
+                              <Phone className="w-3 h-3" />
+                              <span>{lead.phone}</span>
+                              {lead.googleVerified && (
+                                <span className="text-[8px] px-1 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">✓ Real</span>
+                              )}
+                            </a>
+                          ) : (
+                            <a
+                              href={`https://www.google.com/search?q=${encodeURIComponent((lead.name || '') + ' ' + (lead.city || 'Gujarat') + ' phone number')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 text-[10px] font-bold"
+                              title="Search verified live phone number on Google Maps"
+                            >
+                              <Search className="w-2.5 h-2.5 text-cyan-400" />
+                              <span>Find on Google</span>
+                            </a>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -893,10 +910,28 @@ export default function LeadsMatrixTable({
                       <span className={`font-bold truncate block ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
                         {lead.dm}
                       </span>
-                      <a href={`tel:${lead.phone}`} className="text-[11px] font-mono text-blue-500 hover:underline flex items-center gap-1 mt-0.5">
-                        <Phone className="w-3 h-3" />
-                        <span>{lead.phone}</span>
-                      </a>
+                      {lead.phone ? (
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <a href={`tel:${lead.phone}`} className="text-[11px] font-mono font-bold text-emerald-400 hover:underline flex items-center gap-1">
+                            <Phone className="w-3 h-3" />
+                            <span>{lead.phone}</span>
+                          </a>
+                          {lead.googleVerified && (
+                            <span className="text-[8px] px-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">✓ Real</span>
+                          )}
+                        </div>
+                      ) : (
+                        <a 
+                          href={`https://www.google.com/search?q=${encodeURIComponent((lead.name || '') + ' ' + (lead.city || 'Gujarat') + ' phone number')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[10px] text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 mt-0.5 font-bold"
+                          title="Search verified phone number on Google Maps"
+                        >
+                          <Search className="w-2.5 h-2.5 text-cyan-400" />
+                          <span>Find on Google</span>
+                        </a>
+                      )}
                     </div>
                     <div className="text-right">
                       <span className="text-[10px] block font-semibold">Pipeline Potential</span>
@@ -996,19 +1031,36 @@ export default function LeadsMatrixTable({
                     <span>Share</span>
                   </button>
 
-                  {/* 4. Direct Phone Call */}
-                  <a
-                    href={`tel:${lead.phone}`}
-                    className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
-                      isDark
-                        ? 'bg-blue-600/15 text-blue-400 border-blue-500/30'
-                        : 'bg-blue-50 text-blue-700 border-blue-200'
-                    }`}
-                    title={`Call ${lead.dm}`}
-                  >
-                    <PhoneCall className="w-3.5 h-3.5" />
-                    <span>Call</span>
-                  </a>
+                  {/* 4. Direct Phone Call or Google Search */}
+                  {lead.phone ? (
+                    <a
+                      href={`tel:${lead.phone}`}
+                      className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
+                        isDark
+                          ? 'bg-emerald-600/15 text-emerald-400 border-emerald-500/30 hover:bg-emerald-600/25'
+                          : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                      }`}
+                      title={`Call ${lead.name} (${lead.phone})`}
+                    >
+                      <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Call</span>
+                    </a>
+                  ) : (
+                    <a
+                      href={`https://www.google.com/search?q=${encodeURIComponent((lead.name || '') + ' ' + (lead.city || 'Gujarat') + ' phone number')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex flex-col sm:flex-row items-center justify-center gap-0.5 sm:gap-1 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-xs font-bold transition-all border ${
+                        isDark
+                          ? 'bg-amber-600/15 text-amber-300 border-amber-500/30 hover:bg-amber-600/25'
+                          : 'bg-amber-50 text-amber-700 border-amber-200'
+                      }`}
+                      title="Search verified live phone number on Google Maps"
+                    >
+                      <Search className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Phone</span>
+                    </a>
+                  )}
 
                   {/* 5. 360 Packages */}
                   {onOpenPackages && (

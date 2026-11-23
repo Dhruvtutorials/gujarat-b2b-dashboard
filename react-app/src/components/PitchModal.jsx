@@ -34,6 +34,7 @@ export default function PitchModal({ lead, onClose }) {
   const [senderPhone, setSenderPhone] = useState(() => {
     return localStorage.getItem('corridor_sender_phone') || '+91 98700 98180';
   });
+  const [recipientPhone, setRecipientPhone] = useState(lead.phone || '');
 
   const [copied, setCopied] = useState(false);
   const [isSendingWebhook, setIsSendingWebhook] = useState(false);
@@ -127,12 +128,16 @@ Phone: ${senderPhone}`;
 
   const handleWhatsApp = () => {
     const encoded = encodeURIComponent(pitchText);
-    let digits = (lead.phone || '').replace(/\D/g, '');
+    let digits = (recipientPhone || lead.phone || '').replace(/\D/g, '');
     if (digits.startsWith('0')) {
       digits = digits.substring(1);
     }
     if (!digits.startsWith('91') && digits.length === 10) {
       digits = '91' + digits;
+    }
+    if (!digits) {
+      window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+      return;
     }
     window.open(`https://wa.me/${digits}?text=${encoded}`, '_blank');
   };
@@ -212,6 +217,31 @@ Phone: ${senderPhone}`;
               onChange={(e) => handleUpdateSenderPhone(e.target.value)}
               className="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-emerald-300 font-mono font-bold text-xs focus:outline-none focus:border-emerald-500"
             />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-slate-400 font-semibold flex items-center gap-1 text-[11px]">
+              <PhoneCall className="w-3 h-3 text-cyan-400" />
+              <span>Client Phone:</span>
+            </span>
+            <input
+              type="text"
+              value={recipientPhone}
+              onChange={(e) => setRecipientPhone(e.target.value)}
+              placeholder="Client WhatsApp #"
+              className="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-cyan-300 font-mono font-bold text-xs focus:outline-none focus:border-cyan-500 max-w-[140px]"
+            />
+            {!recipientPhone && (
+              <a
+                href={`https://www.google.com/search?q=${encodeURIComponent((lead.name || '') + ' ' + (lead.city || 'Gujarat') + ' phone number')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-0.5"
+                title="Search real number on Google Maps"
+              >
+                <span>🔍 Find</span>
+              </a>
+            )}
           </div>
         </div>
 
